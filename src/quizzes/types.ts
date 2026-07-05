@@ -26,10 +26,14 @@ export interface Question {
   prompt: string;
   /** 出題の補足（例: "市外局番" / "駅名"） */
   sub?: string;
+  /** 出題画像（マンホールクイズ）。地図の左上にパネル表示される */
+  image?: string;
+  /** 画像の出典ページ（回答後にリンク表示） */
+  imageLink?: string;
   targets: Target[];
 }
 
-export type QuizId = 'station' | 'areacode' | 'legacy';
+export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole';
 
 export type OperatorFilter = 'all' | 'jr' | 'nonjr';
 

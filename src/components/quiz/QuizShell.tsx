@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuizEngine } from '../../hooks/useQuizEngine';
 import type { Question } from '../../quizzes/types';
 import { QuizMap } from '../map/QuizMap';
@@ -14,6 +14,11 @@ export interface QuizShellProps {
 export function QuizShell({ questions, radiusKm, quizTitle, onFinish, onExit }: QuizShellProps) {
   const engine = useQuizEngine(questions, radiusKm);
   const { current, phase, pin, feedback } = engine;
+  const [imgExpanded, setImgExpanded] = useState(false);
+
+  useEffect(() => {
+    setImgExpanded(false);
+  }, [current?.id]);
 
   // スペースキー: 出題中はピン確定、回答表示中は次の問題へ
   useEffect(() => {
@@ -45,7 +50,9 @@ export function QuizShell({ questions, radiusKm, quizTitle, onFinish, onExit }: 
         <button className="btn btn-ghost" onClick={onExit}>← 終了</button>
         <div className="quiz-question">
           <span className="quiz-sub">{current.sub ?? quizTitle}</span>
-          <span className="quiz-prompt">{current.prompt}</span>
+          <span className={`quiz-prompt ${current.prompt.length > 8 ? 'quiz-prompt-long' : ''}`}>
+            {current.prompt}
+          </span>
           {multi && phase === 'guessing' && (
             <span className="quiz-multi-badge">全 {current.targets.length} 箇所 / あと {remain}</span>
           )}
@@ -56,6 +63,25 @@ export function QuizShell({ questions, radiusKm, quizTitle, onFinish, onExit }: 
       </header>
 
       <div className="quiz-map-wrap">
+        {current.image && (
+          <div
+            className={`quiz-image ${imgExpanded ? 'quiz-image-expanded' : ''}`}
+            onClick={() => setImgExpanded(!imgExpanded)}
+            title="クリックで拡大/縮小"
+          >
+            <img src={current.image} alt="マンホールの写真" />
+            {phase === 'revealed' && current.imageLink && (
+              <a
+                href={current.imageLink}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                出典: 日本マンホール蓋学会
+              </a>
+            )}
+          </div>
+        )}
         <QuizMap
           question={current}
           revealed={phase === 'revealed'}

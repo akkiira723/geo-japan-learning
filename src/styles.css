@@ -167,6 +167,7 @@ kbd {
 }
 .quiz-sub { font-size: 0.78rem; color: var(--muted); }
 .quiz-prompt { font-size: 2.1rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.15; }
+.quiz-prompt-long { font-size: 1.25rem; font-weight: 700; }
 .quiz-multi-badge {
   background: #fef3c7;
   color: #92400e;
@@ -198,6 +199,42 @@ kbd {
   pointer-events: none;
 }
 .quiz-feedback-hit { color: var(--green); }
+
+/* マンホールクイズの出題画像パネル */
+.quiz-image {
+  position: absolute;
+  top: 80px;
+  left: 12px;
+  z-index: 1000;
+  width: 230px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  cursor: zoom-in;
+  transition: width 0.15s;
+}
+.quiz-image img {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+}
+.quiz-image a {
+  display: block;
+  font-size: 0.72rem;
+  text-align: right;
+  margin-top: 4px;
+}
+.quiz-image-expanded {
+  width: 70vw;
+  max-width: 560px;
+  cursor: zoom-out;
+}
+@media (max-width: 600px) {
+  .quiz-image { width: 150px; top: 66px; }
+  .quiz-image-expanded { width: 88vw; max-width: 480px; }
+}
 
 .map-control {
   position: absolute;

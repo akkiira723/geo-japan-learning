@@ -24,6 +24,10 @@ export function About() {
           <a href="https://github.com/smartnews-smri/japan-topography" target="_blank" rel="noreferrer">japan-topography</a> 経由で加工
         </li>
         <li>
+          マンホール画像: <a href="https://we-love-manho.com/" target="_blank" rel="noreferrer">日本マンホール蓋学会</a>
+          （画像の権利は同会・各撮影者に帰属。本ツールは画像を複製・再配布せず同サイトから直接表示し、各問題に出典ページへのリンクを表示します）
+        </li>
+        <li>
           地図タイル: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
           <a href="https://tile.openstreetmap.jp/" target="_blank" rel="noreferrer">OSMFJ タイルサーバー</a>（日本語スタイル）/{' '}
           <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 地理院タイル</a> /{' '}
