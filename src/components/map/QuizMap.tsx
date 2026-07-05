@@ -12,9 +12,24 @@ const OSM_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
 const CARTO_ATTR = OSM_ATTR + ' &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
 
-type MapTypeId = 'gsi-pale' | 'gsi-std' | 'voyager' | 'osm';
+type MapTypeId = 'bright-ja' | 'basic-ja' | 'gsi-pale' | 'gsi-std' | 'voyager' | 'osm';
+
+const OSMFJ_ATTR =
+  OSM_ATTR + ' / tiles by <a href="https://tile.openstreetmap.jp/" target="_blank" rel="noreferrer">OSMFJ</a>';
 
 const MAP_TYPES: Record<MapTypeId, { label: string; url: string; attr: string; subdomains?: string; maxNativeZoom: number }> = {
+  'bright-ja': {
+    label: 'OSM Bright 日本語',
+    url: 'https://tile.openstreetmap.jp/styles/osm-bright-ja/{z}/{x}/{y}{r}.png',
+    attr: OSMFJ_ATTR,
+    maxNativeZoom: 18,
+  },
+  'basic-ja': {
+    label: 'ベーシック 日本語',
+    url: 'https://tile.openstreetmap.jp/styles/maptiler-basic-ja/{z}/{x}/{y}{r}.png',
+    attr: OSMFJ_ATTR,
+    maxNativeZoom: 18,
+  },
   'gsi-pale': {
     label: '地理院 淡色',
     url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
@@ -42,7 +57,7 @@ const MAP_TYPES: Record<MapTypeId, { label: string; url: string; attr: string; s
   },
 };
 
-const MAPTYPE_KEY = 'geo-japan-learning:maptype2';
+const MAPTYPE_KEY = 'geo-japan-learning:maptype3';
 const BORDER_KEY = 'geo-japan-learning:prefborder';
 const MUNI_BORDER_KEY = 'geo-japan-learning:muniborder';
 /** 市町村境オーバーレイを表示する最小ズーム */
@@ -50,7 +65,7 @@ const MUNI_BORDER_MIN_ZOOM = 9;
 
 function loadMapType(): MapTypeId {
   const v = localStorage.getItem(MAPTYPE_KEY);
-  return v && v in MAP_TYPES ? (v as MapTypeId) : 'voyager';
+  return v && v in MAP_TYPES ? (v as MapTypeId) : 'bright-ja';
 }
 
 function divPin(className: string, html: string): L.DivIcon {
