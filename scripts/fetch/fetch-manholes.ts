@@ -57,14 +57,23 @@ export interface MuniResult {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function fetchWithCache(url: string, cachePath: string, binary = false): Promise<Buffer | null> {
+async function fetchWithCache(url: string, cachePath: string): Promise<Buffer | null> {
   if (existsSync(cachePath)) return readFile(cachePath);
-  await sleep(DELAY_MS);
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const buf = Buffer.from(await res.arrayBuffer());
-  await writeFile(cachePath, binary ? buf : buf);
-  return buf;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await sleep(DELAY_MS * attempt);
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+      if (!res.ok) return null;
+      const buf = Buffer.from(await res.arrayBuffer());
+      await writeFile(cachePath, buf);
+      return buf;
+    } catch (err) {
+      console.warn(`  リトライ ${attempt}/3: ${url} (${err instanceof Error ? err.message : err})`);
+      if (attempt === 3) return null;
+      await sleep(3000 * attempt);
+    }
+  }
+  return null;
 }
 
 function sha1(s: string): string {
@@ -148,7 +157,7 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
     if (COLOR_TEXT.test(desc) && !NONCOLOR_TEXT.test(desc)) continue;
 
     const imgCache = `data-cache/manho/img/${sha1(url)}.jpg`;
-    const img = await fetchWithCache(url, imgCache, true);
+    const img = await fetchWithCache(url, imgCache);
     if (!img || img.length < 5000) continue;
     let stats;
     try {
