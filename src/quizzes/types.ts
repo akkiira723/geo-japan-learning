@@ -8,8 +8,10 @@ export interface LatLng {
 /** クイズ1問の回答対象（同名駅・同名旧市町村は1問に複数入る） */
 export interface Target {
   id: string;
-  /** 回答後に表示する補足ラベル（例: "東京都 (JR山手線)" / "宮城県 → 大和町"） */
+  /** 回答後に表示する補足ラベル（例: "東京都 (JR山手線)" / "宮城県 大和町"） */
   label: string;
+  /** ラベルの下に小さく表示する2行目（例: "現在: 北広島市"） */
+  sublabel?: string;
   kind: 'point' | 'polygon';
   /** [lat, lng] 点ターゲットの座標 or ポリゴンの代表点 */
   point: [number, number];

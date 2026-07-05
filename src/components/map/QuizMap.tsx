@@ -264,7 +264,8 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
             .map((t) => (
               <Marker key={t.id} position={[t.point[0], t.point[1]]} icon={hitPinIcon}>
                 <Tooltip direction="top" offset={[0, -20]} permanent={revealed}>
-                  {t.label}
+                  <div className="tt-label">{t.label}</div>
+                  {t.sublabel && <div className="tt-sub">{t.sublabel}</div>}
                 </Tooltip>
               </Marker>
             ))}
@@ -279,7 +280,8 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
                 {!wasHit && (
                   <Marker position={[t.point[0], t.point[1]]} icon={answerPinIcon}>
                     <Tooltip direction="top" offset={[0, -20]} permanent>
-                      {t.label}
+                      <div className="tt-label">{t.label}</div>
+                      {t.sublabel && <div className="tt-sub">{t.sublabel}</div>}
                     </Tooltip>
                   </Marker>
                 )}

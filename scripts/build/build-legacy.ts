@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { feature } from 'topojson-client';
+import polygonClipping from 'polygon-clipping';
 import type { MultiPolygon, Polygon, Feature, FeatureCollection } from 'geojson';
 import type { Topology, GeometryCollection } from 'topojson-specification';
 import { parseCsvRecords } from '../lib/csv.ts';
@@ -17,6 +18,7 @@ interface OutTown {
   id: string;
   n: string; // 表示名（例: 広島町）
   gun: string; // 郡・支庁など（例: 札幌郡）
+  into: string; // 現在の市区町村（例: 北広島市 / 甲府市・富士河口湖町）
   point: [number, number]; // [lat, lng]
   bbox: [number, number, number, number];
   geom: Polygon | MultiPolygon;
@@ -55,6 +57,96 @@ function bboxOf(geom: Polygon | MultiPolygon): [number, number, number, number] 
     }
   const r = (v: number) => Math.round(v * 1e4) / 1e4;
   return [r(w), r(s), r(e), r(n)];
+}
+
+type PolyCoords = Ring[];
+type MultiCoords = PolyCoords[];
+
+function toMulti(geom: Polygon | MultiPolygon): MultiCoords {
+  return geom.type === 'Polygon' ? [geom.coordinates as PolyCoords] : (geom.coordinates as MultiCoords);
+}
+
+/** deg² の面積（重なり比較用の相対値でよい） */
+function areaOf(coords: MultiCoords): number {
+  const ringArea = (ring: Ring): number => {
+    let a = 0;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+    }
+    return Math.abs(a / 2);
+  };
+  let total = 0;
+  for (const poly of coords) {
+    if (poly.length === 0) continue;
+    total += ringArea(poly[0]);
+    for (const hole of poly.slice(1)) total -= ringArea(hole);
+  }
+  return total;
+}
+
+interface MuniRef {
+  name: string; // 表示名（政令市は「静岡市清水区」形式）
+  bbox: [number, number, number, number];
+  coords: MultiCoords;
+}
+
+/** 現在の全市区町村（N03 2021）を重なり判定用に読み込む */
+async function loadCurrentMunis(): Promise<MuniRef[]> {
+  const munis: MuniRef[] = [];
+  for (let pref = 1; pref <= 47; pref++) {
+    const pp = String(pref).padStart(2, '0');
+    const gj = JSON.parse(await readFile(`data-cache/geo/muni/pref-${pp}.geojson`, 'utf8'));
+    for (const f of gj.features as Feature<Polygon | MultiPolygon, { N03_003: string | null; N03_004: string | null }>[]) {
+      const g3 = f.properties.N03_003;
+      const g4 = f.properties.N03_004;
+      if (!g4) continue;
+      const isSeirei = g3 && !/支庁$|振興局$/.test(g3) && !g3.endsWith('郡');
+      const name = isSeirei ? `${g3}${g4}` : g4;
+      const coords = toMulti(f.geometry);
+      let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
+      for (const poly of coords)
+        for (const ring of poly)
+          for (const [x, y] of ring) {
+            if (x < w) w = x;
+            if (y < s) s = y;
+            if (x > e) e = x;
+            if (y > n) n = y;
+          }
+      munis.push({ name, bbox: [w, s, e, n], coords });
+    }
+  }
+  return munis;
+}
+
+/** 旧市町村ポリゴンと最大重なりの現市区町村を求める（分割合併は上位を併記） */
+function computeInto(geom: Polygon | MultiPolygon, bbox: [number, number, number, number], munis: MuniRef[]): string {
+  const town = toMulti(geom);
+  const townArea = areaOf(town);
+  if (townArea === 0) return '';
+  const overlaps: { name: string; ratio: number }[] = [];
+  for (const m of munis) {
+    if (bbox[0] > m.bbox[2] || bbox[2] < m.bbox[0] || bbox[1] > m.bbox[3] || bbox[3] < m.bbox[1]) continue;
+    try {
+      const inter = polygonClipping.intersection(town as never, m.coords as never) as MultiCoords;
+      const a = areaOf(inter);
+      if (a > 0) overlaps.push({ name: m.name, ratio: a / townArea });
+    } catch {
+      // トポロジーエラーは無視（bbox が重なるだけの隣接自治体で稀に発生）
+    }
+  }
+  if (overlaps.length === 0) return '';
+  overlaps.sort((a, b) => b.ratio - a.ratio);
+  const main = overlaps.filter((o) => o.ratio >= 0.15).slice(0, 3);
+  const picked = main.length > 0 ? main : [overlaps[0]];
+  // 同一政令市の複数区にまたがる場合は市名に集約（例: さいたま市見沼区+西区+北区 → さいたま市）
+  const cityOf = (name: string) => name.match(/^(.+?市).+区$/)?.[1] ?? name;
+  const names: string[] = [];
+  for (const o of picked) {
+    const sameCityCount = picked.filter((x) => cityOf(x.name) === cityOf(o.name)).length;
+    const display = sameCityCount > 1 ? cityOf(o.name) : o.name;
+    if (!names.includes(display)) names.push(display);
+  }
+  return names.join('・');
 }
 
 async function main() {
@@ -116,6 +208,10 @@ async function main() {
     console.log(`${snap}: ${added} 件追加（累計 ${features.length}）`);
   }
 
+  console.log('現市区町村ポリゴンを読み込み中（合併先の算出用）...');
+  const currentMunis = await loadCurrentMunis();
+  console.log(`  ${currentMunis.length} 市区町村`);
+
   const byPref = new Map<number, OutTown[]>();
   let excluded = { ward: 0, surviving: 0, promoted: 0, manual: 0, noGeom: 0 };
 
@@ -139,6 +235,7 @@ async function main() {
       id: p.id,
       n: name,
       gun: p.N03_003 ?? '',
+      into: computeInto(geom, bbox, currentMunis),
       point: [(bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2],
       bbox,
       geom,

@@ -8,6 +8,7 @@ interface TownEntry {
   id: string;
   n: string;
   gun: string;
+  into: string;
   point: [number, number];
   bbox: [number, number, number, number];
   geom: Polygon | MultiPolygon;
@@ -40,6 +41,7 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     const targets: Target[] = group.map(({ town, pref }) => ({
       id: town.id,
       label: `${name}（${prefName(pref)}${town.gun ? ' ' + town.gun : ''}）`,
+      sublabel: town.into ? `現在: ${town.into}` : undefined,
       kind: 'polygon',
       point: town.point,
       bbox: town.bbox,
