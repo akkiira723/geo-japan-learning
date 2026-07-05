@@ -4,9 +4,10 @@ import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap, useM
 import type { HitMark } from '../../hooks/useQuizEngine';
 import type { LatLng, Question, Target } from '../../quizzes/types';
 
-const GSI_BLANK = 'https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png';
-const GSI_PALE = 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png';
-const GSI_ATTR = '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">地理院タイル</a>';
+// GeoGuessr の回答マップに近い Google Maps 風スタイル（CARTO Voyager）
+const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const TILE_ATTR =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
 
 function divPin(className: string, html: string): L.DivIcon {
   return L.divIcon({ className: '', html: `<div class="${className}">${html}</div>`, iconSize: [24, 24], iconAnchor: [12, 24] });
@@ -64,11 +65,7 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
       className="quiz-map"
       attributionControl={true}
     >
-      {revealed ? (
-        <TileLayer key="pale" url={GSI_PALE} attribution={GSI_ATTR} maxNativeZoom={18} />
-      ) : (
-        <TileLayer key="blank" url={GSI_BLANK} attribution={GSI_ATTR} minNativeZoom={5} maxNativeZoom={14} />
-      )}
+      <TileLayer url={TILE_URL} attribution={TILE_ATTR} subdomains="abcd" maxNativeZoom={19} />
 
       {!revealed && <ClickHandler onClick={onPlacePin} />}
       {question && <RevealFit targets={question.targets} active={revealed} />}
