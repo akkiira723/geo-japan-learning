@@ -24,8 +24,9 @@ export function About() {
           <a href="https://github.com/smartnews-smri/japan-topography" target="_blank" rel="noreferrer">japan-topography</a> 経由で加工
         </li>
         <li>
-          地図タイル: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
-          <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>（Voyager スタイル）
+          地図タイル: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 地理院タイル</a>（淡色・標準）/{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
+          <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>
         </li>
       </ul>
 

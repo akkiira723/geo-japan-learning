@@ -10,7 +10,8 @@
     "test": "vitest run",
     "data:stations": "tsx scripts/fetch/fetch-stations.ts && tsx scripts/build/build-stations.ts",
     "data:areacodes": "tsx scripts/fetch/fetch-area-codes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-areacodes.ts",
-    "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/build/build-legacy.ts"
+    "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/build/build-legacy.ts",
+    "data:outline": "tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-pref-outline.ts"
   },
   "dependencies": {
     "@turf/boolean-point-in-polygon": "^7.2.0",

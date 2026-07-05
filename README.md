@@ -10,7 +10,7 @@ GeoGuessr 日本マップ対策の地図クイズ。市外局番・旧市町村�
 | 市外局番 | 局番（例: 0123） | エリアポリゴン内クリックで正解 | 388局番 |
 | 旧市町村 | 消滅市町村名（同名は全箇所回答） | 旧市町村ポリゴン内クリックで正解 | 1,746件（1995年10月以降に消滅） |
 
-共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、GeoGuessr 風の Google Maps ライクな地図（CARTO Voyager）、回答後の正解エリア表示、成績の localStorage 保存。
+共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、地図タイプ切替（地理院 淡色/標準・CARTO Voyager・OSM）＋県境強調オーバーレイ、回答後の正解エリア表示、成績の localStorage 保存。
 
 ## 開発
 
@@ -46,4 +46,4 @@ npm run data:legacy     # Geoshapeスナップショット差分 → public/data
 - 旧市町村ポリゴン: 『歴史的行政区域データセットβ版』（CODH作成）doi:10.20676/00000447（CC BY 4.0）
 - 市区町村ポリゴン: 国土数値情報 N03 を [japan-topography](https://github.com/smartnews-smri/japan-topography) 経由で加工
 - 市外局番表: good-luck-day.com
-- 地図タイル: © OpenStreetMap contributors / © CARTO（Voyager）
+- 地図タイル: 国土地理院 地理院タイル / © OpenStreetMap contributors / © CARTO
