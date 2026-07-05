@@ -42,12 +42,15 @@ const MAP_TYPES: Record<MapTypeId, { label: string; url: string; attr: string; s
   },
 };
 
-const MAPTYPE_KEY = 'geo-japan-learning:maptype';
+const MAPTYPE_KEY = 'geo-japan-learning:maptype2';
 const BORDER_KEY = 'geo-japan-learning:prefborder';
+const MUNI_BORDER_KEY = 'geo-japan-learning:muniborder';
+/** 市町村境オーバーレイを表示する最小ズーム */
+const MUNI_BORDER_MIN_ZOOM = 9;
 
 function loadMapType(): MapTypeId {
   const v = localStorage.getItem(MAPTYPE_KEY);
-  return v && v in MAP_TYPES ? (v as MapTypeId) : 'gsi-pale';
+  return v && v in MAP_TYPES ? (v as MapTypeId) : 'voyager';
 }
 
 function divPin(className: string, html: string): L.DivIcon {
@@ -66,6 +69,77 @@ function ClickHandler({ onClick }: { onClick: (p: LatLng) => void }) {
     },
   });
   return null;
+}
+
+interface MuniOutlineIndex {
+  prefBbox: Record<string, [number, number, number, number]>;
+}
+
+const muniChunks = new Map<number, FeatureCollection>();
+
+/** ズーム時のみ、表示範囲に重なる県の市町村境界線を遅延ロードして描画 */
+function MuniBorders({ enabled }: { enabled: boolean }) {
+  const [index, setIndex] = useState<MuniOutlineIndex | null>(null);
+  const [visiblePrefs, setVisiblePrefs] = useState<number[]>([]);
+  const [, bump] = useState(0);
+  const map = useMap();
+
+  useEffect(() => {
+    if (!enabled || index) return;
+    loadChunk<MuniOutlineIndex>('muni-outline/index.json').then(setIndex).catch(() => {});
+  }, [enabled, index]);
+
+  useEffect(() => {
+    if (!enabled || !index) {
+      setVisiblePrefs([]);
+      return;
+    }
+    const update = () => {
+      if (map.getZoom() < MUNI_BORDER_MIN_ZOOM) {
+        setVisiblePrefs([]);
+        return;
+      }
+      const b = map.getBounds();
+      const prefs: number[] = [];
+      for (const [pref, [w, s, e, n]] of Object.entries(index.prefBbox)) {
+        if (b.getWest() <= e && b.getEast() >= w && b.getSouth() <= n && b.getNorth() >= s) {
+          prefs.push(Number(pref));
+        }
+      }
+      setVisiblePrefs(prefs);
+      for (const p of prefs) {
+        if (!muniChunks.has(p)) {
+          loadChunk<FeatureCollection>(`muni-outline/pref-${String(p).padStart(2, '0')}.json`)
+            .then((fc) => {
+              muniChunks.set(p, fc);
+              bump((n2) => n2 + 1);
+            })
+            .catch(() => {});
+        }
+      }
+    };
+    update();
+    map.on('moveend zoomend', update);
+    return () => {
+      map.off('moveend zoomend', update);
+    };
+  }, [enabled, index, map]);
+
+  if (!enabled) return null;
+  return (
+    <>
+      {visiblePrefs
+        .filter((p) => muniChunks.has(p))
+        .map((p) => (
+          <GeoJSON
+            key={`muni-${p}`}
+            data={muniChunks.get(p)!}
+            interactive={false}
+            style={{ color: '#64748b', weight: 1, opacity: 0.55, fillOpacity: 0, dashArray: '3 3' }}
+          />
+        ))}
+    </>
+  );
 }
 
 /** 回答後に正解全体が入るようズームを合わせる */
@@ -98,6 +172,7 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
   const [mapType, setMapType] = useState<MapTypeId>(loadMapType);
   const [showBorder, setShowBorder] = useState(() => localStorage.getItem(BORDER_KEY) !== '0');
+  const [showMuniBorder, setShowMuniBorder] = useState(() => localStorage.getItem(MUNI_BORDER_KEY) !== '0');
   const [outline, setOutline] = useState<FeatureCollection | null>(null);
 
   useEffect(() => {
@@ -120,6 +195,10 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
   const toggleBorder = (on: boolean) => {
     setShowBorder(on);
     localStorage.setItem(BORDER_KEY, on ? '1' : '0');
+  };
+  const toggleMuniBorder = (on: boolean) => {
+    setShowMuniBorder(on);
+    localStorage.setItem(MUNI_BORDER_KEY, on ? '1' : '0');
   };
 
   const tile = MAP_TYPES[mapType];
@@ -150,6 +229,9 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
             style={{ color: '#e11d48', weight: 1.3, opacity: 0.65, fillOpacity: 0 }}
           />
         )}
+
+        {/* 市町村境（ズーム時のみ・表示範囲の県だけ遅延ロード） */}
+        <MuniBorders enabled={showMuniBorder} />
 
         {!revealed && <ClickHandler onClick={onPlacePin} />}
         {question && <RevealFit targets={question.targets} active={revealed} />}
@@ -218,7 +300,11 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
         </select>
         <label className="map-control-check">
           <input type="checkbox" checked={showBorder} onChange={(e) => toggleBorder(e.target.checked)} />
-          県境を強調
+          県境
+        </label>
+        <label className="map-control-check">
+          <input type="checkbox" checked={showMuniBorder} onChange={(e) => toggleMuniBorder(e.target.checked)} />
+          市町村境
         </label>
       </div>
     </>

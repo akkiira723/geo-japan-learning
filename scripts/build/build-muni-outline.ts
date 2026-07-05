@@ -1,0 +1,78 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import type { MultiPolygon, Polygon } from 'geojson';
+
+type Ring = [number, number][];
+type PolyCoords = Ring[];
+type MultiCoords = PolyCoords[];
+
+function toMulti(geom: Polygon | MultiPolygon): MultiCoords {
+  return geom.type === 'Polygon' ? [geom.coordinates as PolyCoords] : (geom.coordinates as MultiCoords);
+}
+
+function round4(coords: MultiCoords): MultiCoords {
+  return coords.map((poly) =>
+    poly.map((ring) => {
+      const out: Ring = [];
+      for (const [x, y] of ring) {
+        const p: [number, number] = [Math.round(x * 1e4) / 1e4, Math.round(y * 1e4) / 1e4];
+        const prev = out[out.length - 1];
+        if (!prev || prev[0] !== p[0] || prev[1] !== p[1]) out.push(p);
+      }
+      return out;
+    }),
+  );
+}
+
+function ringArea(ring: Ring): number {
+  let a = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    a += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+  }
+  return Math.abs(a / 2);
+}
+
+const MIN_ISLAND_AREA = 5e-5; // 約 0.5km² 未満の島は省略
+
+async function main() {
+  await mkdir('public/data/muni-outline', { recursive: true });
+  const prefBbox: Record<number, [number, number, number, number]> = {} as never;
+  let totalBytes = 0;
+
+  for (let pref = 1; pref <= 47; pref++) {
+    const pp = String(pref).padStart(2, '0');
+    const gj = JSON.parse(await readFile(`data-cache/geo/muni/pref-${pp}.geojson`, 'utf8'));
+    let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
+    const features = gj.features.map((f: { geometry: Polygon | MultiPolygon }) => {
+      const coords = round4(toMulti(f.geometry)).filter(
+        (poly) => poly.length > 0 && ringArea(poly[0]) >= MIN_ISLAND_AREA,
+      );
+      for (const poly of coords)
+        for (const ring of poly)
+          for (const [x, y] of ring) {
+            if (x < w) w = x;
+            if (y < s) s = y;
+            if (x > e) e = x;
+            if (y > n) n = y;
+          }
+      return { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: coords } };
+    }).filter((f: { geometry: MultiPolygon }) => f.geometry.coordinates.length > 0);
+
+    const r = (v: number) => Math.round(v * 1e4) / 1e4;
+    prefBbox[pref] = [r(w), r(s), r(e), r(n)];
+    const json = JSON.stringify({ type: 'FeatureCollection', features });
+    totalBytes += json.length;
+    await writeFile(`public/data/muni-outline/pref-${pp}.json`, json, 'utf8');
+  }
+
+  await writeFile(
+    'public/data/muni-outline/index.json',
+    JSON.stringify({ version: 1, prefBbox, source: '国土数値情報 N03 (japan-topography s0010)' }),
+    'utf8',
+  );
+  console.log(`✓ muni-outline 47チャンク 計 ${(totalBytes / 1e6).toFixed(1)} MB`);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
