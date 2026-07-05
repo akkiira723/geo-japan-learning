@@ -1,4 +1,5 @@
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import type { MultiPolygon, Polygon } from 'geojson';
 import type { LatLng, Target } from '../quizzes/types';
 
 const EARTH_RADIUS_KM = 6371;
@@ -22,25 +23,56 @@ export function inBbox(p: LatLng, bbox: [number, number, number, number]): boole
 
 export interface JudgeResult {
   hit: boolean;
-  /** 点ターゲットまたはポリゴン代表点までの距離 */
+  /** 点ターゲットまでの距離、またはポリゴン境界への最短距離（内側なら0） */
   distanceKm: number;
+}
+
+const DEG_KM = 111.32; // 緯度1度あたりの距離
+
+/** 点と線分の最短距離（局所平面近似）。飛び地を含む全パーツで正しい距離を返すための下請け */
+function distToSegmentKm(p: LatLng, ax: number, ay: number, bx: number, by: number): number {
+  const kx = DEG_KM * Math.cos((p.lat * Math.PI) / 180); // 経度1度あたりの km
+  const px = (p.lng - ax) * kx;
+  const py = (p.lat - ay) * DEG_KM;
+  const vx = (bx - ax) * kx;
+  const vy = (by - ay) * DEG_KM;
+  const len2 = vx * vx + vy * vy;
+  const t = len2 === 0 ? 0 : Math.max(0, Math.min(1, (px * vx + py * vy) / len2));
+  const dx = px - t * vx;
+  const dy = py - t * vy;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+/** ポリゴン境界（飛び地・穴を含む全リング）への最短距離 */
+export function distanceToGeomKm(p: LatLng, geom: Polygon | MultiPolygon): number {
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+  let min = Infinity;
+  for (const poly of polys) {
+    for (const ring of poly) {
+      for (let i = 0; i < ring.length - 1; i++) {
+        const d = distToSegmentKm(p, ring[i][0], ring[i][1], ring[i + 1][0], ring[i + 1][1]);
+        if (d < min) min = d;
+      }
+    }
+  }
+  return min;
 }
 
 export function judgeTarget(target: Target, click: LatLng, radiusKm: number): JudgeResult {
   const rep: LatLng = { lat: target.point[0], lng: target.point[1] };
-  const distanceKm = haversineKm(rep, click);
   if (target.kind === 'point') {
+    const distanceKm = haversineKm(rep, click);
     return { hit: distanceKm <= radiusKm, distanceKm };
-  }
-  // polygon: bbox プレフィルタ → point-in-polygon
-  if (target.bbox && !inBbox(click, target.bbox)) {
-    return { hit: false, distanceKm };
   }
   if (!target.geom) {
+    const distanceKm = haversineKm(rep, click);
     return { hit: distanceKm <= radiusKm, distanceKm };
   }
-  const hit = booleanPointInPolygon([click.lng, click.lat], target.geom);
-  return { hit, distanceKm };
+  // polygon: bbox 内なら point-in-polygon、距離は境界への最短距離（代表点ではなく）
+  const inside =
+    (!target.bbox || inBbox(click, target.bbox)) &&
+    booleanPointInPolygon([click.lng, click.lat], target.geom);
+  return { hit: inside, distanceKm: inside ? 0 : distanceToGeomKm(click, target.geom) };
 }
 
 /**

@@ -68,6 +68,45 @@ describe('judgeTarget (polygon)', () => {
   });
 });
 
+describe('judgeTarget (飛び地つきポリゴン)', () => {
+  // 本体: 経度139〜139.5 / 飛び地: 経度140.5〜140.6（bbox中心は約139.8で両者の間の海上）
+  const target: Target = {
+    id: 'ex1',
+    label: '飛び地テスト',
+    kind: 'polygon',
+    point: [35.3, 139.8], // bbox 中心（どちらのパーツからも遠い）
+    bbox: [139, 35, 140.6, 35.6],
+    geom: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [[[139, 35], [139.5, 35], [139.5, 35.6], [139, 35.6], [139, 35]]],
+        [[[140.5, 35], [140.6, 35], [140.6, 35.1], [140.5, 35.1], [140.5, 35]]],
+      ],
+    },
+  };
+
+  it('飛び地の中は hit', () => {
+    expect(judgeTarget(target, { lat: 35.05, lng: 140.55 }, 0).hit).toBe(true);
+  });
+
+  it('飛び地のすぐ外の距離は代表点ではなく境界基準（数km以内）', () => {
+    // 飛び地の東 0.05度 ≈ 4.5km。代表点(139.8)基準だと約70kmになってしまう
+    const r = judgeTarget(target, { lat: 35.05, lng: 140.65 }, 0);
+    expect(r.hit).toBe(false);
+    expect(r.distanceKm).toBeLessThan(6);
+  });
+
+  it('本体のすぐ外も境界基準の距離', () => {
+    const r = judgeTarget(target, { lat: 35.3, lng: 138.95 }, 0); // 本体の西 0.05度
+    expect(r.hit).toBe(false);
+    expect(r.distanceKm).toBeLessThan(6);
+  });
+
+  it('内側なら距離0', () => {
+    expect(judgeTarget(target, { lat: 35.3, lng: 139.2 }, 0).distanceKm).toBe(0);
+  });
+});
+
 describe('judgeClick（複数ターゲットの最近傍消費）', () => {
   const a: Target = { id: 'a', label: 'A', kind: 'point', point: [35.0, 139.0] };
   const b: Target = { id: 'b', label: 'B', kind: 'point', point: [35.1, 139.0] }; // Aの約11km北
