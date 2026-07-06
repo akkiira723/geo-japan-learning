@@ -7,13 +7,14 @@ export interface QuizShellProps {
   questions: Question[];
   radiusKm: number;
   quizTitle: string;
+  prefs?: number[];
   hoverKind?: HoverKind;
   hoverPrefs?: number[];
   onFinish: (stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number }) => void;
   onExit: () => void;
 }
 
-export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
+export function QuizShell({ questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
   const engine = useQuizEngine(questions, radiusKm);
   const { current, phase, pin, feedback } = engine;
   const [imgExpanded, setImgExpanded] = useState(true);
@@ -98,6 +99,7 @@ export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPref
           missMarks={engine.missMarks}
           radiusKm={radiusKm}
           onPlacePin={engine.placePin}
+          prefs={prefs}
           hoverKind={hoverKind}
           hoverPrefs={hoverPrefs}
         />

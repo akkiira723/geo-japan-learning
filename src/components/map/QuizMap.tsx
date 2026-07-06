@@ -158,6 +158,31 @@ function MuniBorders({ enabled }: { enabled: boolean }) {
   );
 }
 
+/** 出題範囲（選択した都道府県）が画面全体に入るようズームする。全国選択時はデフォルト表示 */
+function RegionFit({ prefs, questionKey, revealed }: { prefs: number[]; questionKey: string; revealed: boolean }) {
+  const map = useMap();
+  const [index, setIndex] = useState<MuniOutlineIndex | null>(null);
+
+  useEffect(() => {
+    if (prefs.length === 0 || prefs.length >= 47) return;
+    loadChunk<MuniOutlineIndex>('muni-outline/index.json').then(setIndex).catch(() => {});
+  }, [prefs]);
+
+  // 各問題の出題開始時に選択範囲へフィット（回答表示で寄ったズームを戻す）
+  useEffect(() => {
+    if (revealed || !index || prefs.length === 0 || prefs.length >= 47) return;
+    let bounds: L.LatLngBounds | null = null;
+    for (const p of prefs) {
+      const bb = index.prefBbox[p];
+      if (!bb) continue;
+      const b = L.latLngBounds([bb[1], bb[0]], [bb[3], bb[2]]);
+      bounds = bounds ? bounds.extend(b) : b;
+    }
+    if (bounds) map.fitBounds(bounds.pad(0.04));
+  }, [index, prefs, questionKey, revealed, map]);
+  return null;
+}
+
 /** 回答後に正解全体が入るようズームを合わせる */
 function RevealFit({ targets, active }: { targets: Target[]; active: boolean }) {
   const map = useMap();
@@ -182,12 +207,14 @@ export interface QuizMapProps {
   missMarks: LatLng[];
   radiusKm: number;
   onPlacePin: (p: LatLng) => void;
+  /** 出題範囲の都道府県。地図の初期表示をこの範囲にフィットさせる */
+  prefs?: number[];
   /** ポリゴン系クイズ: カーソル下の区割りをハイライト */
   hoverKind?: HoverKind;
   hoverPrefs?: number[];
 }
 
-export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, hoverKind, hoverPrefs }: QuizMapProps) {
+export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs }: QuizMapProps) {
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
   const [mapType, setMapType] = useState<MapTypeId>(loadMapType);
   const [showBorder, setShowBorder] = useState(() => localStorage.getItem(BORDER_KEY) !== '0');
@@ -258,6 +285,7 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
         )}
 
         {!revealed && <ClickHandler onClick={onPlacePin} />}
+        {prefs && <RegionFit prefs={prefs} questionKey={question?.id ?? ''} revealed={revealed} />}
         {question && <RevealFit targets={question.targets} active={revealed} />}
 
         {pin && <Marker position={[pin.lat, pin.lng]} icon={guessPinIcon} />}
