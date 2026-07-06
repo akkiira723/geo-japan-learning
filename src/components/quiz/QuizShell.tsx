@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useQuizEngine } from '../../hooks/useQuizEngine';
-import type { Question } from '../../quizzes/types';
+import type { HoverKind, Question } from '../../quizzes/types';
 import { QuizMap } from '../map/QuizMap';
 
 export interface QuizShellProps {
   questions: Question[];
   radiusKm: number;
   quizTitle: string;
+  hoverKind?: HoverKind;
+  hoverPrefs?: number[];
   onFinish: (stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number }) => void;
   onExit: () => void;
 }
 
-export function QuizShell({ questions, radiusKm, quizTitle, onFinish, onExit }: QuizShellProps) {
+export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
   const engine = useQuizEngine(questions, radiusKm);
   const { current, phase, pin, feedback } = engine;
   const [imgExpanded, setImgExpanded] = useState(false);
@@ -90,6 +92,8 @@ export function QuizShell({ questions, radiusKm, quizTitle, onFinish, onExit }: 
           missMarks={engine.missMarks}
           radiusKm={radiusKm}
           onPlacePin={engine.placePin}
+          hoverKind={hoverKind}
+          hoverPrefs={hoverPrefs}
         />
         {feedback && (
           <div className={`quiz-feedback quiz-feedback-${feedback.type}`}>{feedback.message}</div>

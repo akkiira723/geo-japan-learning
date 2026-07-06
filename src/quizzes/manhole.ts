@@ -63,6 +63,7 @@ export const manholeQuiz: QuizModule = {
       'ご当地デザインマンホールの写真から自治体を当てる。その自治体（旧市町村の蓋なら旧町村域）内をクリックで正解。',
     usesRadius: false,
     hasOperatorFilter: false,
+    hoverKind: 'muni',
   },
   loadQuestions,
 };

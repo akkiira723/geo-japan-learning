@@ -66,6 +66,8 @@ export function QuizPage() {
           questions={state.questions}
           radiusKm={state.filter.radiusKm}
           quizTitle={quiz.meta.title}
+          hoverKind={quiz.meta.hoverKind}
+          hoverPrefs={state.filter.prefs}
           onExit={() => setState({ mode: 'setup' })}
           onFinish={(stats) => {
             saveSession({

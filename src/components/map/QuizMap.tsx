@@ -4,7 +4,8 @@ import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap, useM
 import type { FeatureCollection } from 'geojson';
 import { loadChunk } from '../../hooks/useChunkLoader';
 import type { HitMark } from '../../hooks/useQuizEngine';
-import type { LatLng, Question, Target } from '../../quizzes/types';
+import type { HoverKind, LatLng, Question, Target } from '../../quizzes/types';
+import { HoverHighlight } from './HoverHighlight';
 
 const GSI_ATTR =
   '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">地理院タイル</a>';
@@ -181,9 +182,12 @@ export interface QuizMapProps {
   missMarks: LatLng[];
   radiusKm: number;
   onPlacePin: (p: LatLng) => void;
+  /** ポリゴン系クイズ: カーソル下の区割りをハイライト */
+  hoverKind?: HoverKind;
+  hoverPrefs?: number[];
 }
 
-export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin }: QuizMapProps) {
+export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, hoverKind, hoverPrefs }: QuizMapProps) {
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
   const [mapType, setMapType] = useState<MapTypeId>(loadMapType);
   const [showBorder, setShowBorder] = useState(() => localStorage.getItem(BORDER_KEY) !== '0');
@@ -247,6 +251,11 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
 
         {/* 市町村境（ズーム時のみ・表示範囲の県だけ遅延ロード） */}
         <MuniBorders enabled={showMuniBorder} />
+
+        {/* カーソル下の区割りハイライト（クイズごとの境界: 局番エリア/旧市町村/現市区町村） */}
+        {hoverKind && hoverPrefs && hoverPrefs.length > 0 && (
+          <HoverHighlight kind={hoverKind} prefs={hoverPrefs} active={!revealed} />
+        )}
 
         {!revealed && <ClickHandler onClick={onPlacePin} />}
         {question && <RevealFit targets={question.targets} active={revealed} />}

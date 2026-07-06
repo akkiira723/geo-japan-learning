@@ -64,6 +64,7 @@ export const legacyTownQuiz: QuizModule = {
       '平成の大合併などで消滅した市町村の場所を地図でクリック。同名の旧市町村が複数ある場合は全部の場所を答えよう。',
     usesRadius: false,
     hasOperatorFilter: false,
+    hoverKind: 'legacy',
   },
   loadQuestions,
 };

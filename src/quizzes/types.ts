@@ -45,6 +45,8 @@ export interface QuizFilter {
   radiusKm: number;
 }
 
+export type HoverKind = 'areacode' | 'legacy' | 'muni';
+
 export interface QuizMeta {
   id: QuizId;
   title: string;
@@ -53,6 +55,8 @@ export interface QuizMeta {
   usesRadius: boolean;
   /** 事業者フィルタを出すか */
   hasOperatorFilter: boolean;
+  /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
+  hoverKind?: HoverKind;
 }
 
 export interface QuizModule {

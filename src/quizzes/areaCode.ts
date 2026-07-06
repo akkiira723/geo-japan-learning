@@ -74,6 +74,7 @@ export const areaCodeQuiz: QuizModule = {
     description: '出題された市外局番のエリアを地図でクリック。エリア内なら正解。境界は市区町村単位の近似。',
     usesRadius: false,
     hasOperatorFilter: false,
+    hoverKind: 'areacode',
   },
   loadQuestions,
 };
