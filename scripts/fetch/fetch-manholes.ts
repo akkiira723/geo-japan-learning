@@ -15,7 +15,7 @@ const PREF_INDEX: Record<number, string> = {
   4: 'miyagi/miyagi.html', 5: 'akita/akita.html', 6: 'yamagata/yamagataitirann.html',
   7: 'hukusima/hukusima.html', 8: 'ibaraki/ibaraki.html', 9: 'totigi/totigi.html',
   10: 'gunnma/gunnma.html', 11: 'saitama/saitamaitirann.html', 12: 'tiba/tiba.html',
-  13: 'toukyou/to/to.html', 14: 'kanagawa/kanagawa.html', 15: 'niigata/niigata.html',
+  13: 'toukyou/toitirann.html', 14: 'kanagawa/kanagawa.html', 15: 'niigata/niigata.html',
   16: 'toyama/toyamaitirann.html', 17: 'isikawa/isikawa.html', 18: 'hukui/hukui.html',
   19: 'yamanasi/yamanasiitirann.html', 20: 'nagano/naganoitirann.html', 21: 'gihu/gihu.html',
   22: 'sizuoka/sizuokaitirann.html', 23: 'aiti/aitiitirann.html', 24: 'mie/mie.html',
@@ -103,9 +103,12 @@ function parseIndex(html: string, indexUrl: string): { name: string; gun: string
     const text = stripTags(m[2]);
     if (!text || text.length < 2) continue;
     // 「観音寺市.」「綾川町（綾歌郡）」形式
+    // 規格蓋・その他カテゴリのページは自治体特定に不向きなので除外
+    if (/規格|その他|デザイン蓋以外/.test(text)) continue;
     const nm = text.match(/^([^（(．.]+?)[．.]?(?:[（(]([^）)]+)[）)])?[．.]?$/);
     if (!nm) continue;
-    const name = nm[1].trim();
+    // 「大阪市デザイン」「所沢市デザイン蓋」「横浜市デザイン１」のようなカテゴリ語つきの名前を正規化
+    const name = nm[1].trim().replace(/デザイン蓋?[0-9０-９]*$/, '');
     const gun = (nm[2] ?? '').trim();
     // 市町村区以外（県ページ・雑多リンク）は除外
     if (!/[市町村区]$/.test(name)) continue;

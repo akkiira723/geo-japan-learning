@@ -142,8 +142,10 @@ async function main() {
       const munis: MuniResult[] = JSON.parse(await readFile(resultPath, 'utf8'));
       const geo = await loadPrefGeo(pref);
       for (const m of munis) {
-        const key = `${PREFECTURES[pref]}|${m.name}`;
-        let name = m.name;
+        // 北海道インデックスの「あ 愛別町」のようなかな見出し混入を除去
+        const cleanName = m.name.replace(/^[ぁ-んァ-ヶ]\s+/, '');
+        const key = `${PREFECTURES[pref]}|${cleanName}`;
+        let name = cleanName;
         if (key in overrides) {
           const o = overrides[key];
           if (o === null) continue;
@@ -201,6 +203,22 @@ async function main() {
         }
       }
     }
+    // 同名の複数ページ（横浜市デザイン１/２など）は1自治体にマージ
+    const byName = new Map<string, OutItem>();
+    for (const it of items) {
+      const cur = byName.get(it.name);
+      if (cur) {
+        for (const img of it.imgs) {
+          if (!cur.imgs.some((x) => x.url === img.url)) cur.imgs.push(img);
+        }
+      } else {
+        byName.set(it.name, it);
+      }
+    }
+    const merged = [...byName.values()];
+    items.length = 0;
+    items.push(...merged);
+
     prefCounts[pref] = items.length;
     total += items.length;
     await writeFile(
