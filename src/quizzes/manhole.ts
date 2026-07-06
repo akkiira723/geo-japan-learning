@@ -8,7 +8,7 @@ interface ManholeItem {
   id: string;
   name: string;
   page: string;
-  imgs: { url: string; kind: string }[];
+  imgs: { url: string; kind: string; desc?: string }[];
   into?: string;
   point: [number, number];
   bbox: [number, number, number, number];
@@ -40,6 +40,7 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
       sub: 'マンホールクイズ',
       image: img.url,
       imageLink: item.page,
+      imageDesc: img.desc,
       targets: [
         {
           id: item.id,

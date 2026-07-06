@@ -4,6 +4,9 @@ import type { LatLng, Question, Target } from '../quizzes/types';
 
 export type QuizPhase = 'guessing' | 'revealed' | 'finished';
 
+/** 1問あたりの許容ミス回数。超えたら不正解として正解を表示する */
+export const MAX_MISSES = 5;
+
 export interface HitMark {
   target: Target;
   click: LatLng;
@@ -64,15 +67,25 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
     } else {
       statsRef.current.missCount += 1;
       setMissMarks((m) => [...m, pin]);
-      const km = nearestDistanceKm === Infinity ? null : Math.round(nearestDistanceKm);
-      setFeedback({
-        type: 'miss',
-        message: km === null ? 'はずれ…' : `はずれ… 最寄りの正解まで約 ${km} km`,
-      });
+      const missCount = missMarks.length + 1;
+      if (missCount >= MAX_MISSES) {
+        // 5回外したら不正解として正解を表示
+        statsRef.current.giveUpCount += remainingTargets.length;
+        setPhase('revealed');
+        setFeedback({ type: 'giveup', message: `不正解…（ミス ${MAX_MISSES} 回）正解はこちら` });
+      } else {
+        const km = nearestDistanceKm === Infinity ? null : Math.round(nearestDistanceKm);
+        setFeedback({
+          type: 'miss',
+          message:
+            (km === null ? 'はずれ…' : `はずれ… 最寄りの正解まで約 ${km} km`) +
+            `（あと ${MAX_MISSES - missCount} 回）`,
+        });
+      }
     }
     bumpStats((n) => n + 1);
     setPin(null);
-  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks]);
+  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks, missMarks]);
 
   const giveUp = useCallback(() => {
     if (phase !== 'guessing' || !current) return;

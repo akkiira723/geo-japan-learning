@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useQuizEngine } from '../../hooks/useQuizEngine';
+import { MAX_MISSES, useQuizEngine } from '../../hooks/useQuizEngine';
 import type { HoverKind, Question } from '../../quizzes/types';
 import { QuizMap } from '../map/QuizMap';
 
@@ -60,6 +60,9 @@ export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPref
           )}
         </div>
         <div className="quiz-progress">
+          {phase === 'guessing' && engine.missMarks.length > 0 && (
+            <span className="quiz-miss-count">ミス {engine.missMarks.length}/{MAX_MISSES}　</span>
+          )}
           {engine.index + 1} / {engine.total}
         </div>
       </header>
@@ -72,6 +75,9 @@ export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPref
             title="クリックで拡大/縮小"
           >
             <img src={current.image} alt="マンホールの写真" />
+            {phase === 'revealed' && current.imageDesc && (
+              <p className="quiz-image-desc">{current.imageDesc}</p>
+            )}
             {phase === 'revealed' && current.imageLink && (
               <a
                 href={current.imageLink}

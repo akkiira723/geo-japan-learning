@@ -30,6 +30,8 @@ export interface Question {
   image?: string;
   /** 画像の出典ページ（回答後にリンク表示） */
   imageLink?: string;
+  /** 画像の説明文（回答後に表示） */
+  imageDesc?: string;
   targets: Target[];
 }
 

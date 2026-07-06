@@ -226,6 +226,15 @@ kbd {
   text-align: right;
   margin-top: 4px;
 }
+.quiz-image-desc {
+  margin: 6px 2px 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text);
+  max-height: 9em;
+  overflow-y: auto;
+}
+.quiz-miss-count { color: var(--red); font-weight: 600; }
 .quiz-image-expanded {
   width: 70vw;
   max-width: 560px;

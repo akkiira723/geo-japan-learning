@@ -21,7 +21,7 @@ interface OutItem {
   id: string;
   name: string;
   page: string;
-  imgs: { url: string; kind: string }[];
+  imgs: { url: string; kind: string; desc: string }[];
   /** 旧市町村へのフォールバック時のみ: 現在の自治体 */
   into?: string;
   point: [number, number];
@@ -167,7 +167,7 @@ async function main() {
             id: createHash('sha1').update(m.page).digest('hex').slice(0, 10),
             name,
             page: m.page,
-            imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind })),
+            imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind, desc: i.desc })),
             point: [(bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2],
             bbox,
             geom: { type: 'MultiPolygon', coordinates: merged },
@@ -181,7 +181,7 @@ async function main() {
               id: createHash('sha1').update(m.page).digest('hex').slice(0, 10),
               name: `${name}（旧）`,
               page: m.page,
-              imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind })),
+              imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind, desc: i.desc })),
               into: legacy.into,
               point: [
                 (legacy.bbox[1] + legacy.bbox[3]) / 2,

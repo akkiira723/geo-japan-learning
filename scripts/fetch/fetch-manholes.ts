@@ -136,6 +136,14 @@ function parsePairs(html: string, pageUrl: string): { url: string; desc: string 
   return out;
 }
 
+/** サイトの説明文から撮影日・撮影者等のメタ情報を落とし、デザインの解説だけを残す */
+function cleanDesc(desc: string): string {
+  let d = desc.split(/・(?:撮影日|提供日|撮影場所|撮影者|提供者)[：:]/)[0];
+  d = d.replace(/(下水道?管|汚水管|雨水管|合流管|農業集落排水|集落排水|農業用水用?|消雪用?)?\s*(マンホール蓋|小型蓋|ハンドホール)\s*$/,'');
+  d = d.replace(/^・/, '').trim();
+  return d.slice(0, 220);
+}
+
 async function processMuni(muni: { name: string; gun: string; url: string }, pref: number): Promise<MuniResult | null> {
   const pageCache = `data-cache/manho/pages/${sha1(muni.url)}.html`;
   const buf = await fetchWithCache(muni.url, pageCache);
@@ -149,8 +157,11 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
   const hashes: string[] = [];
   let emblemKept = false;
   let designCount = 0;
+  // 「上記のノンカラー。」のような短い説明の参照先（直近の「上記」でない説明）
+  let lastFullDesc = '';
 
   for (const { url, desc } of pairs) {
+    if (desc.length >= 8 && !SAME_AS_ABOVE.test(desc)) lastFullDesc = desc;
     if (desc.length < 8) continue;
     if (SKIP_TEXT.test(desc)) continue;
     if (SAME_AS_ABOVE.test(desc) && !NONCOLOR_VARIANT.test(desc)) continue;
@@ -172,7 +183,11 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
     if (hashes.some((h) => hammingHex(h, stats.dhash) <= DHASH_DUP_MAX)) continue;
 
     hashes.push(stats.dhash);
-    kept.push({ url, kind: isEmblem ? 'emblem' : 'design', desc: desc.slice(0, 60) });
+    let outDesc = cleanDesc(desc);
+    if (/^上記/.test(outDesc) && outDesc.length < 20 && lastFullDesc) {
+      outDesc = cleanDesc(lastFullDesc) + '（写真はノンカラー版）';
+    }
+    kept.push({ url, kind: isEmblem ? 'emblem' : 'design', desc: outDesc });
     if (isEmblem) emblemKept = true;
     else designCount++;
     if (emblemKept && designCount >= MAX_DESIGNS_PER_MUNI) break;
