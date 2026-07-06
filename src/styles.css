@@ -127,6 +127,7 @@ kbd {
 .filter-panel h3 { font-size: 0.9rem; color: var(--muted); margin: 0 0 8px; }
 .filter-desc { color: var(--muted); }
 .filter-warn { color: var(--red); font-size: 0.88rem; }
+.filter-note { color: var(--muted); font-size: 0.82rem; margin: 8px 0 0; }
 
 .pref-grid {
   display: grid;

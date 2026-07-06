@@ -3,7 +3,12 @@ import { REGIONS } from '../../lib/regions';
 import { ALL_PREF_CODES, prefName } from '../../lib/prefectures';
 import type { OperatorFilter, QuizFilter, QuizMeta } from '../../quizzes/types';
 
-const COUNT_OPTIONS = [5, 10, 20];
+const COUNT_OPTIONS: { count: number; label: string }[] = [
+  { count: 5, label: '5 問' },
+  { count: 10, label: '10 問' },
+  { count: 20, label: '20 問' },
+  { count: Infinity, label: '全問' },
+];
 const RADIUS_OPTIONS: { km: number; label: string }[] = [
   { km: 50, label: 'やさしい (50km)' },
   { km: 20, label: 'ふつう (20km)' },
@@ -134,16 +139,19 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       <section>
         <h3>出題数</h3>
         <div className="chip-row">
-          {COUNT_OPTIONS.map((c) => (
+          {COUNT_OPTIONS.map((o) => (
             <button
-              key={c}
-              className={`chip ${questionCount === c ? 'chip-on' : ''}`}
-              onClick={() => setQuestionCount(c)}
+              key={o.label}
+              className={`chip ${questionCount === o.count ? 'chip-on' : ''}`}
+              onClick={() => setQuestionCount(o.count)}
             >
-              {c} 問
+              {o.label}
             </button>
           ))}
         </div>
+        {questionCount === Infinity && (
+          <p className="filter-note">選択した範囲の全問題を出題します（途中で「終了」できます）</p>
+        )}
       </section>
 
       <button className="btn btn-primary btn-large" disabled={prefs.size === 0} onClick={start}>
