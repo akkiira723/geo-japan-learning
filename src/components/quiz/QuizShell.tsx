@@ -16,10 +16,10 @@ export interface QuizShellProps {
 export function QuizShell({ questions, radiusKm, quizTitle, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
   const engine = useQuizEngine(questions, radiusKm);
   const { current, phase, pin, feedback } = engine;
-  const [imgExpanded, setImgExpanded] = useState(false);
+  const [imgExpanded, setImgExpanded] = useState(true);
 
   useEffect(() => {
-    setImgExpanded(false);
+    setImgExpanded(true);
   }, [current?.id]);
 
   // スペースキー: 出題中はピン確定、回答表示中は次の問題へ
