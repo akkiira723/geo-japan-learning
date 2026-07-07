@@ -58,9 +58,15 @@ const MAP_TYPES: Record<MapTypeId, { label: string; url: string; attr: string; s
   },
 };
 
+/** 鉄道強調オーバーレイ（OpenRailwayMap 透過タイル） */
+const RAIL_URL = 'https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png';
+const RAIL_ATTR =
+  'Rail overlay &copy; <a href="https://www.openrailwaymap.org/" target="_blank" rel="noreferrer">OpenRailwayMap</a> (CC-BY-SA)';
+
 const MAPTYPE_KEY = 'geo-japan-learning:maptype3';
 const BORDER_KEY = 'geo-japan-learning:prefborder';
 const MUNI_BORDER_KEY = 'geo-japan-learning:muniborder';
+const RAIL_KEY = 'geo-japan-learning:railoverlay';
 /** 市町村境オーバーレイを表示する最小ズーム */
 const MUNI_BORDER_MIN_ZOOM = 9;
 
@@ -219,6 +225,7 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
   const [mapType, setMapType] = useState<MapTypeId>(loadMapType);
   const [showBorder, setShowBorder] = useState(() => localStorage.getItem(BORDER_KEY) !== '0');
   const [showMuniBorder, setShowMuniBorder] = useState(() => localStorage.getItem(MUNI_BORDER_KEY) !== '0');
+  const [showRail, setShowRail] = useState(() => localStorage.getItem(RAIL_KEY) === '1');
   const [outline, setOutline] = useState<FeatureCollection | null>(null);
 
   useEffect(() => {
@@ -246,6 +253,10 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
     setShowMuniBorder(on);
     localStorage.setItem(MUNI_BORDER_KEY, on ? '1' : '0');
   };
+  const toggleRail = (on: boolean) => {
+    setShowRail(on);
+    localStorage.setItem(RAIL_KEY, on ? '1' : '0');
+  };
 
   const tile = MAP_TYPES[mapType];
 
@@ -266,6 +277,11 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
           maxNativeZoom={tile.maxNativeZoom}
           {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
         />
+
+        {/* 鉄道強調オーバーレイ（透過タイル。zIndex でベース地図の上に固定） */}
+        {showRail && (
+          <TileLayer url={RAIL_URL} attribution={RAIL_ATTR} subdomains="abc" maxNativeZoom={19} zIndex={5} />
+        )}
 
         {/* 県境強調オーバーレイ（クリックは地図へ素通し） */}
         {showBorder && outline && (
@@ -326,13 +342,13 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
                   <Circle
                     center={[t.point[0], t.point[1]]}
                     radius={radiusKm * 1000}
-                    pathOptions={{ color: wasHit ? '#16a34a' : '#f59e0b', weight: 1.5, fillOpacity: 0.08 }}
+                    pathOptions={{ color: wasHit ? '#1fa588' : '#e8a13d', weight: 1.5, fillOpacity: 0.08 }}
                   />
                 )}
                 {t.kind === 'polygon' && t.geom && (
                   <GeoJSON
                     data={t.geom}
-                    style={{ color: wasHit ? '#16a34a' : '#f59e0b', weight: 2, fillOpacity: 0.18 }}
+                    style={{ color: wasHit ? '#1fa588' : '#e8a13d', weight: 2, fillOpacity: 0.18 }}
                   />
                 )}
               </span>
@@ -359,6 +375,10 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
         <label className="map-control-check">
           <input type="checkbox" checked={showMuniBorder} onChange={(e) => toggleMuniBorder(e.target.checked)} />
           市町村境
+        </label>
+        <label className="map-control-check">
+          <input type="checkbox" checked={showRail} onChange={(e) => toggleRail(e.target.checked)} />
+          鉄道
         </label>
       </div>
     </>

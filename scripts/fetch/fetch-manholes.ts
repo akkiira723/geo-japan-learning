@@ -31,15 +31,29 @@ const PREF_INDEX: Record<number, string> = {
 
 // テキストだけで除外できるもの（ダウンロード前に判定）
 const SKIP_TEXT =
-  /マンホールカード|ポケふた|展示蓋|展示されて|同じデザイン|同デザイン|色違い|親子|カードの座標|仕切弁|制水弁|空気弁|消火栓|防火水槽|量水器|止水栓|減圧弁|排泥弁|電話|電気|通信|側溝|汚水枡|汚水桝|排水桝|集水枡|基準点|境界|越境/;
-// 「上記の〜」は同デザインの変種（小型・受枠違い・表記違い等）なので原則スキップ。
+  /マンホールカード|ポケふた|展示蓋|展示されて|展示した後|展示の様子|展示品|同じデザイン|同デザイン|色違い|親子|カードの座標|仕切弁|制水弁|空気弁|消火栓|防火水槽|量水器|止水栓|減圧弁|排泥弁|電話|電気|通信|側溝|汚水枡|汚水桝|排水桝|集水枡|基準点|境界|越境/;
+// 蓋そのものではない写真（歩道絵・案内板・デザインの元ネタ探訪など）と明言しているもの
+const EXPLICIT_NONLID =
+  /マンホール(?:蓋)?では(?:なく|ありません)|歩道絵|案内板|タイル板|蓋が無かったので|行った証し|デザインの元にな|蓋の.{0,8}とは違/;
+// 蓋ではなくデザインの元ネタ（像・碑・建物・風景など）の写真を示唆する語。
+// 蓋の絵柄の説明にも登場しうるため、円形検出スコアが低く蓋らしい語彙もない場合のみ除外に使う
+const NONLID_TEXT =
+  /役場|庁舎|記念碑|文学碑|石碑|銅像|の像|像です|建立|モニュメント|灯台|燈籠|大橋|神社|鳥居|時計塔|の塔|風車|湿原|アンテナ|タイル|学校|の写真|入口/;
+// 蓋の写真であることを示唆する語彙
+const LID_HINT =
+  /蓋|マンホール|ハンドホール|地紋|地模様|模様|絵柄|[市町村区]章|の文字|文字入|表記|汚水|雨水|下水|合流|農集|集落排水|規格/;
+// 「上記の〜」「上と同じ〜」は同デザインの変種（小型・受枠違い・表記違い等）なので原則スキップ。
 // ただしノンカラー版はカラー版の代わりに採用したいので残す
-const SAME_AS_ABOVE = /上記/;
-const NONCOLOR_VARIANT = /ノンカラー(?!.{0,6}小型)/;
+const ABOVE_REF = /上記|同上|上の(?:蓋|写真|もの)|(?<![右左])上と/;
+const NONCOLOR_VARIANT = /ノ[ンー]カラー(?!.{0,6}小型)/;
 // テキストでカラー蓋と分かるもの
 const COLOR_TEXT = /カラー(?!版の無)|(クリーム|茶|青|緑|赤|黄|ピンク|橙|紫)色|彩色/;
-const NONCOLOR_TEXT = /ノンカラー|無彩色|色無し/;
+const NONCOLOR_TEXT = /ノ[ンー]カラー|無彩色|無着色|色無し/;
 const EMBLEM_TEXT = /[市町村区]章/;
+// 円形（楕円含む）の輪郭がこれ未満なら蓋の写真ではないとみなす
+const CIRCLE_HARD_MIN = 0.35;
+// これ未満かつ NONLID_TEXT を含むなら元ネタ写真とみなす
+const CIRCLE_SOFT_MIN = 0.6;
 
 interface KeptImage {
   url: string;
@@ -54,6 +68,9 @@ export interface MuniResult {
   page: string;
   imgs: KeptImage[];
 }
+
+/** ヒューリスティックで拾いきれない蓋以外の写真（URL単位の手動除外、main で読み込む） */
+let imgExcludes = new Set<string>();
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -123,7 +140,10 @@ function parseIndex(html: string, indexUrl: string): { name: string; gun: string
 /** 自治体ページから (画像URL, 説明文) ペアを抽出（説明は画像の直後） */
 function parsePairs(html: string, pageUrl: string): { url: string; desc: string }[] {
   const out: { url: string; desc: string }[] = [];
-  const parts = html.split(/<img\s/i).slice(1);
+  // 「NEW」バッジ等の gif <img> が写真と説明文の間に挟まっていることがあり、
+  // そのまま split すると説明文が gif 側に付いて捨てられるため先に除去する
+  const cleaned = html.replace(/<img\s[^>]*src="[^"]*\.gif"[^>]*>/gi, ' ');
+  const parts = cleaned.split(/<img\s/i).slice(1);
   for (const part of parts) {
     const srcM = part.match(/^[^>]*?src="([^"]+)"/i);
     if (!srcM) continue;
@@ -136,12 +156,25 @@ function parsePairs(html: string, pageUrl: string): { url: string; desc: string 
   return out;
 }
 
+/** 撮影日・撮影者等のメタ情報とページ末尾のナビ文言を落とした説明本文（判定用） */
+function descBody(desc: string): string {
+  return desc.split(/・(?:撮影日|提供日|撮影場所|撮影者|提供者)[：:]/)[0].split(/検索でこのページ/)[0];
+}
+
 /** サイトの説明文から撮影日・撮影者等のメタ情報を落とし、デザインの解説だけを残す */
 function cleanDesc(desc: string): string {
-  let d = desc.split(/・(?:撮影日|提供日|撮影場所|撮影者|提供者)[：:]/)[0];
-  d = d.replace(/(下水道?管|汚水管|雨水管|合流管|農業集落排水|集落排水|農業用水用?|消雪用?)?\s*(マンホール蓋|小型蓋|ハンドホール)\s*$/,'');
+  let d = descBody(desc);
+  d = d.replace(/(下水道?管|汚水管|雨水管|合流管|農業集落排水|集落排水|農業用水用?|消雪用?)?\s*(マンホールの?蓋|小型蓋|ハンドホールの?蓋?)\s*$/,'');
   d = d.replace(/^・/, '').trim();
   return d.slice(0, 220);
+}
+
+/** 「上記の〜」「上と同じ〜」の参照部分を、参照先（直前の画像）の説明文で置き換える */
+function resolveAboveRef(desc: string, refDesc: string): string {
+  const r = '「' + refDesc.replace(/[。.\s]+$/, '') + '」';
+  return desc
+    .replace(/上記|上の(?:蓋|写真|もの)|(?<![右左])上(?=と)/g, r)
+    .replace(/同上/g, `${r}と同じ`);
 }
 
 async function processMuni(muni: { name: string; gun: string; url: string }, pref: number): Promise<MuniResult | null> {
@@ -157,14 +190,18 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
   const hashes: string[] = [];
   let emblemKept = false;
   let designCount = 0;
-  // 「上記のノンカラー。」のような短い説明の参照先（直近の「上記」でない説明）
+  // 「上記のノンカラー。」のような説明の参照先（直近の「上記」でない説明）
   let lastFullDesc = '';
 
   for (const { url, desc } of pairs) {
-    if (desc.length >= 8 && !SAME_AS_ABOVE.test(desc)) lastFullDesc = desc;
+    const body = descBody(desc);
+    const refersAbove = ABOVE_REF.test(body);
+    if (desc.length >= 8 && !refersAbove) lastFullDesc = desc;
     if (desc.length < 8) continue;
+    if (imgExcludes.has(url)) continue;
     if (SKIP_TEXT.test(desc)) continue;
-    if (SAME_AS_ABOVE.test(desc) && !NONCOLOR_VARIANT.test(desc)) continue;
+    if (EXPLICIT_NONLID.test(body)) continue;
+    if (refersAbove && !NONCOLOR_VARIANT.test(body)) continue;
     const isEmblem = EMBLEM_TEXT.test(desc);
     if (isEmblem && emblemKept) continue;
     if (!isEmblem && designCount >= MAX_DESIGNS_PER_MUNI) continue;
@@ -180,12 +217,16 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
       continue;
     }
     if (stats.colorFraction > COLOR_FRACTION_MAX) continue;
+    // 蓋ではない写真（デザインの元ネタの像・碑・建物・風景など）を除外。
+    // 円形（楕円含む）の輪郭が明確ならほぼ蓋。弱い場合は説明文の語彙で判断する
+    if (stats.circleScore < CIRCLE_HARD_MIN) continue;
+    if (stats.circleScore < CIRCLE_SOFT_MIN && NONLID_TEXT.test(body) && !LID_HINT.test(body)) continue;
     if (hashes.some((h) => hammingHex(h, stats.dhash) <= DHASH_DUP_MAX)) continue;
 
     hashes.push(stats.dhash);
     let outDesc = cleanDesc(desc);
-    if (/^上記/.test(outDesc) && outDesc.length < 20 && lastFullDesc) {
-      outDesc = cleanDesc(lastFullDesc) + '（写真はノンカラー版）';
+    if (refersAbove && lastFullDesc) {
+      outDesc = resolveAboveRef(outDesc, cleanDesc(lastFullDesc));
     }
     kept.push({ url, kind: isEmblem ? 'emblem' : 'design', desc: outDesc });
     if (isEmblem) emblemKept = true;
@@ -199,6 +240,9 @@ async function processMuni(muni: { name: string; gun: string; url: string }, pre
 
 async function main() {
   const onlyPref = process.argv[2] ? Number(process.argv[2]) : null;
+  imgExcludes = new Set(
+    Object.keys(JSON.parse(await readFile('scripts/overrides/manhole-img-excludes.json', 'utf8'))),
+  );
   await mkdir('data-cache/manho/pages', { recursive: true });
   await mkdir('data-cache/manho/img', { recursive: true });
   await mkdir('data-cache/manho/result', { recursive: true });

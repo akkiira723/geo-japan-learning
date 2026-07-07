@@ -146,7 +146,7 @@ export function HoverHighlight({ kind, prefs, active }: HoverHighlightProps) {
       key={hover.id}
       data={hover.geom}
       interactive={false}
-      style={{ color: '#1d4ed8', weight: 2.5, opacity: 0.9, fillColor: '#60a5fa', fillOpacity: 0.3 }}
+      style={{ color: '#177f69', weight: 2.5, opacity: 0.9, fillColor: '#5fd4b4', fillOpacity: 0.3 }}
     />
   );
 }

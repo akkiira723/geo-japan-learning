@@ -4,7 +4,7 @@ import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
 import type { Question, QuizFilter, QuizModule } from './types';
 
-interface ManholeItem {
+export interface ManholeItem {
   id: string;
   name: string;
   page: string;
@@ -20,13 +20,16 @@ interface ManholeChunk {
   items: ManholeItem[];
 }
 
-async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
+/** 指定した都道府県のマンホールデータを読み込む（クイズ・単語帳で共用） */
+export async function loadManholeItems(prefs: number[]): Promise<{ item: ManholeItem; pref: number }[]> {
   const chunks = await Promise.all(
-    filter.prefs.map((p) => loadChunk<ManholeChunk>(`manholes/pref-${String(p).padStart(2, '0')}.json`)),
+    prefs.map((p) => loadChunk<ManholeChunk>(`manholes/pref-${String(p).padStart(2, '0')}.json`)),
   );
-  const all: { item: ManholeItem; pref: number }[] = chunks.flatMap((c) =>
-    c.items.map((item) => ({ item, pref: c.pref })),
-  );
+  return chunks.flatMap((c) => c.items.map((item) => ({ item, pref: c.pref })));
+}
+
+async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
+  const all = await loadManholeItems(filter.prefs);
 
   const picked = shuffled(all).slice(0, filter.questionCount);
   return picked.map(({ item, pref }) => {

@@ -42,6 +42,9 @@ export function About() {
         <li>成績はこのブラウザの localStorage にのみ保存されます。</li>
       </ul>
 
+      <p>
+        <Link to="/changelog">変更履歴</Link>
+      </p>
       <Link to="/">ホームへ戻る</Link>
     </div>
   );
