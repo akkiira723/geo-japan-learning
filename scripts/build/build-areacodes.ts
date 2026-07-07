@@ -168,7 +168,9 @@ async function main() {
     const rowIdx = await loadPref(rowPrefCd);
 
     for (const token of row.tokens) {
-      const key = `${row.pref}|${token}`;
+      // 局番別キー（`局番|県|トークン`）優先。同一トークンが複数局番で区割りが違うケース用
+      const codeKey = `${row.code}|${row.pref}|${token}`;
+      const key = codeKey in overrides ? codeKey : `${row.pref}|${token}`;
       let resolved: string[] | null = [token];
       if (key in overrides) {
         resolved = overrides[key];
