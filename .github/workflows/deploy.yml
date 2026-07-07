@@ -19,10 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # 初回実行時に Pages を自動で有効化する
-      - uses: actions/configure-pages@v4
-        with:
-          enablement: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
