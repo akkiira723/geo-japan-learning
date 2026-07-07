@@ -21,9 +21,9 @@ export interface FilterPanelProps {
 }
 
 export function FilterPanel({ meta, onStart }: FilterPanelProps) {
-  const [prefs, setPrefs] = useState<Set<number>>(new Set(ALL_PREF_CODES));
+  const [prefs, setPrefs] = useState<Set<number>>(new Set());
   const [operator, setOperator] = useState<OperatorFilter>('all');
-  const [questionCount, setQuestionCount] = useState(10);
+  const [questionCount, setQuestionCount] = useState(Infinity);
   const [radiusKm, setRadiusKm] = useState(20);
   const [showPrefs, setShowPrefs] = useState(false);
 
