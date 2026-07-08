@@ -63,6 +63,7 @@ export function QuizPage() {
     case 'playing':
       return (
         <QuizShell
+          quizId={quiz.meta.id}
           questions={state.questions}
           radiusKm={state.filter.radiusKm}
           quizTitle={quiz.meta.title}

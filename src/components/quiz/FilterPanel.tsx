@@ -10,9 +10,9 @@ const COUNT_OPTIONS: { count: number; label: string }[] = [
   { count: Infinity, label: '全問' },
 ];
 const RADIUS_OPTIONS: { km: number; label: string }[] = [
-  { km: 50, label: 'やさしい (50km)' },
-  { km: 20, label: 'ふつう (20km)' },
-  { km: 10, label: 'むずかしい (10km)' },
+  { km: 20, label: 'やさしい (20km)' },
+  { km: 10, label: 'ふつう (10km)' },
+  { km: 3, label: 'むずかしい (3km)' },
 ];
 
 export interface FilterPanelProps {
@@ -24,7 +24,7 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   const [prefs, setPrefs] = useState<Set<number>>(new Set());
   const [operator, setOperator] = useState<OperatorFilter>('all');
   const [questionCount, setQuestionCount] = useState(Infinity);
-  const [radiusKm, setRadiusKm] = useState(20);
+  const [radiusKm, setRadiusKm] = useState(3);
   // PC 幅（モバイル用ブレークポイント 600px 超）では都道府県一覧を最初から開く
   const [showPrefs, setShowPrefs] = useState(() => window.matchMedia('(min-width: 601px)').matches);
 

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { MAX_MISSES, useQuizEngine } from '../../hooks/useQuizEngine';
-import type { HoverKind, Question } from '../../quizzes/types';
+import type { HoverKind, Question, QuizId } from '../../quizzes/types';
 import { QuizMap } from '../map/QuizMap';
 
 export interface QuizShellProps {
+  quizId: QuizId;
   questions: Question[];
   radiusKm: number;
   quizTitle: string;
@@ -14,7 +15,7 @@ export interface QuizShellProps {
   onExit: () => void;
 }
 
-export function QuizShell({ questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
+export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
   const engine = useQuizEngine(questions, radiusKm);
   const { current, phase, pin, feedback } = engine;
   const [imgExpanded, setImgExpanded] = useState(true);
@@ -92,6 +93,7 @@ export function QuizShell({ questions, radiusKm, quizTitle, prefs, hoverKind, ho
           </div>
         )}
         <QuizMap
+          quizId={quizId}
           question={current}
           revealed={phase === 'revealed'}
           pin={pin}

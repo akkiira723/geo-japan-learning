@@ -4,7 +4,7 @@ import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap, useM
 import type { FeatureCollection } from 'geojson';
 import { loadChunk } from '../../hooks/useChunkLoader';
 import type { HitMark } from '../../hooks/useQuizEngine';
-import type { HoverKind, LatLng, Question, Target } from '../../quizzes/types';
+import type { HoverKind, LatLng, Question, QuizId, Target } from '../../quizzes/types';
 import { HoverHighlight } from './HoverHighlight';
 
 const GSI_ATTR =
@@ -63,16 +63,40 @@ const RAIL_URL = 'https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'
 const RAIL_ATTR =
   'Rail overlay &copy; <a href="https://www.openrailwaymap.org/" target="_blank" rel="noreferrer">OpenRailwayMap</a> (CC-BY-SA)';
 
-const MAPTYPE_KEY = 'geo-japan-learning:maptype3';
-const BORDER_KEY = 'geo-japan-learning:prefborder';
-const MUNI_BORDER_KEY = 'geo-japan-learning:muniborder';
-const RAIL_KEY = 'geo-japan-learning:railoverlay';
+/** クイズごとに地図設定を保存する（駅クイズは鉄道重視、他は境界重視のため共有しない） */
+const MAP_SETTINGS_KEY_PREFIX = 'geo-japan-learning:mapsettings:';
 /** 市町村境オーバーレイを表示する最小ズーム */
 const MUNI_BORDER_MIN_ZOOM = 9;
 
-function loadMapType(): MapTypeId {
-  const v = localStorage.getItem(MAPTYPE_KEY);
-  return v && v in MAP_TYPES ? (v as MapTypeId) : 'bright-ja';
+interface MapSettings {
+  mapType: MapTypeId;
+  border: boolean;
+  muniBorder: boolean;
+  rail: boolean;
+}
+
+function defaultMapSettings(quizId: QuizId): MapSettings {
+  if (quizId === 'station') {
+    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: true };
+  }
+  return { mapType: 'basic-ja', border: true, muniBorder: true, rail: false };
+}
+
+function loadMapSettings(quizId: QuizId): MapSettings {
+  const def = defaultMapSettings(quizId);
+  try {
+    const raw = localStorage.getItem(MAP_SETTINGS_KEY_PREFIX + quizId);
+    if (!raw) return def;
+    const v = JSON.parse(raw) as Partial<MapSettings>;
+    return {
+      mapType: v.mapType && v.mapType in MAP_TYPES ? v.mapType : def.mapType,
+      border: typeof v.border === 'boolean' ? v.border : def.border,
+      muniBorder: typeof v.muniBorder === 'boolean' ? v.muniBorder : def.muniBorder,
+      rail: typeof v.rail === 'boolean' ? v.rail : def.rail,
+    };
+  } catch {
+    return def;
+  }
 }
 
 function divPin(className: string, html: string): L.DivIcon {
@@ -206,6 +230,7 @@ function RevealFit({ targets, active }: { targets: Target[]; active: boolean }) 
 }
 
 export interface QuizMapProps {
+  quizId: QuizId;
   question: Question | null;
   revealed: boolean;
   pin: LatLng | null;
@@ -220,12 +245,10 @@ export interface QuizMapProps {
   hoverPrefs?: number[];
 }
 
-export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs }: QuizMapProps) {
+export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs }: QuizMapProps) {
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
-  const [mapType, setMapType] = useState<MapTypeId>(loadMapType);
-  const [showBorder, setShowBorder] = useState(() => localStorage.getItem(BORDER_KEY) !== '0');
-  const [showMuniBorder, setShowMuniBorder] = useState(() => localStorage.getItem(MUNI_BORDER_KEY) !== '0');
-  const [showRail, setShowRail] = useState(() => localStorage.getItem(RAIL_KEY) === '1');
+  const [settings, setSettings] = useState<MapSettings>(() => loadMapSettings(quizId));
+  const { mapType, border: showBorder, muniBorder: showMuniBorder, rail: showRail } = settings;
   const [outline, setOutline] = useState<FeatureCollection | null>(null);
 
   useEffect(() => {
@@ -241,22 +264,17 @@ export function QuizMap({ question, revealed, pin, hitMarks, missMarks, radiusKm
     };
   }, [showBorder, outline]);
 
-  const changeMapType = (t: MapTypeId) => {
-    setMapType(t);
-    localStorage.setItem(MAPTYPE_KEY, t);
+  const updateSettings = (patch: Partial<MapSettings>) => {
+    setSettings((prev) => {
+      const next = { ...prev, ...patch };
+      localStorage.setItem(MAP_SETTINGS_KEY_PREFIX + quizId, JSON.stringify(next));
+      return next;
+    });
   };
-  const toggleBorder = (on: boolean) => {
-    setShowBorder(on);
-    localStorage.setItem(BORDER_KEY, on ? '1' : '0');
-  };
-  const toggleMuniBorder = (on: boolean) => {
-    setShowMuniBorder(on);
-    localStorage.setItem(MUNI_BORDER_KEY, on ? '1' : '0');
-  };
-  const toggleRail = (on: boolean) => {
-    setShowRail(on);
-    localStorage.setItem(RAIL_KEY, on ? '1' : '0');
-  };
+  const changeMapType = (t: MapTypeId) => updateSettings({ mapType: t });
+  const toggleBorder = (on: boolean) => updateSettings({ border: on });
+  const toggleMuniBorder = (on: boolean) => updateSettings({ muniBorder: on });
+  const toggleRail = (on: boolean) => updateSettings({ rail: on });
 
   const tile = MAP_TYPES[mapType];
 
