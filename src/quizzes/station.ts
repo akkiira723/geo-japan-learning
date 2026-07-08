@@ -65,7 +65,7 @@ export const stationQuiz: QuizModule = {
   meta: {
     id: 'station',
     title: '駅名クイズ',
-    description: '出題された駅の場所を地図でクリック。同名駅が複数ある場合は全部の場所を答えよう。',
+    description: '出題された駅の場所を地図でクリック。同名駅が複数ある場合は全部の場所を答えよう。※一部廃駅も含む',
     usesRadius: true,
     hasOperatorFilter: true,
   },
