@@ -247,7 +247,8 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
   const [prefs, setPrefs] = useState<Set<number>>(new Set(ALL_PREF_CODES));
   const [order, setOrder] = useState<CardOrder>('shuffle');
   const [scope, setScope] = useState<CardScope>('all');
-  const [showPrefs, setShowPrefs] = useState(false);
+  // PC 幅（モバイル用ブレークポイント 600px 超）では都道府県一覧を最初から開く
+  const [showPrefs, setShowPrefs] = useState(() => window.matchMedia('(min-width: 601px)').matches);
 
   const toggleRegion = (regionPrefs: number[]) => {
     setPrefs((prev) => {

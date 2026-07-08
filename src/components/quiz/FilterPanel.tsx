@@ -25,7 +25,8 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   const [operator, setOperator] = useState<OperatorFilter>('all');
   const [questionCount, setQuestionCount] = useState(Infinity);
   const [radiusKm, setRadiusKm] = useState(20);
-  const [showPrefs, setShowPrefs] = useState(false);
+  // PC 幅（モバイル用ブレークポイント 600px 超）では都道府県一覧を最初から開く
+  const [showPrefs, setShowPrefs] = useState(() => window.matchMedia('(min-width: 601px)').matches);
 
   const toggleRegion = (regionPrefs: number[]) => {
     setPrefs((prev) => {
