@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "data:stations": "tsx scripts/fetch/fetch-stations.ts && tsx scripts/build/build-stations.ts",
-    "data:areacodes": "tsx scripts/fetch/fetch-area-codes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-areacodes.ts",
+    "data:areacodes": "tsx scripts/fetch/fetch-area-codes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-chocho-geo.ts && tsx scripts/build/build-areacodes.ts",
     "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/build/build-legacy.ts",
     "data:outline": "tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-pref-outline.ts && tsx scripts/build/build-muni-outline.ts",
     "data:manholes": "tsx scripts/fetch/fetch-manholes.ts && tsx scripts/build/build-manholes.ts"
@@ -33,6 +33,7 @@
     "@types/topojson-client": "^3.1.5",
     "@types/topojson-specification": "^1.0.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "pdfjs-dist": "^3.11.174",
     "sharp": "^0.35.3",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
