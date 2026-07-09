@@ -11,7 +11,11 @@ type PageState =
   | { mode: 'loading' }
   | { mode: 'error'; message: string }
   | { mode: 'playing'; questions: Question[]; filter: QuizFilter }
-  | { mode: 'done'; stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number } };
+  | {
+      mode: 'done';
+      stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number };
+      filter: QuizFilter;
+    };
 
 export function QuizPage() {
   const { quizId } = useParams();
@@ -78,7 +82,7 @@ export function QuizPage() {
               questionCount: state.questions.length,
               ...stats,
             });
-            setState({ mode: 'done', stats });
+            setState({ mode: 'done', stats, filter: state.filter });
           }}
         />
       );
@@ -98,8 +102,11 @@ export function QuizPage() {
             </p>
           </div>
           <div className="result-actions">
-            <button className="btn btn-primary" onClick={() => setState({ mode: 'setup' })}>
+            <button className="btn btn-primary" onClick={() => start(state.filter)}>
               もう一度
+            </button>
+            <button className="btn btn-ghost" onClick={() => setState({ mode: 'setup' })}>
+              設定を変える
             </button>
             <button className="btn btn-ghost" onClick={() => navigate('/')}>
               ホームへ
