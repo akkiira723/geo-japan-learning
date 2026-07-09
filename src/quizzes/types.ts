@@ -45,6 +45,10 @@ export interface QuizFilter {
   questionCount: number;
   /** 点ターゲットの正解半径 km（駅クイズの難易度） */
   radiusKm: number;
+  /** 出題順。省略時はランダム（市外局番クイズのみ 'asc' = 局番の昇順に対応） */
+  order?: 'random' | 'asc';
+  /** 市外局番の先頭2桁フィルタ（例: ['01', '02']）。空/省略はすべて */
+  codePrefixes?: string[];
 }
 
 export type HoverKind = 'areacode' | 'legacy' | 'muni';
@@ -57,6 +61,8 @@ export interface QuizMeta {
   usesRadius: boolean;
   /** 事業者フィルタを出すか */
   hasOperatorFilter: boolean;
+  /** 市外局番向けの出題順・局番帯フィルタを出すか */
+  hasAreaCodeFilters?: boolean;
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
   hoverKind?: HoverKind;
 }

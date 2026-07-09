@@ -44,7 +44,13 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     }
   }
 
-  const codes = shuffled([...byCode.keys()]).slice(0, filter.questionCount);
+  let pool = [...byCode.keys()];
+  if (filter.codePrefixes && filter.codePrefixes.length > 0) {
+    pool = pool.filter((c) => filter.codePrefixes!.some((p) => c.startsWith(p)));
+  }
+  // 出題数の絞り込みはランダムに行い、昇順モードでは選ばれた問題を局番順に並べ替える
+  const codes = shuffled(pool).slice(0, filter.questionCount);
+  if (filter.order === 'asc') codes.sort((a, b) => a.localeCompare(b));
   return codes.map((code) => {
     const e = byCode.get(code)!;
     const center: [number, number] = [(e.bbox[1] + e.bbox[3]) / 2, (e.bbox[0] + e.bbox[2]) / 2];
@@ -71,9 +77,11 @@ export const areaCodeQuiz: QuizModule = {
   meta: {
     id: 'areacode',
     title: '市外局番クイズ',
-    description: '出題された市外局番のエリアを地図でクリック。エリア内なら正解。境界は市区町村単位の近似。',
+    description:
+      '出題された市外局番のエリアを地図でクリック。エリア内なら正解。区画は総務省の市外局番一覧に基づく（複数局番に分かれる市区町村は町丁単位で区分）。',
     usesRadius: false,
     hasOperatorFilter: false,
+    hasAreaCodeFilters: true,
     hoverKind: 'areacode',
   },
   loadQuestions,
