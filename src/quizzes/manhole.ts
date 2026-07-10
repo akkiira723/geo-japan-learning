@@ -2,17 +2,27 @@ import type { MultiPolygon } from 'geojson';
 import { loadChunk } from '../hooks/useChunkLoader';
 import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
-import type { Question, QuizFilter, QuizModule } from './types';
+import type { Question, QuizFilter, QuizModule, Ruby } from './types';
 
 export interface ManholeItem {
   id: string;
   name: string;
+  /** 自治体名のひらがな読み（「（旧）」サフィックスは含まない） */
+  kana?: string;
   page: string;
   imgs: { url: string; kind: string; desc?: string }[];
   into?: string;
+  /** into の各市区町村の読み */
+  intoYomi?: Ruby[];
   point: [number, number];
   bbox: [number, number, number, number];
   geom: MultiPolygon;
+}
+
+/** 表示名 name（「○○町（旧）」等）への Ruby。読み対象は （旧） を除く自治体名部分 */
+export function manholeRuby(item: ManholeItem): Ruby[] | undefined {
+  if (!item.kana) return undefined;
+  return [{ b: item.name.replace(/（旧）$/, ''), k: item.kana }];
 }
 
 interface ManholeChunk {
@@ -48,7 +58,9 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
         {
           id: item.id,
           label: `${item.name}（${prefName(pref)}）`,
+          rubies: manholeRuby(item),
           sublabel: item.into ? `現在: ${item.into}` : undefined,
+          sublabelRubies: item.intoYomi,
           kind: 'polygon' as const,
           point: item.point,
           bbox: item.bbox,

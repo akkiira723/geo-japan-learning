@@ -4,7 +4,8 @@ import { ALL_PREF_CODES, prefName } from '../lib/prefectures';
 import { REGIONS } from '../lib/regions';
 import { shuffled } from '../lib/shuffle';
 import { loadLearnedManholes, saveLearnedManholes } from '../lib/storage';
-import { loadManholeItems, type ManholeItem } from '../quizzes/manhole';
+import { RubyText } from '../components/quiz/RubyText';
+import { loadManholeItems, manholeRuby, type ManholeItem } from '../quizzes/manhole';
 
 type CardOrder = 'shuffle' | 'pref';
 type CardScope = 'all' | 'unlearned';
@@ -181,10 +182,14 @@ export function ManholeCards() {
             {revealed ? (
               <div className="flashcard-answer" onClick={(e) => e.stopPropagation()}>
                 <p className="flashcard-name">
-                  {card.item.name}
+                  <RubyText text={card.item.name} rubies={manholeRuby(card.item)} />
                   <span className="flashcard-pref">（{prefName(card.pref)}）</span>
                 </p>
-                {card.item.into && <p className="flashcard-into">現在: {card.item.into}</p>}
+                {card.item.into && (
+                  <p className="flashcard-into">
+                    <RubyText text={`現在: ${card.item.into}`} rubies={card.item.intoYomi} />
+                  </p>
+                )}
                 {img?.desc && <p className="flashcard-desc">{img.desc}</p>}
                 <a href={card.item.page} target="_blank" rel="noreferrer">
                   出典ページ

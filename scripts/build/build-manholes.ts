@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import type { Feature, MultiPolygon, Polygon } from 'geojson';
 import { normalizeName } from '../lib/normalize.ts';
+import { loadSacDict, resolveMuniYomi, sacCurrentByName, type Yomi } from '../lib/yomi.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
 
 type Ring = [number, number][];
@@ -20,10 +21,14 @@ interface MuniResult {
 interface OutItem {
   id: string;
   name: string;
+  /** 自治体名のひらがな読み（「（旧）」サフィックスは含まない） */
+  kana?: string;
   page: string;
   imgs: { url: string; kind: string; desc: string }[];
   /** 旧市町村へのフォールバック時のみ: 現在の自治体 */
   into?: string;
+  /** into の各市区町村の読み */
+  intoYomi?: Yomi[];
   point: [number, number];
   bbox: [number, number, number, number];
   geom: MultiPolygon;
@@ -108,7 +113,9 @@ async function loadPrefGeo(pref: number): Promise<PrefGeoIndex> {
 
 interface LegacyTown {
   n: string;
+  kana?: string;
   into: string;
+  intoYomi?: Yomi[];
   bbox: [number, number, number, number];
   geom: Polygon | MultiPolygon;
 }
@@ -129,6 +136,28 @@ async function main() {
     await readFile('scripts/overrides/manhole-fixes.json', 'utf8'),
   );
   await mkdir('public/data/manholes', { recursive: true });
+
+  // 読み辞書（e-Stat SAC）: 現行自治体に名寄せできた項目の読みを引く。
+  // 政令市の「市+区」複合名は連結、それ以外の未解決は muni-yomi.json へ
+  const sacDict = await loadSacDict();
+  const muniYomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/muni-yomi.json', 'utf8'),
+  );
+  const unresolvedYomi = new Set<string>();
+  const muniKanaOf = (pref: number, name: string): string | undefined => {
+    const ov = muniYomiOverride[`${pref}|${name}`];
+    if (ov) return ov;
+    const direct = resolveMuniYomi(sacDict, pref, name);
+    if (direct) return direct.k;
+    const m = name.match(/^(.+?市)(.+区)$/);
+    if (m) {
+      const c = sacCurrentByName(sacDict, pref, m[1]);
+      const w = sacCurrentByName(sacDict, pref, m[2]);
+      if (c && w) return c.kana + w.kana;
+    }
+    unresolvedYomi.add(`  "${pref}|${name}": ""`);
+    return undefined;
+  };
 
   const unresolved: string[] = [];
   let total = 0, totalImgs = 0, legacyCount = 0;
@@ -166,6 +195,7 @@ async function main() {
           out = {
             id: createHash('sha1').update(m.page).digest('hex').slice(0, 10),
             name,
+            kana: muniKanaOf(pref, name),
             page: m.page,
             imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind, desc: i.desc })),
             point: [(bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2],
@@ -180,9 +210,11 @@ async function main() {
             out = {
               id: createHash('sha1').update(m.page).digest('hex').slice(0, 10),
               name: `${name}（旧）`,
+              kana: legacy.kana,
               page: m.page,
               imgs: m.imgs.map((i) => ({ url: i.url, kind: i.kind, desc: i.desc })),
               into: legacy.into,
+              intoYomi: legacy.intoYomi,
               point: [
                 (legacy.bbox[1] + legacy.bbox[3]) / 2,
                 (legacy.bbox[0] + legacy.bbox[2]) / 2,
@@ -228,6 +260,13 @@ async function main() {
     );
   }
 
+  if (unresolvedYomi.size > 0) {
+    console.error(`✗ 読み仮名が解決できない自治体が ${unresolvedYomi.size} 件あります。`);
+    console.error('  scripts/overrides/muni-yomi.json に以下のエントリを追記して再実行してください（値はひらがな読み）:');
+    console.error([...unresolvedYomi].join('\n'));
+    process.exit(1);
+  }
+
   await writeFile(
     'public/data/manholes/index.json',
     JSON.stringify({
@@ -237,7 +276,8 @@ async function main() {
       totalImgs,
       legacyCount,
       unresolvedCount: unresolved.length,
-      source: '日本マンホール蓋学会 (we-love-manho.com) — 画像は同サイトから直接読み込み（再配布なし）',
+      source:
+        '日本マンホール蓋学会 (we-love-manho.com) — 画像は同サイトから直接読み込み（再配布なし） + 読み仮名: e-Stat 統計LOD 標準地域コード',
     }),
     'utf8',
   );

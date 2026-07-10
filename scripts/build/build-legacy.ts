@@ -4,6 +4,8 @@ import polygonClipping from 'polygon-clipping';
 import type { MultiPolygon, Polygon, Feature, FeatureCollection } from 'geojson';
 import type { Topology, GeometryCollection } from 'topojson-specification';
 import { parseCsvRecords } from '../lib/csv.ts';
+import { loadSacDict, sacAt, sacCurrentByName, type SacDict, type Yomi } from '../lib/yomi.ts';
+import { normalizeName } from '../lib/normalize.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
 
 interface N03Props {
@@ -17,8 +19,10 @@ interface N03Props {
 interface OutTown {
   id: string;
   n: string; // 表示名（例: 広島町）
+  kana?: string; // ひらがな読み（例: ひろしまちょう）
   gun: string; // 郡・支庁など（例: 札幌郡）
   into: string; // 現在の市区町村（例: 北広島市 / 甲府市・富士河口湖町）
+  intoYomi?: Yomi[]; // into の各市区町村の読み（併記の場合は複数）
   point: [number, number]; // [lat, lng]
   bbox: [number, number, number, number];
   geom: Polygon | MultiPolygon;
@@ -192,21 +196,61 @@ async function main() {
   const snapshots = ['20001001', '19951001'];
   const features: Feature<Polygon | MultiPolygon, N03Props>[] = [];
   const seenCode = new Set<string>();
+  const snapOf = new Map<string, string>(); // JIS5桁 → スナップショット日（読みのコード直引き用）
   for (const snap of snapshots) {
     const topo = JSON.parse(
       await readFile(`data-cache/geo/legacy/jp_city_${snap}.c.topojson`, 'utf8'),
     ) as Topology<{ city: GeometryCollection<N03Props> }>;
     const fc = feature(topo, topo.objects.city) as FeatureCollection<Polygon | MultiPolygon, N03Props>;
     let added = 0;
+    const snapISO = `${snap.slice(0, 4)}-${snap.slice(4, 6)}-${snap.slice(6, 8)}`;
     for (const f of fc.features as Feature<Polygon | MultiPolygon, N03Props>[]) {
       const code5 = f.properties.N03_007;
       if (!code5 || seenCode.has(code5)) continue;
       seenCode.add(code5);
+      snapOf.set(code5, snapISO);
       features.push(f);
       added++;
     }
     console.log(`${snap}: ${added} 件追加（累計 ${features.length}）`);
   }
+
+  // 3.5 読み辞書（e-Stat SAC）: 旧市町村は JIS コード+スナップショット日で直引き（名寄せ不要）
+  const sacDict: SacDict = await loadSacDict();
+  const legacyYomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/legacy-yomi.json', 'utf8'),
+  );
+  const muniYomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/muni-yomi.json', 'utf8'),
+  );
+  // 現行市区町村名 → 読み（全国）。越県合併（例: 山口村→中津川市）の into 用フォールバック
+  const nationCurrentKana = new Map<string, Set<string>>();
+  for (const list of sacDict.byCode.values())
+    for (const e of list) {
+      if (e.to !== null) continue;
+      const key = normalizeName(e.ja);
+      let set = nationCurrentKana.get(key);
+      if (!set) nationCurrentKana.set(key, (set = new Set()));
+      set.add(e.kana);
+    }
+  const unresolvedYomi: string[] = [];
+  /** into の1市区町村分の読み。同県 → 政令市「市+区」連結 → 全国一意 → override の順 */
+  const intoPartYomi = (prefCd: number, name: string): Yomi | null => {
+    const ov = muniYomiOverride[`${prefCd}|${name}`];
+    if (ov) return { b: name, k: ov };
+    const samePref = sacCurrentByName(sacDict, prefCd, name);
+    if (samePref) return { b: name, k: samePref.kana };
+    const m = name.match(/^(.+?市)(.+区)$/);
+    if (m) {
+      const c = sacCurrentByName(sacDict, prefCd, m[1]);
+      const w = sacCurrentByName(sacDict, prefCd, m[2]);
+      if (c && w) return { b: name, k: c.kana + w.kana };
+    }
+    const nation = nationCurrentKana.get(normalizeName(name));
+    if (nation?.size === 1) return { b: name, k: [...nation][0] };
+    unresolvedYomi.push(`  muni-yomi.json: "${prefCd}|${name}": ""`);
+    return null;
+  };
 
   console.log('現市区町村ポリゴンを読み込み中（合併先の算出用）...');
   const currentMunis = await loadCurrentMunis();
@@ -231,11 +275,19 @@ async function main() {
 
     const geom = roundGeom(f.geometry);
     const bbox = bboxOf(geom);
+    const kana = legacyYomiOverride[p.id] ?? sacAt(sacDict, code5, snapOf.get(code5)!)?.kana;
+    if (!kana) unresolvedYomi.push(`  legacy-yomi.json: "${p.id}": ""  ← ${p.N03_001}${p.N03_003 ?? ''}${name}`);
+    const into = computeInto(geom, bbox, currentMunis);
+    const intoYomi = into
+      ? into.split('・').map((nm) => intoPartYomi(prefCd, nm)).filter((y): y is Yomi => y !== null)
+      : [];
     const town: OutTown = {
       id: p.id,
       n: name,
+      kana,
       gun: p.N03_003 ?? '',
-      into: computeInto(geom, bbox, currentMunis),
+      into,
+      intoYomi: intoYomi.length > 0 ? intoYomi : undefined,
       point: [(bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2],
       bbox,
       geom,
@@ -243,6 +295,14 @@ async function main() {
     const arr = byPref.get(prefCd);
     if (arr) arr.push(town);
     else byPref.set(prefCd, [town]);
+  }
+
+  if (unresolvedYomi.length > 0) {
+    const uniq = [...new Set(unresolvedYomi)];
+    console.error(`✗ 読み仮名が解決できない項目が ${uniq.length} 件あります。`);
+    console.error('  以下を該当する scripts/overrides/ の JSON に追記してください（値はひらがな読み）:');
+    console.error(uniq.join('\n'));
+    process.exit(1);
   }
 
   await mkdir('public/data/legacy', { recursive: true });
@@ -268,7 +328,7 @@ async function main() {
       total,
       duplicateNameCount: dupes.length,
       source:
-        '『歴史的行政区域データセットβ版』（CODH作成） doi:10.20676/00000447 (CC BY 4.0) 1995/2000年時点スナップショット',
+        '『歴史的行政区域データセットβ版』（CODH作成） doi:10.20676/00000447 (CC BY 4.0) 1995/2000年時点スナップショット + 読み仮名: e-Stat 統計LOD 標準地域コード',
     }),
     'utf8',
   );

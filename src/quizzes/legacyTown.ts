@@ -2,13 +2,17 @@ import type { MultiPolygon, Polygon } from 'geojson';
 import { loadChunk } from '../hooks/useChunkLoader';
 import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
-import type { Question, QuizFilter, QuizModule, Target } from './types';
+import type { Question, QuizFilter, QuizModule, Ruby, Target } from './types';
 
 interface TownEntry {
   id: string;
   n: string;
+  /** ひらがな読み */
+  kana?: string;
   gun: string;
   into: string;
+  /** into の各市区町村の読み */
+  intoYomi?: Ruby[];
   point: [number, number];
   bbox: [number, number, number, number];
   geom: Polygon | MultiPolygon;
@@ -41,15 +45,20 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     const targets: Target[] = group.map(({ town, pref }) => ({
       id: town.id,
       label: `${name}（${prefName(pref)}${town.gun ? ' ' + town.gun : ''}）`,
+      rubies: town.kana ? [{ b: name, k: town.kana }] : undefined,
       sublabel: town.into ? `現在: ${town.into}` : undefined,
+      sublabelRubies: town.intoYomi,
       kind: 'polygon',
       point: town.point,
       bbox: town.bbox,
       geom: town.geom,
     }));
+    // 同名の旧市町村でも読みが異なることがある（大和町: やまとちょう/たいわちょう 等）ので併記
+    const kanas = [...new Set(group.map(({ town }) => town.kana).filter((k): k is string => !!k))];
     return {
       id: `legacy:${name}`,
       prompt: name,
+      promptRubies: kanas.length > 0 ? [{ b: name, k: kanas.join('・') }] : undefined,
       sub: '旧市町村クイズ',
       targets,
     };
