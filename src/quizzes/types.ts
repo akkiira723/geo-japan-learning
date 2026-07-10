@@ -35,9 +35,15 @@ export interface Question {
   targets: Target[];
 }
 
-export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole';
+export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole' | 'highway';
 
 export type OperatorFilter = 'all' | 'jr' | 'nonjr';
+
+/** 高速道路クイズの施設種別（データチャンクと 1:1 対応） */
+export type HighwayFacilityKind = 'ic' | 'jct' | 'sapa';
+
+/** 高速道路クイズの道路タイプ（都市間高速 / 都市高速） */
+export type HighwayRoadType = 'inter' | 'urban';
 
 export interface QuizFilter {
   prefs: number[];
@@ -49,6 +55,10 @@ export interface QuizFilter {
   order?: 'random' | 'asc';
   /** 市外局番の先頭2桁フィルタ（例: ['01', '02']）。空/省略はすべて */
   codePrefixes?: string[];
+  /** 高速道路クイズの施設種別フィルタ。空/省略はすべて */
+  facilityKinds?: HighwayFacilityKind[];
+  /** 高速道路クイズの道路タイプフィルタ。空/省略はすべて */
+  roadTypes?: HighwayRoadType[];
 }
 
 export type HoverKind = 'areacode' | 'legacy' | 'muni';
@@ -63,6 +73,10 @@ export interface QuizMeta {
   hasOperatorFilter: boolean;
   /** 市外局番向けの出題順・局番帯フィルタを出すか */
   hasAreaCodeFilters?: boolean;
+  /** 全国一律出題（都道府県・地方の選択 UI を出さない） */
+  nationwide?: boolean;
+  /** 高速道路向けの施設種別・道路タイプフィルタを出すか */
+  hasHighwayFilters?: boolean;
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
   hoverKind?: HoverKind;
 }

@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { REGIONS } from '../../lib/regions';
 import { ALL_PREF_CODES, prefName } from '../../lib/prefectures';
-import type { OperatorFilter, QuizFilter, QuizMeta } from '../../quizzes/types';
+import type {
+  HighwayFacilityKind,
+  HighwayRoadType,
+  OperatorFilter,
+  QuizFilter,
+  QuizMeta,
+} from '../../quizzes/types';
 
 const COUNT_OPTIONS: { count: number; label: string }[] = [
   { count: 5, label: '5 問' },
@@ -16,6 +22,16 @@ const RADIUS_OPTIONS: { km: number; label: string }[] = [
 ];
 // 03・06 は単独局番なので帯としては出さない（地方・都道府県で選べば含まれる）
 const CODE_PREFIX_OPTIONS = ['01', '02', '04', '05', '07', '08', '09'];
+
+const FACILITY_KIND_OPTIONS: [HighwayFacilityKind, string][] = [
+  ['ic', 'IC'],
+  ['jct', 'JCT'],
+  ['sapa', 'SA・PA'],
+];
+const ROAD_TYPE_OPTIONS: [HighwayRoadType, string][] = [
+  ['inter', '都市間高速'],
+  ['urban', '都市高速'],
+];
 
 /** 出題範囲の選び方（局番帯は市外局番クイズのみ） */
 type ScopeMode = 'region' | 'pref' | 'band';
@@ -33,6 +49,13 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   const [questionCount, setQuestionCount] = useState(Infinity);
   const [radiusKm, setRadiusKm] = useState(3);
   const [order, setOrder] = useState<'random' | 'asc'>('random');
+  // 高速道路クイズの絞り込み（初期値は全 on = そのままスタート可能）
+  const [facilityKinds, setFacilityKinds] = useState<Set<HighwayFacilityKind>>(
+    () => new Set(FACILITY_KIND_OPTIONS.map(([v]) => v)),
+  );
+  const [roadTypes, setRoadTypes] = useState<Set<HighwayRoadType>>(
+    () => new Set(ROAD_TYPE_OPTIONS.map(([v]) => v)),
+  );
   // PC 幅（モバイル用ブレークポイント 600px 超）では都道府県一覧を最初から開く
   const [showPrefs, setShowPrefs] = useState(() => window.matchMedia('(min-width: 601px)').matches);
 
@@ -74,17 +97,35 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
     setCodePrefixes(new Set());
   };
 
-  const canStart = scopeMode === 'band' ? codePrefixes.size > 0 : prefs.size > 0;
+  const toggleIn = <T,>(set: Dispatch<SetStateAction<Set<T>>>, value: T) => {
+    set((prev) => {
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return next;
+    });
+  };
+
+  const canStart = meta.nationwide
+    ? facilityKinds.size > 0 && roadTypes.size > 0
+    : scopeMode === 'band'
+      ? codePrefixes.size > 0
+      : prefs.size > 0;
 
   const start = () => {
     onStart({
-      // 局番帯モードは県を絞らず全国から局番で絞る
-      prefs: scopeMode === 'band' ? [...ALL_PREF_CODES] : [...prefs].sort((a, b) => a - b),
+      // 全国クイズは県で絞らない（prefs 空 = 地図も日本全域のまま）。局番帯モードも全国から局番で絞る
+      prefs:
+        meta.nationwide ? []
+        : scopeMode === 'band' ? [...ALL_PREF_CODES]
+        : [...prefs].sort((a, b) => a - b),
       operator,
       questionCount,
       radiusKm,
       order,
       codePrefixes: scopeMode === 'band' ? [...codePrefixes].sort() : [],
+      facilityKinds: meta.hasHighwayFilters ? [...facilityKinds] : undefined,
+      roadTypes: meta.hasHighwayFilters ? [...roadTypes] : undefined,
     });
   };
 
@@ -126,7 +167,9 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
 
       <section>
         <h3>出題範囲</h3>
-        {meta.hasAreaCodeFilters ? (
+        {meta.nationwide ? (
+          <p className="filter-note">全国の高速道路から出題します</p>
+        ) : meta.hasAreaCodeFilters ? (
           <>
             <div className="chip-row">
               {(
@@ -174,6 +217,40 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
           </>
         )}
       </section>
+
+      {meta.hasHighwayFilters && (
+        <>
+          <section>
+            <h3>施設の種別</h3>
+            <div className="chip-row">
+              {FACILITY_KIND_OPTIONS.map(([value, label]) => (
+                <button
+                  key={value}
+                  className={`chip ${facilityKinds.has(value) ? 'chip-on' : ''}`}
+                  onClick={() => toggleIn(setFacilityKinds, value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </section>
+          <section>
+            <h3>道路タイプ</h3>
+            <div className="chip-row">
+              {ROAD_TYPE_OPTIONS.map(([value, label]) => (
+                <button
+                  key={value}
+                  className={`chip ${roadTypes.has(value) ? 'chip-on' : ''}`}
+                  onClick={() => toggleIn(setRoadTypes, value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p className="filter-note">都市高速 = 首都高速・阪神高速・名古屋高速・福岡北九州高速・広島高速</p>
+          </section>
+        </>
+      )}
 
       {meta.hasOperatorFilter && (
         <section>
@@ -258,7 +335,11 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       <button className="btn btn-primary btn-large" disabled={!canStart} onClick={start}>
         スタート
       </button>
-      {!canStart && <p className="filter-warn">出題範囲を選んでください</p>}
+      {!canStart && (
+        <p className="filter-warn">
+          {meta.nationwide ? '施設の種別と道路タイプを1つ以上選んでください' : '出題範囲を選んでください'}
+        </p>
+      )}
     </div>
   );
 }

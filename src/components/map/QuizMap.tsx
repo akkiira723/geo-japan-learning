@@ -79,6 +79,10 @@ function defaultMapSettings(quizId: QuizId): MapSettings {
   if (quizId === 'station') {
     return { mapType: 'basic-ja', border: false, muniBorder: false, rail: true };
   }
+  if (quizId === 'highway') {
+    // 高速道路はベース地図自体に強調描画されるためオーバーレイはすべて off
+    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: false };
+  }
   return { mapType: 'basic-ja', border: true, muniBorder: true, rail: false };
 }
 

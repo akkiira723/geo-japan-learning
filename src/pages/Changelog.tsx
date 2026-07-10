@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 
 const ENTRIES: { date: string; items: string[] }[] = [
   {
+    date: '2026-07-10',
+    items: [
+      '高速道路クイズを追加（IC・JCT・SA/PA、都市高速の出入口も収録。施設種別と道路タイプで絞り込み可能）',
+    ],
+  },
+  {
     date: '2026-07-07',
     items: [
       'マンホール単語帳を追加（写真をめくって自治体名を暗記、「覚えた」チェックで未習得のみに絞り込み）',

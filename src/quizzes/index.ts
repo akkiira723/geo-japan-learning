@@ -1,4 +1,5 @@
 import { areaCodeQuiz } from './areaCode';
+import { highwayQuiz } from './highway';
 import { legacyTownQuiz } from './legacyTown';
 import { manholeQuiz } from './manhole';
 import { stationQuiz } from './station';
@@ -6,6 +7,7 @@ import type { QuizId, QuizModule } from './types';
 
 export const QUIZZES: Partial<Record<QuizId, QuizModule>> = {
   station: stationQuiz,
+  highway: highwayQuiz,
   areacode: areaCodeQuiz,
   legacy: legacyTownQuiz,
   manhole: manholeQuiz,

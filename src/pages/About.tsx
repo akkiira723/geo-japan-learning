@@ -5,7 +5,7 @@ export function About() {
     <div className="page about">
       <h1>このツールについて</h1>
       <p>
-        GeoGuessr の日本マップ攻略に役立つ「市外局番」「旧市町村名」「駅名」を、地図クリック型クイズで学習する個人用ツールです。
+        GeoGuessr の日本マップ攻略に役立つ「市外局番」「旧市町村名」「駅名」「高速道路施設」を、地図クリック型クイズで学習する個人用ツールです。
       </p>
 
       <h2>データ出典</h2>
@@ -24,6 +24,11 @@ export function About() {
           <a href="https://github.com/smartnews-smri/japan-topography" target="_blank" rel="noreferrer">japan-topography</a> 経由で加工
         </li>
         <li>
+          高速道路施設（IC・JCT・SA/PA）: ©{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors（ODbL）を
+          Overpass API 経由で取得・加工
+        </li>
+        <li>
           マンホール画像: <a href="https://we-love-manho.com/" target="_blank" rel="noreferrer">日本マンホール蓋学会</a>
           （画像の権利は同会・各撮影者に帰属。本ツールは画像を複製・再配布せず同サイトから直接表示し、各問題に出典ページへのリンクを表示します）
         </li>
@@ -39,6 +44,7 @@ export function About() {
       <ul>
         <li>市外局番エリアは市区町村単位の近似であり、実際の番号区画（MA）境界とは一部異なります。</li>
         <li>1つの市区町村が複数の市外局番を持つ場合、いずれの局番でもその市区町村を正解として扱います。</li>
+        <li>高速道路施設は OpenStreetMap 由来のため、実際の名称・位置と一部異なる場合があります。</li>
         <li>成績はこのブラウザの localStorage にのみ保存されます。</li>
       </ul>
 
