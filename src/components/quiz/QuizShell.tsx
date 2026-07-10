@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { MAX_MISSES, useQuizEngine } from '../../hooks/useQuizEngine';
 import type { HoverKind, Question, QuizId } from '../../quizzes/types';
 import { QuizMap } from '../map/QuizMap';
+import { RubyText } from './RubyText';
 
 export interface QuizShellProps {
   quizId: QuizId;
@@ -55,7 +56,7 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
         <div className="quiz-question">
           <span className="quiz-sub">{current.sub ?? quizTitle}</span>
           <span className={`quiz-prompt ${current.prompt.length > 8 ? 'quiz-prompt-long' : ''}`}>
-            {current.prompt}
+            <RubyText text={current.prompt} rubies={current.promptRubies} />
           </span>
           {multi && phase === 'guessing' && (
             <span className="quiz-multi-badge">全 {current.targets.length} 箇所 / あと {remain}</span>

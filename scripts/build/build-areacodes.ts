@@ -4,6 +4,7 @@ import { feature as topoFeature } from 'topojson-client';
 import type { Topology, GeometryCollection } from 'topojson-specification';
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { normalizeName } from '../lib/normalize.ts';
+import { loadSacDict, resolveMuniYomi, type Yomi } from '../lib/yomi.ts';
 import { loadPref, expandToken, prefCodeByName } from '../lib/n03.ts';
 import { loadClaims, computeSplitMunis, type SplitMuni } from '../lib/areacode-claims.ts';
 import type { SubToken } from '../lib/soumu-kukaku.ts';
@@ -15,6 +16,8 @@ type MultiCoords = PolyCoords[];
 interface OutArea {
   code: string;
   munis: string[];
+  /** munis と同順。b=表示名中の読み対象部分（郡名等を除く）、k=ひらがな読み */
+  munisYomi: (Yomi | null)[];
   bbox: [number, number, number, number];
   geom: MultiPolygon;
 }
@@ -398,6 +401,21 @@ async function main() {
     process.exit(1);
   }
 
+  // --- 市区町村名の読み（e-Stat SAC 現行断面 + overrides/muni-yomi.json）
+  const sacDict = await loadSacDict();
+  const yomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/muni-yomi.json', 'utf8'),
+  );
+  const unresolvedYomi = new Set<string>();
+  const muniYomiOf = (prefCd: number, displayName: string): Yomi | null => {
+    const core = displayName.replace(/[（(]一部[）)]\s*$/, '').trim();
+    const ov = yomiOverride[`${prefCd}|${core}`];
+    if (ov) return { b: core, k: ov };
+    const hit = resolveMuniYomi(sacDict, prefCd, displayName);
+    if (!hit) unresolvedYomi.add(`  "${prefCd}|${core}": ""`);
+    return hit;
+  };
+
   // --- union してチャンク出力
   const outByPref = new Map<number, OutArea[]>();
   const codePrefs = new Map<string, Set<number>>();
@@ -419,6 +437,7 @@ async function main() {
     const area: OutArea = {
       code: b.code,
       munis: b.munis,
+      munisYomi: b.munis.map((m) => muniYomiOf(b.prefCd, m)),
       bbox: bboxOf(merged),
       geom: { type: 'MultiPolygon', coordinates: merged },
     };
@@ -428,6 +447,13 @@ async function main() {
     let cp = codePrefs.get(b.code);
     if (!cp) codePrefs.set(b.code, (cp = new Set()));
     cp.add(b.prefCd);
+  }
+
+  if (unresolvedYomi.size > 0) {
+    console.error(`✗ 読み仮名が解決できない市区町村が ${unresolvedYomi.size} 件あります。`);
+    console.error('  scripts/overrides/muni-yomi.json に以下のエントリを追記してください（値はひらがな読み）:');
+    console.error([...unresolvedYomi].join('\n'));
+    process.exit(1);
   }
 
   await mkdir('public/data/areacodes', { recursive: true });
@@ -452,7 +478,7 @@ async function main() {
         [...codePrefs.entries()].filter(([, s]) => s.size > 1).map(([c, s]) => [c, [...s].sort((a, b) => a - b)]),
       ),
       source:
-        '総務省「市外局番の一覧」PDF + 国土数値情報 N03 (japan-topography s0010) + 国勢調査2020小地域 (Geoshape)',
+        '総務省「市外局番の一覧」PDF + 国土数値情報 N03 (japan-topography s0010) + 国勢調査2020小地域 (Geoshape) + 読み仮名: e-Stat 統計LOD 標準地域コード',
       note: '番号区画は市区町村単位で解決し、複数局番に分割される市区町村は町丁・字等（小地域）単位で切り分けた近似。',
     }),
     'utf8',

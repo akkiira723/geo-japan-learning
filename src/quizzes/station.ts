@@ -6,7 +6,8 @@ import type { Question, QuizFilter, QuizModule, Target } from './types';
 interface StationRecord {
   id: string;
   n: string;
-  k?: string;
+  /** ひらがな読み（駅名部分のみ、「駅」を含まない） */
+  kana?: string;
   lat: number;
   lon: number;
   lines: string[];
@@ -49,12 +50,16 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     const targets: Target[] = group.map((s) => ({
       id: s.id,
       label: `${name}駅（${prefName(s.pref)}・${s.lines[0] ?? ''}）`,
+      rubies: s.kana ? [{ b: name, k: s.kana }] : undefined,
       kind: 'point',
       point: [s.lat, s.lon],
     }));
+    // 同名駅グループでも読みが異なることがある（金山: かなやま/かねやま）ので出題側は併記する
+    const kanas = [...new Set(group.map((s) => s.kana).filter((k): k is string => !!k))];
     return {
       id: `station:${name}`,
       prompt: `${name}駅`,
+      promptRubies: kanas.length > 0 ? [{ b: name, k: kanas.join('・') }] : undefined,
       sub: '駅名クイズ',
       targets,
     };

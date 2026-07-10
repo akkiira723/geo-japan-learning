@@ -236,6 +236,17 @@ kbd {
 .tt-label { font-weight: 700; }
 .tt-sub { color: var(--muted); font-size: 0.85em; margin-top: 1px; }
 
+/* 地名のふりがな（RubyText）。rt の分だけ行が高くなるので表示箇所ごとに余白を確保する */
+ruby { ruby-align: center; }
+rt {
+  font-size: 0.5em;
+  font-weight: 400;
+  opacity: 0.85;
+  letter-spacing: 0;
+  user-select: none;
+}
+.quiz-prompt ruby, .tt-label ruby, .tt-sub ruby { line-height: 1.9; }
+
 .quiz-map-wrap { flex: 1; position: relative; min-height: 0; }
 .quiz-map { width: 100%; height: 100%; }
 

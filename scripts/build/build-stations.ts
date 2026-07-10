@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { parseCsvRecords } from '../lib/csv.ts';
+import { normalizeName } from '../lib/normalize.ts';
 
 interface LineInfo {
   code: number;
@@ -7,12 +8,22 @@ interface LineInfo {
   company_code?: number;
 }
 
+/** station_database (Seo-4d696b75) out/main/station.json の読み辞書に使う部分 */
+interface KanaStation {
+  original_name: string;
+  name_kana: string;
+  prefecture: number;
+  lat: number;
+  lng: number;
+}
+
 type Operator = 'jr' | 'subway' | 'other';
 
 interface OutStation {
   id: string;
   n: string;
-  k?: string;
+  /** ひらがな読み（station_database 由来 + overrides/station-yomi.json） */
+  kana?: string;
   lat: number;
   lon: number;
   lines: string[];
@@ -34,11 +45,68 @@ function classifyStation(ops: Operator[]): Operator {
   return 'other';
 }
 
+/** 突合キー: 全角英数（ＪＲ/２等）を NFKC で畳んでから共通の異体字正規化を通す */
+const kanaMatchKey = (pref: number, name: string) => `${pref}|${normalizeName(name.normalize('NFKC'))}`;
+
+/** 末尾の括弧注記（「押上〈スカイツリー前〉」「中町（西町北）」等）を落とした照合用の名前 */
+const stripParen = (name: string) => name.replace(/[（(〈].*?[）)〉]\s*$/, '').trim();
+
+/**
+ * 読み辞書: 突合キー → 候補駅（同県同名は座標最近傍で確定）。
+ * 読みは辞書由来のみで、機械かな変換はしない。
+ */
+function buildKanaIndex(list: KanaStation[]): Map<string, KanaStation[]> {
+  const index = new Map<string, KanaStation[]>();
+  const add = (key: string, s: KanaStation) => {
+    const arr = index.get(key);
+    if (arr) arr.push(s);
+    else index.set(key, [s]);
+  };
+  for (const s of list) {
+    if (!s.original_name || !s.name_kana) continue;
+    add(kanaMatchKey(s.prefecture, s.original_name), s);
+    // 辞書側は「四ツ谷(四ッ谷)」「押上（スカイツリー前）」のような併記があるため、
+    // 括弧を落とした別名でも引けるようにする（読み側の括弧併記も同様に落とす）
+    const stripped = stripParen(s.original_name);
+    if (stripped !== s.original_name) {
+      add(kanaMatchKey(s.prefecture, stripped), { ...s, name_kana: stripParen(s.name_kana) });
+    }
+  }
+  return index;
+}
+
+function lookupKana(
+  index: Map<string, KanaStation[]>,
+  pref: number,
+  name: string,
+  lat: number,
+  lon: number,
+): string | undefined {
+  const candidates =
+    index.get(kanaMatchKey(pref, name)) ?? index.get(kanaMatchKey(pref, stripParen(name)));
+  if (!candidates || candidates.length === 0) return undefined;
+  if (candidates.length === 1) return candidates[0].name_kana;
+  let best = candidates[0];
+  let bestD = Infinity;
+  for (const c of candidates) {
+    const d = (c.lat - lat) ** 2 + (c.lng - lon) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = c;
+    }
+  }
+  return best.name_kana;
+}
+
 async function main() {
   const csv = await readFile('data-cache/raw/stations.csv', 'utf8');
   const rows = parseCsvRecords(csv);
   const lineList: LineInfo[] = JSON.parse(await readFile('data-cache/raw/line.json', 'utf8'));
   const lineByCode = new Map(lineList.map((l) => [String(l.code), l]));
+  const kanaIndex = buildKanaIndex(JSON.parse(await readFile('data-cache/raw/station-kana.json', 'utf8')));
+  const yomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/station-yomi.json', 'utf8'),
+  );
 
   const active = rows.filter((r) => r.e_status === '0');
   console.log(`全 ${rows.length} 行 → 営業中 ${active.length} 駅レコード`);
@@ -53,6 +121,7 @@ async function main() {
   }
 
   let unmatchedLines = new Set<string>();
+  const unresolvedKana: string[] = [];
   const byPref = new Map<number, OutStation[]>();
   for (const [gcd, members] of groups) {
     // 代表レコード: station_cd == g_cd のものを優先
@@ -75,10 +144,15 @@ async function main() {
       }
     }
 
+    // 読み: override（手動補正が最優先）→ station_database 辞書 → 未解決
+    const kana =
+      yomiOverride[`${pref}|${rep.station_name}`] ?? lookupKana(kanaIndex, pref, rep.station_name, lat, lon);
+    if (!kana) unresolvedKana.push(`  "${pref}|${rep.station_name}": ""`);
+
     const st: OutStation = {
       id: gcd,
       n: rep.station_name,
-      k: rep.station_name_k || undefined,
+      kana,
       lat,
       lon,
       lines: lineNames,
@@ -87,6 +161,13 @@ async function main() {
     const arr = byPref.get(pref);
     if (arr) arr.push(st);
     else byPref.set(pref, [st]);
+  }
+
+  if (unresolvedKana.length > 0) {
+    console.error(`✗ 読み仮名が解決できない駅が ${unresolvedKana.length} 件あります。`);
+    console.error('  scripts/overrides/station-yomi.json に以下のエントリを追記してください（値はひらがな読み）:');
+    console.error(unresolvedKana.join('\n'));
+    process.exit(1);
   }
 
   await mkdir('public/data/stations', { recursive: true });

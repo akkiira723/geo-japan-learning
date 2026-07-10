@@ -9,10 +9,10 @@
     "preview": "vite preview",
     "test": "vitest run",
     "data:stations": "tsx scripts/fetch/fetch-stations.ts && tsx scripts/build/build-stations.ts",
-    "data:areacodes": "tsx scripts/fetch/fetch-area-codes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-chocho-geo.ts && tsx scripts/build/build-areacodes.ts",
-    "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/build/build-legacy.ts",
+    "data:areacodes": "tsx scripts/fetch/fetch-area-codes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-chocho-geo.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-areacodes.ts",
+    "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-legacy.ts",
     "data:outline": "tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-pref-outline.ts && tsx scripts/build/build-muni-outline.ts",
-    "data:manholes": "tsx scripts/fetch/fetch-manholes.ts && tsx scripts/build/build-manholes.ts",
+    "data:manholes": "tsx scripts/fetch/fetch-manholes.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-manholes.ts",
     "data:highways": "tsx scripts/fetch/fetch-highways.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-highways.ts"
   },
   "dependencies": {

@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import { useEffect, useMemo, useState } from 'react';
 import { Circle, GeoJSON, MapContainer, Marker, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
+import { RubyText } from '../quiz/RubyText';
 import type { FeatureCollection } from 'geojson';
 import { loadChunk } from '../../hooks/useChunkLoader';
 import type { HitMark } from '../../hooks/useQuizEngine';
@@ -339,8 +340,8 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
             .map((t) => (
               <Marker key={t.id} position={[t.point[0], t.point[1]]} icon={hitPinIcon}>
                 <Tooltip direction="top" offset={[0, -20]} permanent={revealed}>
-                  <div className="tt-label">{t.label}</div>
-                  {t.sublabel && <div className="tt-sub">{t.sublabel}</div>}
+                  <div className="tt-label"><RubyText text={t.label} rubies={t.rubies} /></div>
+                  {t.sublabel && <div className="tt-sub"><RubyText text={t.sublabel} rubies={t.sublabelRubies} /></div>}
                 </Tooltip>
               </Marker>
             ))}
@@ -355,8 +356,8 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
                 {!wasHit && (
                   <Marker position={[t.point[0], t.point[1]]} icon={answerPinIcon}>
                     <Tooltip direction="top" offset={[0, -20]} permanent>
-                      <div className="tt-label">{t.label}</div>
-                      {t.sublabel && <div className="tt-sub">{t.sublabel}</div>}
+                      <div className="tt-label"><RubyText text={t.label} rubies={t.rubies} /></div>
+                      {t.sublabel && <div className="tt-sub"><RubyText text={t.sublabel} rubies={t.sublabelRubies} /></div>}
                     </Tooltip>
                   </Marker>
                 )}

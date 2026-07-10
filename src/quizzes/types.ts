@@ -5,13 +5,26 @@ export interface LatLng {
   lng: number;
 }
 
+/**
+ * ふりがな1件: 表示文字列中に最初に現れる b の部分へ k（ひらがな）のルビを振る。
+ * 郡名・路線名・道路名などの装飾部分は b に含めない（ルビ対象は地名コアのみ）。
+ */
+export interface Ruby {
+  b: string;
+  k: string;
+}
+
 /** クイズ1問の回答対象（同名駅・同名旧市町村は1問に複数入る） */
 export interface Target {
   id: string;
   /** 回答後に表示する補足ラベル（例: "東京都 (JR山手線)" / "宮城県 大和町"） */
   label: string;
+  /** label に振るふりがな（複数の地名を含むラベルは複数エントリ） */
+  rubies?: Ruby[];
   /** ラベルの下に小さく表示する2行目（例: "現在: 北広島市"） */
   sublabel?: string;
+  /** sublabel に振るふりがな */
+  sublabelRubies?: Ruby[];
   kind: 'point' | 'polygon';
   /** [lat, lng] 点ターゲットの座標 or ポリゴンの代表点 */
   point: [number, number];
@@ -24,6 +37,8 @@ export interface Question {
   id: string;
   /** 出題文のメイン表示（例: "0123" / "広島町" / "大久保"） */
   prompt: string;
+  /** prompt に振るふりがな（市外局番など地名でない prompt は省略） */
+  promptRubies?: Ruby[];
   /** 出題の補足（例: "市外局番" / "駅名"） */
   sub?: string;
   /** 出題画像（マンホールクイズ）。地図の左上にパネル表示される */
