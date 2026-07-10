@@ -23,6 +23,7 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 1. `npm run data:<target>` を実行する
 2. 未解決の名前が1件でもあると build スクリプトが exit 1 し、一覧が表示される
 3. 該当する `scripts/overrides/*.json`（`legacy-fixes.json` / `manhole-fixes.json` / `areacode-muni-fixes.json`〔市町村名〕 / `areacode-chocho-fixes.json`〔大字等。値 `null`=無視、`["旧:○○町"]`=旧市町村ポリゴン照合〕 / `highway-fixes.json`〔`exclude`=除外・`rename`=名称修正、キーは OSM id `n123…`〕）に entry を追記する。areacode の大字は実在しない（国勢調査に痕跡がない）ことも多く、その場合は包含/除外の両リストに同名で載っていて打ち消し合うので `null` で安全に無視できる
+4. **読み仮名の未解決**も同じ往復ループ（`station-yomi.json`〔`県番号|駅名`〕/ `muni-yomi.json`〔`県番号|市区町村名`〕/ `legacy-yomi.json`〔gci ID〕/ `highway-yomi.json`〔OSM id〕、値はひらがな読み）。**読みは必ず出典（Wikipedia 本文等）で裏を取ってから記入する** — 地名は同じ漢字でも読みが異なる（大和町: やまとまち/やまとちょう/だいわちょう）。高速道路だけは読み欠落でも exit しない（読みなしで出力される）
 4. 1〜3 をクリーンになるまで繰り返す
 
 **未解決リストが概ね15〜20件を超える場合**は、生リストをそのままメインの会話に貼らずに Subagent へ委譲する。生データと該当ソース（対象の CSV/シート/クロール結果）を渡し、「タイプミス／自治体名変更／本当に欠落」に分類させ、構造化された結果だけを受け取ること。調査ログでメインコンテキストを汚さない。
@@ -34,6 +35,7 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 ## 高速道路専用: キャッシュ無効化と件数チェック
 
 - Overpass の再取得は `data-cache/highway/` を削除してから `npm run data:highways`（数分。親 way はノード ID バッチで分割取得され、混雑時はミラーへ自動ローテーション）
+- Wikipedia 読み辞書の再取得は `data-cache/yomi/wikipedia-highway.json` を削除（パーサだけ直した場合はこれで十分。記事本文も取り直すなら `wp-*.txt` も削除）。市区町村読み辞書（e-Stat SAC）の再取得は `data-cache/yomi/sac.json` と `sac-part-*.json` を削除
 - build は件数のサニティチェック（IC/JCT/SA・PA の想定範囲・道路名欠落率）で exit 1 することがある。OSM 側の大変動でなければ `build-highways.ts` の閾値ではなく取得データを疑う
 
 ## マンホール専用: キャッシュ無効化

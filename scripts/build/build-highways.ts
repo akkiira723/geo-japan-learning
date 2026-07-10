@@ -7,12 +7,18 @@ import {
   classifyJunctionKind,
   classifyServiceKind,
   clusterByProximity,
+  facilityCore,
+  facilityKanaCore,
   isExcludedName,
   isExpresswayRestArea,
   isUrbanExpressway,
   normalizeFacilityName,
   type HighwayKind,
 } from '../lib/highway.ts';
+import { kataToHira, type Yomi } from '../lib/yomi.ts';
+import { normalizeName } from '../lib/normalize.ts';
+import { PREFECTURES } from '../../src/lib/prefectures.ts';
+import type { HighwayYomiEntry } from '../fetch/fetch-highway-yomi.ts';
 
 const CLUSTER_KM = 2; // 上下線・複数ランプの同名ノードを1施設とみなす距離
 
@@ -49,12 +55,16 @@ interface Facility {
   lon: number;
   roads: string[];
   urban: boolean;
+  /** OSM の name:ja-Hira（あれば読みの第一ソース） */
+  hira?: string;
 }
 
 interface OutFacility {
   id: string;
   n: string;
   k?: 'sa' | 'pa';
+  /** 地名コアのふりがな（b は n の先頭部分、k はひらがな読み）。読みが取れない施設は省略 */
+  y?: Yomi;
   lat: number;
   lon: number;
   r?: string[];
@@ -125,6 +135,7 @@ async function loadFacilities(overrides: Overrides): Promise<Facility[]> {
       lon: nd.lon,
       roads: pickRoads(parents),
       urban,
+      hira: nd.tags?.['name:ja-Hira'],
     });
   }
 
@@ -148,6 +159,7 @@ async function loadFacilities(overrides: Overrides): Promise<Facility[]> {
       lon,
       roads: [],
       urban: isUrbanExpressway(el.tags ?? {}),
+      hira: el.tags?.['name:ja-Hira'],
     });
   }
 
@@ -212,6 +224,7 @@ function mergeFacilities(facilities: Facility[]): Facility[] {
         lon: round5(lon),
         roads,
         urban: cluster.some((f) => f.urban),
+        hira: cluster.map((f) => f.hira).find(Boolean),
       });
     }
   }
@@ -314,22 +327,84 @@ function sanity(label: string, count: number, min: number, max: number, errors: 
   }
 }
 
+/**
+ * 施設の読み解決: overrides/highway-yomi.json → OSM name:ja-Hira → Wikipedia 読み辞書。
+ * 都市高速のランプ名や新設施設など辞書に無いものは読みなしのまま出力する
+ * （欠落リストを表示するので override で漸進的に補完する運用）。
+ */
+function buildYomiResolver(
+  wikiEntries: HighwayYomiEntry[],
+  yomiOverride: Record<string, string>,
+): (f: Facility, pref: number) => { yomi?: Yomi; miss?: string } {
+  const byCore = new Map<string, HighwayYomiEntry[]>();
+  for (const e of wikiEntries) {
+    const key = normalizeName(e.core);
+    const arr = byCore.get(key);
+    if (arr) arr.push(e);
+    else byCore.set(key, [e]);
+  }
+  return (f, pref) => {
+    // 「横浜青葉IC/JCT」「名立谷浜SA(上り)、IC」のような複合表記は先頭の施設名で読みを引く。
+    // ・は固有名にも使われるため、先頭部が施設サフィックスで終わる場合だけ複合とみなす
+    const cleaned = f.name.replace(/[（(].*?[）)]/g, '').trim();
+    const parts = cleaned.split(/[/／、;・]/);
+    const isCompound =
+      parts.length > 1 && /(IC|JCT|SA|PA|インターチェンジ|ジャンクション|サービスエリア|パーキングエリア|出入口|ランプ)$/.test(parts[0].trim());
+    const b = facilityCore(isCompound ? parts[0].trim() : cleaned);
+    const done = (k: string) => ({ yomi: { b, k } });
+    const ov = yomiOverride[f.osmKey];
+    if (ov) return done(ov);
+    if (f.hira) {
+      const k = facilityKanaCore(kataToHira(f.hira.normalize('NFKC').replace(/[（(].*?[）)]/g, '').trim()));
+      if (k && /^[ぁ-んー・\s]+$/.test(k)) return done(k);
+    }
+    let candidates = byCore.get(normalizeName(b)) ?? [];
+    if (candidates.length > 1) {
+      const prefName = PREFECTURES[pref];
+      const byPref = candidates.filter((c) => c.pref === prefName);
+      if (byPref.length > 0) candidates = byPref;
+    }
+    if (candidates.length > 1 && f.roads.length > 0) {
+      const byRoad = candidates.filter(
+        (c) => c.road && f.roads.some((r) => r.includes(c.road!) || c.road!.includes(r)),
+      );
+      if (byRoad.length > 0) candidates = byRoad;
+    }
+    const kanas = [...new Set(candidates.map((c) => c.kana))];
+    if (kanas.length === 1) return done(kanas[0]);
+    return { miss: `${f.name} (${f.osmKey}, pref ${pref})${kanas.length > 1 ? ` 読み候補: ${kanas.join('/')}` : ''}` };
+  };
+}
+
 async function main() {
   const overrides: Overrides = JSON.parse(
     await readFile('scripts/overrides/highway-fixes.json', 'utf8'),
   );
+  const yomiOverride: Record<string, string> = JSON.parse(
+    await readFile('scripts/overrides/highway-yomi.json', 'utf8'),
+  );
+  const wikiYomi: { entries: HighwayYomiEntry[] } = JSON.parse(
+    await readFile('data-cache/yomi/wikipedia-highway.json', 'utf8'),
+  );
+  const resolveYomi = buildYomiResolver(wikiYomi.entries, yomiOverride);
   const facilities = mergeFacilities(await loadFacilities(overrides));
   const prefGeos = await loadPrefGeos();
 
   const chunks: Record<ChunkKind, OutFacility[]> = { ic: [], jct: [], sapa: [] };
   const fallbacks: string[] = [];
+  const yomiMisses: string[] = [];
   let urbanCount = 0;
+  let yomiCount = 0;
   for (const f of facilities) {
     const pref = assignPref(f, prefGeos, fallbacks);
     const chunk: ChunkKind = f.kind === 'sa' || f.kind === 'pa' ? 'sapa' : f.kind;
+    const { yomi, miss } = resolveYomi(f, pref);
+    if (miss) yomiMisses.push(miss);
+    else yomiCount++;
     const rec: OutFacility = {
       id: f.osmKey,
       n: f.name,
+      y: yomi,
       lat: f.lat,
       lon: f.lon,
       pref,
@@ -346,6 +421,16 @@ async function main() {
   if (fallbacks.length > 0) {
     console.log(`⚠ ポリゴン外（最寄り県にフォールバック）: ${fallbacks.length} 件`);
     for (const f of fallbacks.slice(0, 20)) console.log(`  ${f}`);
+  }
+  console.log(
+    `読み: ${yomiCount}/${facilities.length} 件（${((yomiCount / facilities.length) * 100).toFixed(1)}%）`,
+  );
+  if (yomiMisses.length > 0) {
+    console.log(
+      `⚠ 読みなし ${yomiMisses.length} 件（出力には含める。overrides/highway-yomi.json の「OSMキー: 読み」で補完可能）:`,
+    );
+    for (const m of yomiMisses.slice(0, 30)) console.log(`  ${m}`);
+    if (yomiMisses.length > 30) console.log(`  ...ほか ${yomiMisses.length - 30} 件`);
   }
 
   // 件数とデータ品質のサニティチェック（範囲外なら生成失敗として exit 1）。
@@ -390,7 +475,8 @@ async function main() {
       counts,
       urbanCount,
       duplicateNameCount: dupNames.length,
-      source: 'OpenStreetMap via Overpass API (ODbL, © OpenStreetMap contributors)',
+      source:
+        'OpenStreetMap via Overpass API (ODbL, © OpenStreetMap contributors) + 読み仮名: OSM name:ja-Hira / Wikipedia「日本のインターチェンジ一覧」「日本のサービスエリア・パーキングエリア一覧」(CC BY-SA 4.0)',
     }),
     'utf8',
   );

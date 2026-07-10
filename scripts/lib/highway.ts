@@ -103,6 +103,37 @@ export function isUrbanExpressway(tags: { operator?: string; name?: string }): b
 }
 
 /**
+ * 施設名から種別サフィックス（IC/JCT/SA/PA/出入口/ランプ等）を繰り返し外した地名コア。
+ * ふりがな（ルビ）の対象範囲と、Wikipedia 読み辞書との突合キーの素になる。
+ * サフィックスを外すと固有名が残らない名前はそのまま返す。
+ */
+const FACILITY_SUFFIX_RE =
+  /(スマートインターチェンジ|インターチェンジ|ジャンクション|サービスエリア|パーキングエリア|ハイウェイオアシス|本線料金所|料金所|出入口|入口|出口|ランプ|スマートIC|スマート|I\.C\.?|J\.C\.?T\.?|S\.A\.?|P\.A\.?|IC|JCT|SA|PA|TB|SIC)$/;
+export function facilityCore(name: string): string {
+  let s = name.trim();
+  for (;;) {
+    const t = s.replace(FACILITY_SUFFIX_RE, '').trim();
+    if (t === s || t === '') return s;
+    s = t;
+  }
+}
+
+/**
+ * 施設読みから種別サフィックスの読み（いんたーちぇんじ 等）を外した地名コアの読み。
+ * 呼び出し側でカタカナ→ひらがな変換（kataToHira）済みであること。
+ */
+const FACILITY_KANA_SUFFIX_RE =
+  /(すまーといんたーちぇんじ|いんたーちぇんじ|じゃんくしょん|さーびすえりあ|ぱーきんぐえりあ|はいうぇいおあしす|ほんせんりょうきんじょ|りょうきんじょ|でいりぐち|いりぐち|でぐち|らんぷ|すまーと)$/;
+export function facilityKanaCore(reading: string): string {
+  let s = reading.trim();
+  for (;;) {
+    const t = s.replace(FACILITY_KANA_SUFFIX_RE, '').trim();
+    if (t === s || t === '') return s;
+    s = t;
+  }
+}
+
+/**
  * 距離 km 以内で連結な点同士をまとめる単連結クラスタリング（union-find）。
  * 同名施設の上下線ノード・複数ランプを1ターゲットにマージするために使う。
  */

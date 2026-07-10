@@ -13,7 +13,7 @@
     "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-legacy.ts",
     "data:outline": "tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-pref-outline.ts && tsx scripts/build/build-muni-outline.ts",
     "data:manholes": "tsx scripts/fetch/fetch-manholes.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-manholes.ts",
-    "data:highways": "tsx scripts/fetch/fetch-highways.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-highways.ts"
+    "data:highways": "tsx scripts/fetch/fetch-highways.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-highway-yomi.ts && tsx scripts/build/build-highways.ts"
   },
   "dependencies": {
     "@turf/boolean-point-in-polygon": "^7.2.0",

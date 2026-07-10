@@ -93,6 +93,11 @@ export interface Yomi {
   k: string;
 }
 
+/** カタカナ→ひらがな（読みの表記ゆれ吸収用。長音・記号はそのまま） */
+export function kataToHira(s: string): string {
+  return s.replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
+}
+
 /**
  * 市区町村の表示名から読みを解決する。表示名には「空知郡南幌町」「岩見沢市（一部）」の
  * ような装飾が付くため、(1)（一部）を落とす → (2) そのまま引く → (3) 郡プレフィックスを

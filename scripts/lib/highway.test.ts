@@ -4,6 +4,8 @@ import {
   classifyJunctionKind,
   classifyServiceKind,
   clusterByProximity,
+  facilityCore,
+  facilityKanaCore,
   isExcludedName,
   isExpresswayRestArea,
   isUrbanExpressway,
@@ -155,5 +157,25 @@ describe('clusterByProximity', () => {
       { lat: 35.02, lon: 139.0 },
     ];
     expect(clusterByProximity(items, 1.5)).toHaveLength(1);
+  });
+});
+
+describe('facilityCore / facilityKanaCore', () => {
+  it('種別サフィックスを繰り返し外して地名コアを得る', () => {
+    expect(facilityCore('海老名SA')).toBe('海老名');
+    expect(facilityCore('浜崎橋JCT')).toBe('浜崎橋');
+    expect(facilityCore('台場出入口')).toBe('台場');
+    expect(facilityCore('海津PAスマートインターチェンジ')).toBe('海津');
+    expect(facilityCore('商工センター西ランプ')).toBe('商工センター西');
+  });
+  it('裸名称・サフィックスのみの名前はそのまま', () => {
+    expect(facilityCore('川口東')).toBe('川口東');
+    expect(facilityCore('出入口')).toBe('出入口');
+  });
+  it('読みのサフィックスも同様に外す', () => {
+    expect(facilityKanaCore('えびなさーびすえりあ')).toBe('えびな');
+    expect(facilityKanaCore('だいばでいりぐち')).toBe('だいば');
+    expect(facilityKanaCore('かいづぱーきんぐえりあすまーと')).toBe('かいづ');
+    expect(facilityKanaCore('かわぐちひがし')).toBe('かわぐちひがし');
   });
 });

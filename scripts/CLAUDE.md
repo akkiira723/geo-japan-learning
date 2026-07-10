@@ -8,6 +8,16 @@ CI では絶対に実行しない。ローカルで実行し、`public/data/` �
 `npm run data:*` はそれぞれ `fetch/*.ts`（ネットワーク I/O → `data-cache/`）→ `build/*.ts`（`data-cache/` → `public/data/*.json`）の順で1本のスクリプトを2段実行する。
 `fetch-muni-geo.ts` は `data:areacodes` と `data:outline` で共有されるので、両方古い場合でも二重に取得し直す必要はない。
 
+## 読み仮名（ふりがな）
+
+読みは出典データのみで機械かな変換はしない。共通辞書は e-Stat 統計LOD 標準地域コード
+（`fetch-sac-yomi.ts` → `data-cache/yomi/sac.json`、現行+消滅市区町村のひらがな。引き当ては `lib/yomi.ts`）。
+駅は station_database の `name_kana`、高速道路は OSM `name:ja-Hira` → Wikipedia 一覧
+（`fetch-highway-yomi.ts`、CC BY-SA）の順。辞書に無いものは `overrides/*-yomi.json`
+（`station-yomi`〔`県番号|駅名`〕/ `muni-yomi`〔`県番号|市区町村名`、areacode・manhole・legacy の into 共用〕/
+`legacy-yomi`〔gci ID〕/ `highway-yomi`〔OSM id〕）に追記する。
+高速道路だけは欠落を許容して警告表示のみ（他は exit 1）。
+
 ## 名寄せ（override）運用
 
 build スクリプトは名前解決に失敗した項目が1件でもあると exit 1 し、未解決リストを表示する。

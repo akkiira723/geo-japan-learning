@@ -1,13 +1,15 @@
 import { loadChunk } from '../hooks/useChunkLoader';
 import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
-import type { HighwayFacilityKind, Question, QuizFilter, QuizModule, Target } from './types';
+import type { HighwayFacilityKind, Question, QuizFilter, QuizModule, Ruby, Target } from './types';
 
 interface HighwayRecord {
   id: string;
   n: string;
   /** sapa チャンクのみ: SA か PA か */
   k?: 'sa' | 'pa';
+  /** 地名コアのふりがな（b は n 中の対象部分、k はひらがな）。読みが無い施設は省略 */
+  y?: Ruby;
   lat: number;
   lon: number;
   /** 道路名（例: ["東名高速道路"]）。取得できなかった施設は省略 */
@@ -47,12 +49,17 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     const targets: Target[] = group.map((f) => ({
       id: f.id,
       label: `${name}（${prefName(f.pref)}${f.r?.[0] ? '・' + f.r[0] : ''}）`,
+      rubies: f.y ? [f.y] : undefined,
       kind: 'point',
       point: [f.lat, f.lon],
     }));
+    // 同名施設で読みが異なる場合は併記（b は同名グループなので共通）
+    const yomis = group.map((f) => f.y).filter((y): y is Ruby => !!y);
+    const kanas = [...new Set(yomis.map((y) => y.k))];
     return {
       id: `highway:${name}`,
       prompt: name,
+      promptRubies: kanas.length > 0 ? [{ b: yomis[0].b, k: kanas.join('・') }] : undefined,
       // 全国出題で範囲の絞り込みがないため、道路名をヒントとして出す
       sub: roads.length > 0 ? roads.slice(0, 2).join('・') : '高速道路クイズ',
       targets,
