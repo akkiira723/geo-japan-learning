@@ -40,6 +40,22 @@ ${JP_AREA}
 nwr["highway"~"^(services|rest_area)$"]["name"](area.jp);
 out center tags;`;
 
+/**
+ * 本線の線形（地図オーバーレイ用）。motorway_link（ランプ）は視覚ノイズになるだけなので含めない。
+ * 全国一括 out geom は数十MBになり途切れるため、まず ID 一覧だけ取り、ID バッチで geometry を取得する
+ */
+const QUERY_LINE_IDS = `
+[out:json][timeout:600];
+${JP_AREA}
+way["highway"="motorway"](area.jp);
+out ids;`;
+
+const LINES_BATCH_SIZE = 2000;
+const queryLinesBatch = (wayIds: number[]) => `
+[out:json][timeout:300];
+way(id:${wayIds.join(',')});
+out geom;`;
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 interface OverpassResponse {
@@ -112,11 +128,40 @@ async function fetchWays(): Promise<void> {
   console.log(`親way: 計 ${byWayId.size} way → ${outPath}`);
 }
 
+/** 本線 way の ID バッチごとに geometry つきで取得し、重複を除いて lines.json にまとめる */
+async function fetchLines(): Promise<void> {
+  const outPath = 'data-cache/highway/lines.json';
+  if (existsSync(outPath)) {
+    const cached = JSON.parse(await readFile(outPath, 'utf8'));
+    console.log(`本線線形: キャッシュ済み（${cached.elements.length} 要素、スキップ）`);
+    return;
+  }
+  await fetchOverpass('本線way ID一覧', QUERY_LINE_IDS, 'data-cache/highway/line-ids.json');
+  const idsJson = JSON.parse(await readFile('data-cache/highway/line-ids.json', 'utf8'));
+  const ids: number[] = idsJson.elements.map((e: { id: number }) => e.id).sort((a: number, b: number) => a - b);
+  const byWayId = new Map<number, unknown>();
+  for (let i = 0; i < ids.length; i += LINES_BATCH_SIZE) {
+    const batch = ids.slice(i, i + LINES_BATCH_SIZE);
+    const part = `data-cache/highway/lines-part-${String(i / LINES_BATCH_SIZE).padStart(2, '0')}.json`;
+    await fetchOverpass(
+      `本線線形 ${i / LINES_BATCH_SIZE + 1}/${Math.ceil(ids.length / LINES_BATCH_SIZE)}`,
+      queryLinesBatch(batch),
+      part,
+    );
+    const json = JSON.parse(await readFile(part, 'utf8'));
+    for (const el of json.elements as { id: number }[]) byWayId.set(el.id, el);
+    await sleep(BATCH_DELAY_MS);
+  }
+  await writeFile(outPath, JSON.stringify({ elements: [...byWayId.values()] }), 'utf8');
+  console.log(`本線線形: 計 ${byWayId.size} way → ${outPath}`);
+}
+
 async function main() {
   await mkdir('data-cache/highway', { recursive: true });
   await fetchOverpass('IC/JCTノード', QUERY_JUNCTIONS, 'data-cache/highway/junctions.json');
   await fetchWays();
   await fetchOverpass('SA/PA', QUERY_SERVICES, 'data-cache/highway/services.json');
+  await fetchLines();
   console.log('完了');
 }
 

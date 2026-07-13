@@ -12,7 +12,7 @@ GeoGuessr 日本マップ対策の地図クイズ。市外局番・旧市町村�
 | 旧市町村 | 消滅市町村名（同名は全箇所回答） | 旧市町村ポリゴン内クリックで正解 | 1,746件（1995年10月以降に消滅） |
 | マンホール | ご当地マンホール写真 | 自治体ポリゴン内クリックで正解 | 各自治体 市章蓋1枚＋デザイン蓋最大3枚 |
 
-共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、高速道路は全国一律出題＋施設種別（IC/JCT/SA・PA）と道路タイプ（都市間高速/都市高速）フィルタ、市外局番は出題範囲を地方/都道府県/局番帯（01台〜09台。03・06 は単独局番のため帯なし）のいずれかで選択+出題順（ランダム/局番の昇順）、地図タイプ切替（OSM Bright 日本語・ベーシック日本語・地理院 淡色/標準・CARTO Voyager・OSM）＋県境・市町村境オーバーレイ、回答後の正解エリア表示、成績の localStorage 保存。
+共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、高速道路は全国一律出題＋施設種別（IC/JCT/SA・PA）と道路タイプ（都市間高速/都市高速）フィルタ、市外局番は出題範囲を地方/都道府県/局番帯（01台〜09台。03・06 は単独局番のため帯なし）のいずれかで選択+出題順（ランダム/局番の昇順）、地図タイプ切替（OSM Bright 日本語・ベーシック日本語・地理院 淡色/標準・CARTO Voyager・OSM）＋県境・市町村境・鉄道・高速道路線形オーバーレイ、回答後の正解エリア表示、成績の localStorage 保存。
 
 ## 開発
 
@@ -33,7 +33,7 @@ npm run data:areacodes  # 市外局番表 + N03ポリゴン → public/data/area
 npm run data:legacy     # Geoshapeスナップショット差分 → public/data/legacy/
 npm run data:outline    # 県境・市町村境オーバーレイ → public/data/prefs-outline.json ほか
 npm run data:manholes   # 日本マンホール蓋学会をクロール（1時間弱・再開可能） → public/data/manholes/
-npm run data:highways   # OSM Overpass API（IC/JCT/SA/PA） → public/data/highways/
+npm run data:highways   # OSM Overpass API（IC/JCT/SA/PA + 本線線形） → public/data/highways/
 ```
 
 マンホールクイズの画像選定基準（`scripts/fetch/fetch-manholes.ts`）:
@@ -59,6 +59,6 @@ npm run data:highways   # OSM Overpass API（IC/JCT/SA/PA） → public/data/hig
 - 旧市町村ポリゴン: 『歴史的行政区域データセットβ版』（CODH作成）doi:10.20676/00000447（CC BY 4.0）
 - 市区町村ポリゴン: 国土数値情報 N03 を [japan-topography](https://github.com/smartnews-smri/japan-topography) 経由で加工
 - 市外局番の区画: 総務省「[市外局番の一覧](https://www.soumu.go.jp/main_content/000141817.pdf)」
-- 高速道路施設（IC・JCT・SA/PA）: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors（ODbL）、Overpass API 経由で取得・加工
+- 高速道路施設（IC・JCT・SA/PA）・本線線形: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors（ODbL）、Overpass API 経由で取得・加工
 - 町丁・字等（小地域）ポリゴン: 国勢調査2020 小地域境界データを [Geoshape](https://geoshape.ex.nii.ac.jp/ka/) 経由で加工
 - 地図タイル: © OpenStreetMap contributors / OSMFJ タイルサーバー（日本語スタイル） / 国土地理院 地理院タイル / © CARTO

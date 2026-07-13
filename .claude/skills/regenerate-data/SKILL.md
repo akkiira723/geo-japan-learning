@@ -34,7 +34,8 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 
 ## 高速道路専用: キャッシュ無効化と件数チェック
 
-- Overpass の再取得は `data-cache/highway/` を削除してから `npm run data:highways`（数分。親 way はノード ID バッチで分割取得され、混雑時はミラーへ自動ローテーション）
+- Overpass の再取得は `data-cache/highway/` を削除してから `npm run data:highways`（数分。親 way はノード ID バッチ〔`ways-part-*.json`〕、本線線形は way ID バッチ〔`lines-part-*.json`〕で分割取得され、混雑時はミラーへ自動ローテーション。part 単位で再開可能）
+- 本線線形（`public/data/highways/lines.json`、地図オーバーレイ用）は `build-highway-lines.ts` が生成。総延長・サイズのサニティで exit 1 したら `TOLERANCE`（DP 許容誤差）のコメントを参照
 - Wikipedia 読み辞書の再取得は `data-cache/yomi/wikipedia-highway.json` を削除（パーサだけ直した場合はこれで十分。記事本文も取り直すなら `wp-*.txt` も削除）。市区町村読み辞書（e-Stat SAC）の再取得は `data-cache/yomi/sac.json` と `sac-part-*.json` を削除
 - build は件数のサニティチェック（IC/JCT/SA・PA の想定範囲・道路名欠落率）で exit 1 することがある。OSM 側の大変動でなければ `build-highways.ts` の閾値ではなく取得データを疑う
 

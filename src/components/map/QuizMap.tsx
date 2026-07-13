@@ -74,17 +74,18 @@ interface MapSettings {
   border: boolean;
   muniBorder: boolean;
   rail: boolean;
+  highway: boolean;
 }
 
 function defaultMapSettings(quizId: QuizId): MapSettings {
   if (quizId === 'station') {
-    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: true };
+    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: true, highway: false };
   }
   if (quizId === 'highway') {
-    // 高速道路はベース地図自体に強調描画されるためオーバーレイはすべて off
-    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: false };
+    // 高速道路クイズは路線網の学習が主目的なので線形ハイライトのみ on
+    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: false, highway: true };
   }
-  return { mapType: 'basic-ja', border: true, muniBorder: true, rail: false };
+  return { mapType: 'basic-ja', border: true, muniBorder: true, rail: false, highway: false };
 }
 
 function loadMapSettings(quizId: QuizId): MapSettings {
@@ -98,6 +99,7 @@ function loadMapSettings(quizId: QuizId): MapSettings {
       border: typeof v.border === 'boolean' ? v.border : def.border,
       muniBorder: typeof v.muniBorder === 'boolean' ? v.muniBorder : def.muniBorder,
       rail: typeof v.rail === 'boolean' ? v.rail : def.rail,
+      highway: typeof v.highway === 'boolean' ? v.highway : def.highway,
     };
   } catch {
     return def;
@@ -253,8 +255,11 @@ export interface QuizMapProps {
 export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs }: QuizMapProps) {
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
   const [settings, setSettings] = useState<MapSettings>(() => loadMapSettings(quizId));
-  const { mapType, border: showBorder, muniBorder: showMuniBorder, rail: showRail } = settings;
+  const { mapType, border: showBorder, muniBorder: showMuniBorder, rail: showRail, highway: showHighway } = settings;
   const [outline, setOutline] = useState<FeatureCollection | null>(null);
+  const [hwLines, setHwLines] = useState<FeatureCollection | null>(null);
+  // 高速道路線形は10万点級なので、このレイヤーだけ SVG でなく Canvas で描く
+  const hwRenderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
 
   useEffect(() => {
     if (!showBorder || outline) return;
@@ -269,6 +274,19 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
     };
   }, [showBorder, outline]);
 
+  useEffect(() => {
+    if (!showHighway || hwLines) return;
+    let cancelled = false;
+    loadChunk<FeatureCollection>('highways/lines.json')
+      .then((fc) => {
+        if (!cancelled) setHwLines(fc);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [showHighway, hwLines]);
+
   const updateSettings = (patch: Partial<MapSettings>) => {
     setSettings((prev) => {
       const next = { ...prev, ...patch };
@@ -280,6 +298,7 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
   const toggleBorder = (on: boolean) => updateSettings({ border: on });
   const toggleMuniBorder = (on: boolean) => updateSettings({ muniBorder: on });
   const toggleRail = (on: boolean) => updateSettings({ rail: on });
+  const toggleHighway = (on: boolean) => updateSettings({ highway: on });
 
   const tile = MAP_TYPES[mapType];
 
@@ -312,6 +331,15 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
             data={outline}
             interactive={false}
             style={{ color: '#e11d48', weight: 1.3, opacity: 0.65, fillOpacity: 0 }}
+          />
+        )}
+
+        {/* 高速道路線形オーバーレイ（緑＝標識色。クリックは地図へ素通し）。renderer は PathOptions 経由で子 Polyline に届く */}
+        {showHighway && hwLines && (
+          <GeoJSON
+            data={hwLines}
+            interactive={false}
+            style={{ color: '#059669', weight: 2, opacity: 0.75, renderer: hwRenderer }}
           />
         )}
 
@@ -402,6 +430,10 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
         <label className="map-control-check">
           <input type="checkbox" checked={showRail} onChange={(e) => toggleRail(e.target.checked)} />
           鉄道
+        </label>
+        <label className="map-control-check">
+          <input type="checkbox" checked={showHighway} onChange={(e) => toggleHighway(e.target.checked)} />
+          高速道路
         </label>
       </div>
     </>
