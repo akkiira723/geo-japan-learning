@@ -1,5 +1,5 @@
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import type { MultiPolygon, Polygon } from 'geojson';
+import type { MultiLineString, MultiPolygon, Polygon } from 'geojson';
 import type { LatLng, Target } from '../quizzes/types';
 
 const EARTH_RADIUS_KM = 6371;
@@ -23,7 +23,7 @@ export function inBbox(p: LatLng, bbox: [number, number, number, number]): boole
 
 export interface JudgeResult {
   hit: boolean;
-  /** 点ターゲットまでの距離、またはポリゴン境界への最短距離（内側なら0） */
+  /** 点ターゲットまでの距離、ポリゴン境界への最短距離（内側なら0）、または線形への最短距離 */
   distanceKm: number;
 }
 
@@ -43,9 +43,10 @@ function distToSegmentKm(p: LatLng, ax: number, ay: number, bx: number, by: numb
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-/** ポリゴン境界（飛び地・穴を含む全リング）への最短距離 */
-export function distanceToGeomKm(p: LatLng, geom: Polygon | MultiPolygon): number {
-  const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+/** ポリゴン境界（飛び地・穴を含む全リング）または線形（全パーツ）への最短距離 */
+export function distanceToGeomKm(p: LatLng, geom: Polygon | MultiPolygon | MultiLineString): number {
+  // Polygon のリング列と MultiLineString の線列は同じネスト深度なので同一ループで処理できる
+  const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
   let min = Infinity;
   for (const poly of polys) {
     for (const ring of poly) {
@@ -66,6 +67,11 @@ export function judgeTarget(target: Target, click: LatLng, radiusKm: number): Ju
   }
   if (!target.geom) {
     const distanceKm = haversineKm(rep, click);
+    return { hit: distanceKm <= radiusKm, distanceKm };
+  }
+  // line: 線形への最短距離が半径内なら hit（点ターゲットと同じ距離判定を線に対して行う）
+  if (target.kind === 'line' || target.geom.type === 'MultiLineString') {
+    const distanceKm = distanceToGeomKm(click, target.geom);
     return { hit: distanceKm <= radiusKm, distanceKm };
   }
   // polygon: bbox 内なら point-in-polygon、距離は境界への最短距離（代表点ではなく）

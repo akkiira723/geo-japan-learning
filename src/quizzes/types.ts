@@ -1,4 +1,4 @@
-import type { MultiPolygon, Polygon } from 'geojson';
+import type { MultiLineString, MultiPolygon, Polygon } from 'geojson';
 
 export interface LatLng {
   lat: number;
@@ -25,12 +25,12 @@ export interface Target {
   sublabel?: string;
   /** sublabel に振るふりがな */
   sublabelRubies?: Ruby[];
-  kind: 'point' | 'polygon';
-  /** [lat, lng] 点ターゲットの座標 or ポリゴンの代表点 */
+  kind: 'point' | 'polygon' | 'line';
+  /** [lat, lng] 点ターゲットの座標 or ポリゴン・線形の代表点 */
   point: [number, number];
-  /** [west, south, east, north] ポリゴンのバウンディングボックス */
+  /** [west, south, east, north] ポリゴン・線形のバウンディングボックス */
   bbox?: [number, number, number, number];
-  geom?: Polygon | MultiPolygon;
+  geom?: Polygon | MultiPolygon | MultiLineString;
 }
 
 export interface Question {

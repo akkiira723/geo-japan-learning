@@ -107,6 +107,59 @@ describe('judgeTarget (飛び地つきポリゴン)', () => {
   });
 });
 
+describe('judgeTarget (line)', () => {
+  // パーツ1: 緯度35の横線（経度139〜140）/ パーツ2: 同緯度の横線（経度141〜141.5）
+  const target: Target = {
+    id: 'l1',
+    label: 'テスト路線',
+    kind: 'line',
+    point: [35, 139.5],
+    bbox: [139, 35, 141.5, 35],
+    geom: {
+      type: 'MultiLineString',
+      coordinates: [
+        [[139, 35], [139.5, 35], [140, 35]],
+        [[141, 35], [141.5, 35]],
+      ],
+    },
+  };
+
+  it('線への垂線距離が半径内なら hit', () => {
+    // 線の 0.05度北 ≈ 5.6km
+    const r = judgeTarget(target, { lat: 35.05, lng: 139.5 }, 10);
+    expect(r.hit).toBe(true);
+    expect(r.distanceKm).toBeGreaterThan(4);
+    expect(r.distanceKm).toBeLessThan(7);
+  });
+
+  it('半径外なら miss で距離を返す', () => {
+    const r = judgeTarget(target, { lat: 35.05, lng: 139.5 }, 3);
+    expect(r.hit).toBe(false);
+    expect(r.distanceKm).toBeGreaterThan(4);
+  });
+
+  it('端点の先は延長線ではなく端点までの距離', () => {
+    // 西端(139,35)のさらに西 0.1度 ≈ 9.1km。延長線に投影すると 0 になってしまう
+    const r = judgeTarget(target, { lat: 35, lng: 138.9 }, 3);
+    expect(r.hit).toBe(false);
+    expect(r.distanceKm).toBeGreaterThan(8);
+    expect(r.distanceKm).toBeLessThan(10);
+  });
+
+  it('複数パーツの最小距離をとる（近い方のパーツ基準）', () => {
+    // パーツ2の 0.02度北 ≈ 2.2km（パーツ1からは約90km）
+    const r = judgeTarget(target, { lat: 35.02, lng: 141.2 }, 3);
+    expect(r.hit).toBe(true);
+    expect(r.distanceKm).toBeLessThan(3);
+  });
+
+  it('線上のクリックは距離ほぼ0', () => {
+    const r = judgeTarget(target, { lat: 35, lng: 139.7 }, 3);
+    expect(r.hit).toBe(true);
+    expect(r.distanceKm).toBeCloseTo(0, 5);
+  });
+});
+
 describe('judgeClick（複数ターゲットの最近傍消費）', () => {
   const a: Target = { id: 'a', label: 'A', kind: 'point', point: [35.0, 139.0] };
   const b: Target = { id: 'b', label: 'B', kind: 'point', point: [35.1, 139.0] }; // Aの約11km北
