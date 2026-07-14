@@ -402,6 +402,12 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
                     style={{ color: wasHit ? '#1fa588' : '#e8a13d', weight: 2, fillOpacity: 0.18 }}
                   />
                 )}
+                {t.kind === 'line' && t.geom && (
+                  <GeoJSON
+                    data={t.geom}
+                    style={{ color: wasHit ? '#1fa588' : '#e8a13d', weight: 3.5, opacity: 0.9 }}
+                  />
+                )}
               </span>
             );
           })}
