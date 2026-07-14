@@ -7,6 +7,7 @@ import type {
   OperatorFilter,
   QuizFilter,
   QuizMeta,
+  RouteBand,
 } from '../../quizzes/types';
 
 const COUNT_OPTIONS: { count: number; label: string }[] = [
@@ -32,6 +33,11 @@ const ROAD_TYPE_OPTIONS: [HighwayRoadType, string][] = [
   ['inter', '都市間高速'],
   ['urban', '都市高速'],
 ];
+const ROUTE_BAND_OPTIONS: [RouteBand, string][] = [
+  ['two', '1〜58号（主要国道）'],
+  ['three-low', '101〜299号'],
+  ['three-high', '300〜507号'],
+];
 
 /** 出題範囲の選び方（局番帯は市外局番クイズのみ） */
 type ScopeMode = 'region' | 'pref' | 'band';
@@ -55,6 +61,10 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   );
   const [roadTypes, setRoadTypes] = useState<Set<HighwayRoadType>>(
     () => new Set(ROAD_TYPE_OPTIONS.map(([v]) => v)),
+  );
+  // 国道番号クイズの番号帯（初期値は全 on = そのままスタート可能）
+  const [routeBands, setRouteBands] = useState<Set<RouteBand>>(
+    () => new Set(ROUTE_BAND_OPTIONS.map(([v]) => v)),
   );
   // PC 幅（モバイル用ブレークポイント 600px 超）では都道府県一覧を最初から開く
   const [showPrefs, setShowPrefs] = useState(() => window.matchMedia('(min-width: 601px)').matches);
@@ -107,7 +117,8 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   };
 
   const canStart = meta.nationwide
-    ? facilityKinds.size > 0 && roadTypes.size > 0
+    ? (!meta.hasHighwayFilters || (facilityKinds.size > 0 && roadTypes.size > 0)) &&
+      (!meta.hasRouteFilters || routeBands.size > 0)
     : scopeMode === 'band'
       ? codePrefixes.size > 0
       : prefs.size > 0;
@@ -126,6 +137,7 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       codePrefixes: scopeMode === 'band' ? [...codePrefixes].sort() : [],
       facilityKinds: meta.hasHighwayFilters ? [...facilityKinds] : undefined,
       roadTypes: meta.hasHighwayFilters ? [...roadTypes] : undefined,
+      routeBands: meta.hasRouteFilters ? [...routeBands] : undefined,
     });
   };
 
@@ -168,7 +180,9 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       <section>
         <h3>出題範囲</h3>
         {meta.nationwide ? (
-          <p className="filter-note">全国の高速道路から出題します</p>
+          <p className="filter-note">
+            {meta.hasRouteFilters ? '全国の国道から出題します' : '全国の高速道路から出題します'}
+          </p>
         ) : meta.hasAreaCodeFilters ? (
           <>
             <div className="chip-row">
@@ -252,6 +266,24 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
         </>
       )}
 
+      {meta.hasRouteFilters && (
+        <section>
+          <h3>番号帯</h3>
+          <div className="chip-row">
+            {ROUTE_BAND_OPTIONS.map(([value, label]) => (
+              <button
+                key={value}
+                className={`chip ${routeBands.has(value) ? 'chip-on' : ''}`}
+                onClick={() => toggleIn(setRouteBands, value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="filter-note">59〜100・109〜111・214〜216号は欠番のため存在しません</p>
+        </section>
+      )}
+
       {meta.hasOperatorFilter && (
         <section>
           <h3>事業者</h3>
@@ -275,14 +307,14 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
         </section>
       )}
 
-      {meta.hasAreaCodeFilters && (
+      {(meta.hasAreaCodeFilters || meta.hasRouteFilters) && (
         <section>
           <h3>出題順</h3>
           <div className="chip-row">
             {(
               [
                 ['random', 'ランダム'],
-                ['asc', '局番の昇順'],
+                ['asc', meta.hasRouteFilters ? '番号の昇順' : '局番の昇順'],
               ] as ['random' | 'asc', string][]
             ).map(([value, label]) => (
               <button
@@ -337,7 +369,11 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       </button>
       {!canStart && (
         <p className="filter-warn">
-          {meta.nationwide ? '施設の種別と道路タイプを1つ以上選んでください' : '出題範囲を選んでください'}
+          {meta.hasRouteFilters
+            ? '番号帯を1つ以上選んでください'
+            : meta.nationwide
+              ? '施設の種別と道路タイプを1つ以上選んでください'
+              : '出題範囲を選んでください'}
         </p>
       )}
     </div>
