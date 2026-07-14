@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-14",
+  "total": 459,
+  "counts": {
+    "two": 58,
+    "three-low": 193,
+    "three-high": 208
+  },
+  "source": "OpenStreetMap via Overpass API (ODbL, © OpenStreetMap contributors)"
+}
