@@ -50,7 +50,7 @@ export interface Question {
   targets: Target[];
 }
 
-export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole' | 'highway';
+export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole' | 'highway' | 'route';
 
 export type OperatorFilter = 'all' | 'jr' | 'nonjr';
 
@@ -60,13 +60,16 @@ export type HighwayFacilityKind = 'ic' | 'jct' | 'sapa';
 /** 高速道路クイズの道路タイプ（都市間高速 / 都市高速） */
 export type HighwayRoadType = 'inter' | 'urban';
 
+/** 国道番号クイズの番号帯（データチャンクと 1:1 対応） */
+export type RouteBand = 'two' | 'three-low' | 'three-high';
+
 export interface QuizFilter {
   prefs: number[];
   operator?: OperatorFilter;
   questionCount: number;
   /** 点ターゲットの正解半径 km（駅クイズの難易度） */
   radiusKm: number;
-  /** 出題順。省略時はランダム（市外局番クイズのみ 'asc' = 局番の昇順に対応） */
+  /** 出題順。省略時はランダム（市外局番・国道番号クイズのみ 'asc' = 番号の昇順に対応） */
   order?: 'random' | 'asc';
   /** 市外局番の先頭2桁フィルタ（例: ['01', '02']）。空/省略はすべて */
   codePrefixes?: string[];
@@ -74,6 +77,8 @@ export interface QuizFilter {
   facilityKinds?: HighwayFacilityKind[];
   /** 高速道路クイズの道路タイプフィルタ。空/省略はすべて */
   roadTypes?: HighwayRoadType[];
+  /** 国道番号クイズの番号帯フィルタ。空/省略はすべて */
+  routeBands?: RouteBand[];
 }
 
 export type HoverKind = 'areacode' | 'legacy' | 'muni';
@@ -92,6 +97,8 @@ export interface QuizMeta {
   nationwide?: boolean;
   /** 高速道路向けの施設種別・道路タイプフィルタを出すか */
   hasHighwayFilters?: boolean;
+  /** 国道番号向けの番号帯・出題順フィルタを出すか */
+  hasRouteFilters?: boolean;
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
   hoverKind?: HoverKind;
 }

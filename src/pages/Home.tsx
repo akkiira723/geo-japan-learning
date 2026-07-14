@@ -5,6 +5,7 @@ import { loadSessions } from '../lib/storage';
 const QUIZ_ICONS: Record<string, string> = {
   station: '🚉',
   highway: '🛣️',
+  route: '🍙',
   areacode: '☎️',
   legacy: '🗾',
   manhole: '🕳️',
