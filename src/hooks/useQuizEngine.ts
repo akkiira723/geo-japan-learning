@@ -24,10 +24,12 @@ export interface SessionStats {
   giveUpCount: number;
 }
 
-export function useQuizEngine(questions: Question[], radiusKm: number) {
+export function useQuizEngine(questions: Question[], radiusKm: number, selectMode = false) {
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<QuizPhase>(questions.length > 0 ? 'guessing' : 'finished');
   const [pin, setPin] = useState<LatLng | null>(null);
+  /** 選択式（selectMode）: ピンと同時に選んだターゲット id。選択なしクリックは null */
+  const [selection, setSelection] = useState<string | null>(null);
   const [hitMarks, setHitMarks] = useState<HitMark[]>([]);
   const [missMarks, setMissMarks] = useState<LatLng[]>([]);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -43,16 +45,22 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
   }, [current, hitMarks]);
 
   const placePin = useCallback(
-    (p: LatLng) => {
+    (p: LatLng, selectionId?: string | null) => {
       if (phase !== 'guessing') return;
       setPin(p);
+      setSelection(selectionId ?? null);
     },
     [phase],
   );
 
   const confirm = useCallback(() => {
     if (phase !== 'guessing' || !pin || !current) return;
-    const { hitTarget, nearestDistanceKm } = judgeClick(remainingTargets, pin, radiusKm);
+    // 選択式: 選んだ線形の一致で判定。距離はミス表示用にクリック地点から計算する
+    const judged = judgeClick(remainingTargets, pin, radiusKm);
+    const hitTarget = selectMode
+      ? (selection && remainingTargets.find((t) => t.id === selection)) || null
+      : judged.hitTarget;
+    const nearestDistanceKm = judged.nearestDistanceKm;
     if (hitTarget) {
       const nextHits = [...hitMarks, { target: hitTarget, click: pin }];
       setHitMarks(nextHits);
@@ -85,7 +93,8 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
     }
     bumpStats((n) => n + 1);
     setPin(null);
-  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks, missMarks]);
+    setSelection(null);
+  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks, missMarks, selectMode, selection]);
 
   const giveUp = useCallback(() => {
     if (phase !== 'guessing' || !current) return;
@@ -94,6 +103,7 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
     setPhase('revealed');
     setFeedback({ type: 'giveup', message: '正解を表示します' });
     setPin(null);
+    setSelection(null);
   }, [phase, current, remainingTargets]);
 
   const next = useCallback(() => {
@@ -101,6 +111,7 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
     const q = questions[index];
     if (q) statsRef.current.targetCount += q.targets.length;
     setPin(null);
+    setSelection(null);
     setHitMarks([]);
     setMissMarks([]);
     setFeedback(null);
@@ -118,6 +129,7 @@ export function useQuizEngine(questions: Question[], radiusKm: number) {
     total: questions.length,
     phase,
     pin,
+    selection,
     placePin,
     confirm,
     giveUp,

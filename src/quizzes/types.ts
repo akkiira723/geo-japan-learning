@@ -99,6 +99,11 @@ export interface QuizMeta {
   hasHighwayFilters?: boolean;
   /** 国道番号向けの番号帯・出題順フィルタを出すか */
   hasRouteFilters?: boolean;
+  /**
+   * 回答方式。'select' = ホバーでハイライトした線形をクリックで選択し、
+   * 選択 id とターゲット id の一致で判定（正解半径は使わない）。省略 = 従来のクリック地点判定
+   */
+  answerMode?: 'select';
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
   hoverKind?: HoverKind;
 }
