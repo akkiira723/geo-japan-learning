@@ -12,12 +12,14 @@ export interface QuizShellProps {
   prefs?: number[];
   hoverKind?: HoverKind;
   hoverPrefs?: number[];
+  /** 'select' = 線形をホバー選択して回答（国道番号クイズ） */
+  answerMode?: 'select';
   onFinish: (stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number }) => void;
   onExit: () => void;
 }
 
-export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, onFinish, onExit }: QuizShellProps) {
-  const engine = useQuizEngine(questions, radiusKm);
+export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, answerMode, onFinish, onExit }: QuizShellProps) {
+  const engine = useQuizEngine(questions, radiusKm, answerMode === 'select');
   const { current, phase, pin, feedback } = engine;
   const [imgExpanded, setImgExpanded] = useState(true);
 
@@ -105,6 +107,8 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
           prefs={prefs}
           hoverKind={hoverKind}
           hoverPrefs={hoverPrefs}
+          answerMode={answerMode}
+          selectedId={engine.selection}
         />
         {feedback && (
           <div className={`quiz-feedback quiz-feedback-${feedback.type}`}>{feedback.message}</div>
@@ -118,7 +122,13 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
             <button className="btn btn-primary" disabled={!pin} onClick={engine.confirm}>
               回答する <kbd>Space</kbd>
             </button>
-            {!pin && <span className="quiz-hint">地図をクリックしてピンを置き、Space で回答</span>}
+            {!pin && (
+              <span className="quiz-hint">
+                {answerMode === 'select'
+                  ? '国道をクリックして選択し、Space で回答'
+                  : '地図をクリックしてピンを置き、Space で回答'}
+              </span>
+            )}
           </>
         ) : (
           <button className="btn btn-primary" onClick={engine.next}>

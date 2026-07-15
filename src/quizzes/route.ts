@@ -55,11 +55,12 @@ export const routeQuiz: QuizModule = {
     id: 'route',
     title: '国道番号クイズ',
     description:
-      '出題された国道の通る場所を地図でクリック。路線から正解半径内なら正解。バイパスを含む全区間が対象。',
-    usesRadius: true,
+      '出題された国道をハイライトから選んで回答。カーソルを近づけると路線が光るのでクリックで選択。バイパスを含む全区間が対象。',
+    usesRadius: false,
     hasOperatorFilter: false,
     nationwide: true,
     hasRouteFilters: true,
+    answerMode: 'select',
   },
   loadQuestions,
 };
