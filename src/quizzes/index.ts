@@ -7,11 +7,11 @@ import { stationQuiz } from './station';
 import type { QuizId, QuizModule } from './types';
 
 export const QUIZZES: Partial<Record<QuizId, QuizModule>> = {
-  station: stationQuiz,
-  highway: highwayQuiz,
-  route: routeQuiz,
   areacode: areaCodeQuiz,
   legacy: legacyTownQuiz,
+  station: stationQuiz,
+  route: routeQuiz,
+  highway: highwayQuiz,
   manhole: manholeQuiz,
 };
 
