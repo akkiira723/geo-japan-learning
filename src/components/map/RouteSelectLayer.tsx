@@ -100,8 +100,9 @@ export function RouteSelectLayer({
       setHoverId(null);
     },
     click(e) {
-      if (!active || !features) return;
-      onSelect(pick(e.latlng), { lat: e.latlng.lat, lng: e.latlng.lng });
+      if (!active) return;
+      // データロード中でもピンは置けるようにする（クリックが無反応になる時間を作らない）
+      onSelect(features ? pick(e.latlng) : null, { lat: e.latlng.lat, lng: e.latlng.lng });
     },
   });
 

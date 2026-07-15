@@ -14,12 +14,14 @@ export interface QuizShellProps {
   hoverPrefs?: number[];
   /** 'select' = 線形をホバー選択して回答（国道番号クイズ） */
   answerMode?: 'select';
+  /** 選択式のミス表示用: 選択 id を表示名にする */
+  selectionLabel?: (id: string) => string;
   onFinish: (stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number }) => void;
   onExit: () => void;
 }
 
-export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, answerMode, onFinish, onExit }: QuizShellProps) {
-  const engine = useQuizEngine(questions, radiusKm, answerMode === 'select');
+export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hoverKind, hoverPrefs, answerMode, selectionLabel, onFinish, onExit }: QuizShellProps) {
+  const engine = useQuizEngine(questions, radiusKm, { selectMode: answerMode === 'select', selectionLabel });
   const { current, phase, pin, feedback } = engine;
   const [imgExpanded, setImgExpanded] = useState(true);
 
@@ -27,12 +29,19 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
     setImgExpanded(true);
   }, [current?.id]);
 
-  // スペースキー: 出題中はピン確定、回答表示中は次の問題へ
+  // スペースキー: 出題中はピン確定、回答表示中は次の問題へ。Tab: 出題中は降参
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.code !== 'Space') return;
+      if (e.code !== 'Space' && e.code !== 'Tab') return;
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+      if (e.code === 'Tab') {
+        // 出題中のみフォーカス移動を乗っ取る（回答表示中は通常のタブ移動のまま）
+        if (phase !== 'guessing') return;
+        e.preventDefault();
+        engine.giveUp();
+        return;
+      }
       e.preventDefault();
       if (phase === 'guessing') engine.confirm();
       else if (phase === 'revealed') engine.next();
@@ -118,7 +127,9 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
       <footer className="quiz-footer">
         {phase === 'guessing' ? (
           <>
-            <button className="btn btn-ghost" onClick={engine.giveUp}>降参して答えを見る</button>
+            <button className="btn btn-ghost" onClick={engine.giveUp}>
+              降参して答えを見る <kbd>Tab</kbd>
+            </button>
             <button className="btn btn-primary" disabled={!pin} onClick={engine.confirm}>
               回答する <kbd>Space</kbd>
             </button>

@@ -75,6 +75,7 @@ export function QuizPage() {
           hoverKind={quiz.meta.hoverKind}
           hoverPrefs={state.filter.prefs}
           answerMode={quiz.meta.answerMode}
+          selectionLabel={quiz.meta.selectionLabel}
           onExit={() => setState({ mode: 'setup' })}
           onFinish={(stats) => {
             saveSession({

@@ -61,6 +61,7 @@ export const routeQuiz: QuizModule = {
     nationwide: true,
     hasRouteFilters: true,
     answerMode: 'select',
+    selectionLabel: (id) => `国道${id}号`,
   },
   loadQuestions,
 };

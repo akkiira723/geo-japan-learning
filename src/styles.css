@@ -271,6 +271,7 @@ rt {
 .quiz-feedback-hit { background: var(--mint-soft); color: var(--primary-dark); }
 .quiz-feedback-miss { background: var(--red-soft); color: var(--red-dark); }
 .quiz-feedback-giveup { background: var(--amber-soft); color: var(--amber-dark); }
+.quiz-feedback-info { background: var(--mint-faint); color: var(--text); }
 
 /* マンホールクイズの出題画像パネル */
 .quiz-image {

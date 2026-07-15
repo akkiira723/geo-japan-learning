@@ -104,6 +104,8 @@ export interface QuizMeta {
    * 選択 id とターゲット id の一致で判定（正解半径は使わない）。省略 = 従来のクリック地点判定
    */
   answerMode?: 'select';
+  /** 選択式のミス表示用: 選択 id を表示名にする（例: '15' → '国道15号'） */
+  selectionLabel?: (id: string) => string;
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */
   hoverKind?: HoverKind;
 }

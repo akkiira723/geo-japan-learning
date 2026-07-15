@@ -13,8 +13,15 @@ export interface HitMark {
 }
 
 export interface Feedback {
-  type: 'hit' | 'miss' | 'giveup';
+  type: 'hit' | 'miss' | 'giveup' | 'info';
   message: string;
+}
+
+export interface QuizEngineOptions {
+  /** 選択式回答（answerMode='select'）: 選択 id とターゲット id の一致で判定する */
+  selectMode?: boolean;
+  /** 選択式のミス表示用: 選択 id を表示名にする（例: '15' → '国道15号'） */
+  selectionLabel?: (id: string) => string;
 }
 
 export interface SessionStats {
@@ -24,7 +31,8 @@ export interface SessionStats {
   giveUpCount: number;
 }
 
-export function useQuizEngine(questions: Question[], radiusKm: number, selectMode = false) {
+export function useQuizEngine(questions: Question[], radiusKm: number, options: QuizEngineOptions = {}) {
+  const { selectMode = false, selectionLabel } = options;
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<QuizPhase>(questions.length > 0 ? 'guessing' : 'finished');
   const [pin, setPin] = useState<LatLng | null>(null);
@@ -54,7 +62,17 @@ export function useQuizEngine(questions: Question[], radiusKm: number, selectMod
   );
 
   const confirm = useCallback(() => {
-    if (phase !== 'guessing' || !pin || !current) return;
+    if (phase !== 'guessing' || !current) return;
+    // ピンなしで回答操作をしたら、黙って無視せず操作を案内する
+    if (!pin) {
+      setFeedback({
+        type: 'info',
+        message: selectMode
+          ? '地図上の線をクリックして選択してから回答してください'
+          : '地図をクリックしてピンを置いてから回答してください',
+      });
+      return;
+    }
     // 選択式: 選んだ線形の一致で判定。距離はミス表示用にクリック地点から計算する
     const judged = judgeClick(remainingTargets, pin, radiusKm);
     const hitTarget = selectMode
@@ -83,10 +101,14 @@ export function useQuizEngine(questions: Question[], radiusKm: number, selectMod
         setFeedback({ type: 'giveup', message: `不正解…（ミス ${MAX_MISSES} 回）正解はこちら` });
       } else {
         const km = nearestDistanceKm === Infinity ? null : Math.round(nearestDistanceKm);
+        // 選択式では「何を答えたか」を出す（正解との距離だけでは選んだ路線が分からない）
+        const answered =
+          selectMode && selection && selectionLabel ? `（回答: ${selectionLabel(selection)}）` : '';
         setFeedback({
           type: 'miss',
           message:
-            (km === null ? 'はずれ…' : `はずれ… 最寄りの正解まで約 ${km} km`) +
+            `はずれ…${answered}` +
+            (km === null ? '' : ` 最寄りの正解まで約 ${km} km`) +
             `（あと ${MAX_MISSES - missCount} 回）`,
         });
       }
@@ -94,7 +116,7 @@ export function useQuizEngine(questions: Question[], radiusKm: number, selectMod
     bumpStats((n) => n + 1);
     setPin(null);
     setSelection(null);
-  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks, missMarks, selectMode, selection]);
+  }, [phase, pin, current, remainingTargets, radiusKm, hitMarks, missMarks, selectMode, selection, selectionLabel]);
 
   const giveUp = useCallback(() => {
     if (phase !== 'guessing' || !current) return;
