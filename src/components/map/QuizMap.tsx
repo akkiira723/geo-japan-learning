@@ -7,6 +7,7 @@ import { loadChunk } from '../../hooks/useChunkLoader';
 import type { HitMark } from '../../hooks/useQuizEngine';
 import type { HoverKind, LatLng, Question, QuizId, Target } from '../../quizzes/types';
 import { HoverHighlight } from './HoverHighlight';
+import { RouteSelectLayer } from './RouteSelectLayer';
 
 const GSI_ATTR =
   '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">地理院タイル</a>';
@@ -244,15 +245,19 @@ export interface QuizMapProps {
   hitMarks: HitMark[];
   missMarks: LatLng[];
   radiusKm: number;
-  onPlacePin: (p: LatLng) => void;
+  onPlacePin: (p: LatLng, selectionId?: string | null) => void;
   /** 出題範囲の都道府県。地図の初期表示をこの範囲にフィットさせる */
   prefs?: number[];
   /** ポリゴン系クイズ: カーソル下の区割りをハイライト */
   hoverKind?: HoverKind;
   hoverPrefs?: number[];
+  /** 'select' = 線形をホバー選択して回答（国道番号クイズ） */
+  answerMode?: 'select';
+  /** 選択式で現在選択中のターゲット id */
+  selectedId?: string | null;
 }
 
-export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs }: QuizMapProps) {
+export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, radiusKm, onPlacePin, prefs, hoverKind, hoverPrefs, answerMode, selectedId }: QuizMapProps) {
   const hitIds = useMemo(() => new Set(hitMarks.map((h) => h.target.id)), [hitMarks]);
   const [settings, setSettings] = useState<MapSettings>(() => loadMapSettings(quizId));
   const { mapType, border: showBorder, muniBorder: showMuniBorder, rail: showRail, highway: showHighway } = settings;
@@ -351,7 +356,12 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
           <HoverHighlight kind={hoverKind} prefs={hoverPrefs} active={!revealed} />
         )}
 
-        {!revealed && <ClickHandler onClick={onPlacePin} />}
+        {/* 選択式はクリック＝路線選択（RouteSelectLayer 側で処理）、従来型はクリック＝ピン */}
+        {answerMode === 'select' ? (
+          <RouteSelectLayer active={!revealed} selectedId={selectedId ?? null} onSelect={(id, p) => onPlacePin(p, id)} />
+        ) : (
+          !revealed && <ClickHandler onClick={onPlacePin} />
+        )}
         {prefs && <RegionFit prefs={prefs} questionKey={question?.id ?? ''} revealed={revealed} />}
         {question && <RevealFit targets={question.targets} active={revealed} />}
 
