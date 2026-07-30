@@ -4,7 +4,7 @@ import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
 import type { Question, QuizFilter, QuizModule, Ruby, Target } from './types';
 
-interface TownEntry {
+export interface TownEntry {
   id: string;
   n: string;
   /** ひらがな読み */
@@ -18,7 +18,7 @@ interface TownEntry {
   geom: Polygon | MultiPolygon;
 }
 
-interface TownChunk {
+export interface TownChunk {
   pref: number;
   towns: TownEntry[];
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FilterPanel } from '../components/quiz/FilterPanel';
 import { QuizShell } from '../components/quiz/QuizShell';
+import { TextQuizShell } from '../components/quiz/TextQuizShell';
 import { saveSession } from '../lib/storage';
 import { getQuiz } from '../quizzes';
 import type { Question, QuizFilter } from '../quizzes/types';
@@ -65,6 +66,24 @@ export function QuizPage() {
         </div>
       );
     case 'playing':
+      if (quiz.meta.answerMode === 'text') {
+        return (
+          <TextQuizShell
+            questions={state.questions}
+            quizTitle={quiz.meta.title}
+            onExit={() => setState({ mode: 'setup' })}
+            onFinish={(stats) => {
+              saveSession({
+                quizId: quiz.meta.id,
+                playedAt: new Date().toISOString(),
+                questionCount: state.questions.length,
+                ...stats,
+              });
+              setState({ mode: 'done', stats, filter: state.filter });
+            }}
+          />
+        );
+      }
       return (
         <QuizShell
           quizId={quiz.meta.id}

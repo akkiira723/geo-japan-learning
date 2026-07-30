@@ -31,6 +31,10 @@ export interface Target {
   /** [west, south, east, north] ポリゴン・線形のバウンディングボックス */
   bbox?: [number, number, number, number];
   geom?: Polygon | MultiPolygon | MultiLineString;
+  /** テキスト回答式（answerMode='text'）の判定用正解テキスト（例: "北広島市"） */
+  answer?: string;
+  /** テキスト回答式の都道府県ヒント表示用（例: "北海道"。複数県は「・」区切り） */
+  answerPref?: string;
 }
 
 export interface Question {
@@ -50,7 +54,7 @@ export interface Question {
   targets: Target[];
 }
 
-export type QuizId = 'station' | 'areacode' | 'legacy' | 'manhole' | 'highway' | 'route';
+export type QuizId = 'station' | 'areacode' | 'legacy' | 'legacyname' | 'manhole' | 'highway' | 'route';
 
 export type OperatorFilter = 'all' | 'jr' | 'nonjr';
 
@@ -101,9 +105,10 @@ export interface QuizMeta {
   hasRouteFilters?: boolean;
   /**
    * 回答方式。'select' = ホバーでハイライトした線形をクリックで選択し、
-   * 選択 id とターゲット id の一致で判定（正解半径は使わない）。省略 = 従来のクリック地点判定
+   * 選択 id とターゲット id の一致で判定（正解半径は使わない）。
+   * 'text' = 地図を使わずテキスト入力の完全一致で判定（TextQuizShell）。省略 = 従来のクリック地点判定
    */
-  answerMode?: 'select';
+  answerMode?: 'select' | 'text';
   /** 選択式のミス表示用: 選択 id を表示名にする（例: '15' → '国道15号'） */
   selectionLabel?: (id: string) => string;
   /** マウスホバーでハイライトする区割り（ポリゴン系クイズのみ） */

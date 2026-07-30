@@ -8,6 +8,7 @@ const QUIZ_ICONS: Record<string, string> = {
   route: '🍙',
   areacode: '☎️',
   legacy: '🗾',
+  legacyname: '📝',
   manhole: '🕳️',
 };
 
