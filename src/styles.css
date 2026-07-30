@@ -415,6 +415,19 @@ rt {
 .text-quiz-hint-row { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.08em; }
 .text-quiz-hint-pref { font-size: 0.9rem; font-weight: 400; color: var(--muted); letter-spacing: normal; }
 
+.text-quiz-map {
+  width: 100%;
+  max-width: 640px;
+  height: 42vh;
+  min-height: 260px;
+  max-height: 420px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.reveal-map { width: 100%; height: 100%; }
+
 .text-quiz-answers {
   list-style: none;
   margin: 0;

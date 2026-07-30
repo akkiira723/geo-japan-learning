@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MAX_TEXT_MISSES, useTextQuizEngine } from '../../hooks/useTextQuizEngine';
 import { maskName } from '../../lib/textAnswer';
 import type { Question } from '../../quizzes/types';
+import { RevealMap } from '../map/RevealMap';
 import { RubyText } from './RubyText';
 
 export interface TextQuizShellProps {
@@ -132,6 +133,13 @@ export function TextQuizShell({ questions, quizTitle, onFinish, onExit }: TextQu
                 )}
               </span>
             ))}
+          </div>
+        )}
+
+        {phase === 'revealed' && (
+          <div className="text-quiz-map">
+            {/* 問題ごとに作り直してズーム状態をリセットする */}
+            <RevealMap key={current.id} targets={current.targets} solvedIds={engine.solvedIds} />
           </div>
         )}
 
