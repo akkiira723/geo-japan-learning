@@ -1,5 +1,5 @@
-import L from 'leaflet';
-import 'leaflet.gridlayer.googlemutant';
+import type L from 'leaflet';
+import GoogleMutant from 'leaflet.gridlayer.googlemutant';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
@@ -32,7 +32,7 @@ export function GoogleMutantLayer({ type }: { type: GoogleMapType }) {
     loadGoogleMapsApi()
       .then(() => {
         if (cancelled) return;
-        layer = L.gridLayer.googleMutant({ type });
+        layer = new GoogleMutant({ type });
         layer.addTo(map);
       })
       .catch((e) => {
