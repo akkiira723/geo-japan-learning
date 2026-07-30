@@ -33,6 +33,21 @@ function ringArea(ring: Ring): number {
 
 const MIN_ISLAND_AREA = 5e-5; // 約 0.5km² 未満の島は省略
 
+interface N03Props {
+  N03_003?: string | null;
+  N03_004?: string | null;
+}
+
+/**
+ * 現市区町村名。政令市は「市+区」を連結（例: さいたま市岩槻区）、
+ * それ以外は N03_004 のみ（郡名・支庁名は含めない）。legacy の into と同じ表記になる。
+ */
+function muniName(p: N03Props): string {
+  const g = p.N03_003 ?? '';
+  const n = p.N03_004 ?? '';
+  return g.endsWith('市') ? g + n : n;
+}
+
 async function main() {
   await mkdir('public/data/muni-outline', { recursive: true });
   const prefBbox: Record<number, [number, number, number, number]> = {} as never;
@@ -42,7 +57,7 @@ async function main() {
     const pp = String(pref).padStart(2, '0');
     const gj = JSON.parse(await readFile(`data-cache/geo/muni/pref-${pp}.geojson`, 'utf8'));
     let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
-    const features = gj.features.map((f: { geometry: Polygon | MultiPolygon }) => {
+    const features = gj.features.map((f: { properties: N03Props; geometry: Polygon | MultiPolygon }) => {
       const coords = round4(toMulti(f.geometry)).filter(
         (poly) => poly.length > 0 && ringArea(poly[0]) >= MIN_ISLAND_AREA,
       );
@@ -54,7 +69,12 @@ async function main() {
             if (x > e) e = x;
             if (y > n) n = y;
           }
-      return { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: coords } };
+      // n: 名前ハイライト用（旧市町村 名前クイズの正解発表マップが into と突き合わせる）
+      return {
+        type: 'Feature',
+        properties: { n: muniName(f.properties) },
+        geometry: { type: 'MultiPolygon', coordinates: coords },
+      };
     }).filter((f: { geometry: MultiPolygon }) => f.geometry.coordinates.length > 0);
 
     const r = (v: number) => Math.round(v * 1e4) / 1e4;
@@ -66,7 +86,7 @@ async function main() {
 
   await writeFile(
     'public/data/muni-outline/index.json',
-    JSON.stringify({ version: 1, prefBbox, source: '国土数値情報 N03 (japan-topography s0010)' }),
+    JSON.stringify({ version: 2, prefBbox, source: '国土数値情報 N03 (japan-topography s0010)' }),
     'utf8',
   );
   console.log(`✓ muni-outline 47チャンク 計 ${(totalBytes / 1e6).toFixed(1)} MB`);

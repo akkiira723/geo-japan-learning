@@ -35,6 +35,8 @@ export interface Target {
   answer?: string;
   /** テキスト回答式の都道府県ヒント表示用（例: "北海道"。複数県は「・」区切り） */
   answerPref?: string;
+  /** テキスト回答式: 出題元の都道府県コード。正解発表マップが muni-outline から所属市町村を引くのに使う */
+  answerPrefCodes?: number[];
 }
 
 export interface Question {
