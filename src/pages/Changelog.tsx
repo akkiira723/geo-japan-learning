@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 
 const ENTRIES: { date: string; items: string[] }[] = [
   {
+    date: '2026-07-30',
+    items: [
+      '地図タイプに「Google マップ / Google 航空写真」を追加し、デフォルトに変更（GeoGuessr・JapanGuessr の回答マップと同じ見た目で練習できるように）',
+    ],
+  },
+  {
     date: '2026-07-15',
     items: [
       '国道番号クイズを選択式に変更（全路線を薄く表示し、カーソルでハイライトした路線をクリックで選択して回答）',
