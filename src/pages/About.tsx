@@ -41,7 +41,8 @@ export function About() {
           （同会の許諾を得て表示しています。画像の権利は同会・各撮影者に帰属。本ツールは画像を複製・再配布せず同サイトから直接表示し、各問題に出典ページへのリンクを表示します）
         </li>
         <li>
-          地図タイル: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
+          地図タイル: <a href="https://mapsplatform.google.com/" target="_blank" rel="noreferrer">Google マップ</a>（Maps JavaScript API 経由）/{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
           <a href="https://tile.openstreetmap.jp/" target="_blank" rel="noreferrer">OSMFJ タイルサーバー</a>（日本語スタイル）/{' '}
           <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 地理院タイル</a> /{' '}
           <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>

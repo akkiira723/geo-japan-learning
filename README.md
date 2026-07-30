@@ -54,6 +54,11 @@ npm run data:routes     # OSM Overpass API（国道 route リレーション →
 
 `main` への push で GitHub Pages に自動デプロイ（`.github/workflows/deploy.yml`、base: `/geo-japan-learning/`）。リポジトリの Settings → Pages → Source を「GitHub Actions」にすること。
 
+### Google マップ（任意）
+
+GeoGuessr / JapanGuessr の回答マップと同じ本物の Google 地図をベースマップに使える（Leaflet.GridLayer.GoogleMutant + Maps JavaScript API）。
+リポジトリ Secret `VITE_GOOGLE_MAPS_API_KEY` に API キー（HTTP リファラー制限 + Maps JavaScript API 限定を推奨）を登録するとビルドに注入され、地図セレクトに「Google マップ / Google 航空写真」が現れてデフォルトになる。ローカル開発では `.env.local` に同名変数を書く。キー未設定でもビルド・動作は従来通り（選択肢が出ないだけ）。
+
 ## データ出典
 
 - 駅データ: [駅データ.jp](https://ekidata.jp/) 形式の公開スプレッドシート
@@ -63,4 +68,4 @@ npm run data:routes     # OSM Overpass API（国道 route リレーション →
 - 市外局番の区画: 総務省「[市外局番の一覧](https://www.soumu.go.jp/main_content/000141817.pdf)」
 - 高速道路施設（IC・JCT・SA/PA）・本線線形・国道線形: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors（ODbL）、Overpass API 経由で取得・加工
 - 町丁・字等（小地域）ポリゴン: 国勢調査2020 小地域境界データを [Geoshape](https://geoshape.ex.nii.ac.jp/ka/) 経由で加工
-- 地図タイル: © OpenStreetMap contributors / OSMFJ タイルサーバー（日本語スタイル） / 国土地理院 地理院タイル / © CARTO
+- 地図タイル: Google マップ（Maps JavaScript API 経由・任意） / © OpenStreetMap contributors / OSMFJ タイルサーバー（日本語スタイル） / 国土地理院 地理院タイル / © CARTO

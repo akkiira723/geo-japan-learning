@@ -25,7 +25,10 @@ jobs:
           cache: npm
       - run: npm ci
       # データ生成はローカルで実行し public/data/ をコミットする運用
+      # Secret 未登録でもビルドは成功する（Google 地図の選択肢が出ないだけ）
       - run: npm run build
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

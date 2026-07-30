@@ -6,6 +6,7 @@ import type { FeatureCollection } from 'geojson';
 import { loadChunk } from '../../hooks/useChunkLoader';
 import type { HitMark } from '../../hooks/useQuizEngine';
 import type { HoverKind, LatLng, Question, QuizId, Target } from '../../quizzes/types';
+import { GOOGLE_MAPS_API_KEY, GoogleMutantLayer, type GoogleMapType } from './GoogleMutantLayer';
 import { HoverHighlight } from './HoverHighlight';
 import { RouteSelectLayer } from './RouteSelectLayer';
 
@@ -15,12 +16,27 @@ const OSM_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors';
 const CARTO_ATTR = OSM_ATTR + ' &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
 
-type MapTypeId = 'bright-ja' | 'basic-ja' | 'gsi-pale' | 'gsi-std' | 'voyager' | 'osm';
+type MapTypeId = 'google' | 'google-hybrid' | 'bright-ja' | 'basic-ja' | 'gsi-pale' | 'gsi-std' | 'voyager' | 'osm';
 
 const OSMFJ_ATTR =
   OSM_ATTR + ' / tiles by <a href="https://tile.openstreetmap.jp/" target="_blank" rel="noreferrer">OSMFJ</a>';
 
-const MAP_TYPES: Record<MapTypeId, { label: string; url: string; attr: string; subdomains?: string; maxNativeZoom: number }> = {
+interface MapTypeDef {
+  label: string;
+  /** ラスタータイル用。google 指定時は不要 */
+  url?: string;
+  attr?: string;
+  subdomains?: string;
+  maxNativeZoom?: number;
+  /** GeoGuessr/JapanGuessr と同じ本物の Google 地図（GoogleMutant）。API キーがある時のみ選択肢に出す */
+  google?: GoogleMapType;
+}
+
+const HAS_GOOGLE = !!GOOGLE_MAPS_API_KEY;
+
+const MAP_TYPES: Record<MapTypeId, MapTypeDef> = {
+  google: { label: 'Google マップ', google: 'roadmap' },
+  'google-hybrid': { label: 'Google 航空写真', google: 'hybrid' },
   'bright-ja': {
     label: 'OSM Bright 日本語',
     url: 'https://tile.openstreetmap.jp/styles/osm-bright-ja/{z}/{x}/{y}{r}.png',
@@ -78,15 +94,18 @@ interface MapSettings {
   highway: boolean;
 }
 
+/** GeoGuessr/JapanGuessr の回答マップに合わせて Google 地図を既定にする（キー無しビルドでは従来通り） */
+const DEFAULT_MAP_TYPE: MapTypeId = HAS_GOOGLE ? 'google' : 'basic-ja';
+
 function defaultMapSettings(quizId: QuizId): MapSettings {
   if (quizId === 'station') {
-    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: true, highway: false };
+    return { mapType: DEFAULT_MAP_TYPE, border: false, muniBorder: false, rail: true, highway: false };
   }
   if (quizId === 'highway') {
     // 高速道路クイズは路線網の学習が主目的なので線形ハイライトのみ on
-    return { mapType: 'basic-ja', border: false, muniBorder: false, rail: false, highway: true };
+    return { mapType: DEFAULT_MAP_TYPE, border: false, muniBorder: false, rail: false, highway: true };
   }
-  return { mapType: 'basic-ja', border: true, muniBorder: true, rail: false, highway: false };
+  return { mapType: DEFAULT_MAP_TYPE, border: true, muniBorder: true, rail: false, highway: false };
 }
 
 function loadMapSettings(quizId: QuizId): MapSettings {
@@ -95,8 +114,10 @@ function loadMapSettings(quizId: QuizId): MapSettings {
     const raw = localStorage.getItem(MAP_SETTINGS_KEY_PREFIX + quizId);
     if (!raw) return def;
     const v = JSON.parse(raw) as Partial<MapSettings>;
+    const storedTypeUsable =
+      v.mapType && v.mapType in MAP_TYPES && (HAS_GOOGLE || !MAP_TYPES[v.mapType].google);
     return {
-      mapType: v.mapType && v.mapType in MAP_TYPES ? v.mapType : def.mapType,
+      mapType: storedTypeUsable ? v.mapType! : def.mapType,
       border: typeof v.border === 'boolean' ? v.border : def.border,
       muniBorder: typeof v.muniBorder === 'boolean' ? v.muniBorder : def.muniBorder,
       rail: typeof v.rail === 'boolean' ? v.rail : def.rail,
@@ -317,13 +338,17 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
         className="quiz-map"
         attributionControl={true}
       >
-        <TileLayer
-          key={mapType}
-          url={tile.url}
-          attribution={tile.attr}
-          maxNativeZoom={tile.maxNativeZoom}
-          {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
-        />
+        {tile.google ? (
+          <GoogleMutantLayer key={mapType} type={tile.google} />
+        ) : (
+          <TileLayer
+            key={mapType}
+            url={tile.url!}
+            attribution={tile.attr}
+            maxNativeZoom={tile.maxNativeZoom}
+            {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
+          />
+        )}
 
         {/* 鉄道強調オーバーレイ（透過タイル。zIndex でベース地図の上に固定） */}
         {showRail && (
@@ -429,11 +454,13 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
           onChange={(e) => changeMapType(e.target.value as MapTypeId)}
           aria-label="地図の種類"
         >
-          {(Object.entries(MAP_TYPES) as [MapTypeId, (typeof MAP_TYPES)[MapTypeId]][]).map(([id, t]) => (
-            <option key={id} value={id}>
-              {t.label}
-            </option>
-          ))}
+          {(Object.entries(MAP_TYPES) as [MapTypeId, MapTypeDef][])
+            .filter(([, t]) => HAS_GOOGLE || !t.google)
+            .map(([id, t]) => (
+              <option key={id} value={id}>
+                {t.label}
+              </option>
+            ))}
         </select>
         <label className="map-control-check">
           <input type="checkbox" checked={showBorder} onChange={(e) => toggleBorder(e.target.checked)} />
