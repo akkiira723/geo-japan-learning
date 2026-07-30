@@ -334,7 +334,9 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
         center={[37.5, 137.0]}
         zoom={5}
         minZoom={4}
-        maxZoom={16}
+        maxZoom={18}
+        // ホイール1回で2段階ズーム（既定60px/段）。中間ズームのタイル読み込み回数を半減させる
+        wheelPxPerZoomLevel={30}
         className="quiz-map"
         attributionControl={true}
       >
@@ -346,6 +348,7 @@ export function QuizMap({ quizId, question, revealed, pin, hitMarks, missMarks, 
             url={tile.url!}
             attribution={tile.attr}
             maxNativeZoom={tile.maxNativeZoom}
+            keepBuffer={6}
             {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
           />
         )}

@@ -32,7 +32,8 @@ export function GoogleMutantLayer({ type }: { type: GoogleMapType }) {
     loadGoogleMapsApi()
       .then(() => {
         if (cancelled) return;
-        layer = new GoogleMutant({ type });
+        // keepBuffer: 画面外タイルを多めに保持してズーム・パン直後の空白を減らす（既定 2）
+        layer = new GoogleMutant({ type, keepBuffer: 6 });
         layer.addTo(map);
       })
       .catch((e) => {
