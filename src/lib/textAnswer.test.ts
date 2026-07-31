@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { maskName, matchesAnswer, normalizeAnswer } from './textAnswer';
+import { maskKana, maskName, matchesAnswer, normalizeAnswer } from './textAnswer';
 
 describe('normalizeAnswer', () => {
   it('前後の空白を除去する', () => {
@@ -40,6 +40,30 @@ describe('maskName', () => {
 
   it('1文字の名前は全マスク（接尾辞だけを晒さない）', () => {
     expect(maskName('市')).toBe('〇');
+  });
+});
+
+describe('maskKana', () => {
+  it('市の読み し を開示する', () => {
+    expect(maskKana('北広島市', 'きたひろしまし')).toBe('○○○○○○し');
+  });
+
+  it('町の読みは実際のふりがなに従う（ちょう/まち）', () => {
+    expect(maskKana('東和町', 'とうわちょう')).toBe('○○○ちょう');
+    expect(maskKana('高清水町', 'たかしみずまち')).toBe('○○○○○まち');
+  });
+
+  it('村の読みは実際のふりがなに従う（むら/そん）', () => {
+    expect(maskKana('大玉村', 'おおたまむら')).toBe('○○○○むら');
+    expect(maskKana('十島村', 'としまそん')).toBe('○○○そん');
+  });
+
+  it('政令市の区付きは末尾の く だけ開示する', () => {
+    expect(maskKana('さいたま市岩槻区', 'さいたましいわつきく')).toBe('○○○○○○○○○く');
+  });
+
+  it('接尾辞がない・読みが一致しない場合は全マスク', () => {
+    expect(maskKana('東京', 'とうきょう')).toBe('○○○○○');
   });
 });
 

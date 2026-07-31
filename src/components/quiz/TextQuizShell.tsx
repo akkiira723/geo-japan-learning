@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { MAX_TEXT_MISSES, useTextQuizEngine } from '../../hooks/useTextQuizEngine';
-import { maskName } from '../../lib/textAnswer';
+import { maskKana, maskName } from '../../lib/textAnswer';
 import type { Question } from '../../quizzes/types';
 import { RevealMap } from '../map/RevealMap';
 import { RubyText } from './RubyText';
@@ -132,15 +132,16 @@ export function TextQuizShell({ questions, quizTitle, prefs, onFinish, onExit }:
             <span className="text-quiz-hints-title">ヒント</span>
             {engine.remainingTargets.map((t) => {
               const mask = maskName(t.answer ?? '');
-              // 1県に絞った出題では都道府県ヒントに意味がないので、ふりがなの文字数を ◯ のルビで出す
-              const kanaLen = t.rubies?.[0]?.k.length;
-              const showKana = misses >= 2 && singlePref && !!kanaLen;
+              // 1県に絞った出題では都道府県ヒントに意味がないので、ふりがなを ○ のルビで出す
+              // （末尾の 市/町/村/区 の読みだけ開示: ○○し・○○○まち 等）
+              const kana = t.rubies?.[0]?.k;
+              const showKana = misses >= 2 && singlePref && !!kana;
               return (
                 <span key={t.id} className="text-quiz-hint-row">
                   {showKana ? (
                     <ruby>
                       {mask}
-                      <rt>{'○'.repeat(kanaLen)}</rt>
+                      <rt>{maskKana(t.answer ?? '', kana)}</rt>
                     </ruby>
                   ) : (
                     mask

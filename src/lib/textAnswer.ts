@@ -25,6 +25,28 @@ export function matchesAnswer(input: string, answer: string): boolean {
   return ward !== null && norm === ward[1];
 }
 
+/** 末尾種別ごとの読み候補。町=まち/ちょう・村=むら/そん は自治体ごとに異なる */
+const SUFFIX_READINGS: Record<string, string[]> = {
+  市: ['し'],
+  町: ['まち', 'ちょう'],
+  村: ['むら', 'そん'],
+  区: ['く'],
+};
+
+/**
+ * ふりがなヒント: 末尾の 市/町/村/区 の読みだけ開示し、残りを ○ でマスクする。
+ * 例: (北広島市, きたひろしまし) → ○○○○○○し、(東和町, とうわちょう) → ○○○ちょう
+ */
+export function maskKana(name: string, kana: string): string {
+  const candidates = SUFFIX_READINGS[name[name.length - 1]] ?? [];
+  for (const suffix of candidates) {
+    if (kana.length > suffix.length && kana.endsWith(suffix)) {
+      return '○'.repeat(kana.length - suffix.length) + suffix;
+    }
+  }
+  return '○'.repeat(kana.length);
+}
+
 /**
  * 文字数ヒント: 名前の構造（文字数と末尾の 市/町/村/区）だけを残してマスクする。
  * 例: 北広島市 → 〇〇〇市、さいたま市岩槻区 → 〇〇〇〇市〇〇区
