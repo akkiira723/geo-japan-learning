@@ -8,12 +8,14 @@ import { RubyText } from './RubyText';
 export interface TextQuizShellProps {
   questions: Question[];
   quizTitle: string;
+  /** 出題範囲の都道府県。1県のみなら都道府県ヒントの代わりに読みの文字数を出す */
+  prefs?: number[];
   onFinish: (stats: { targetCount: number; hitCount: number; missCount: number; giveUpCount: number }) => void;
   onExit: () => void;
 }
 
-/** テキスト入力回答式のクイズ画面（answerMode='text'）。地図は使わない */
-export function TextQuizShell({ questions, quizTitle, onFinish, onExit }: TextQuizShellProps) {
+/** テキスト入力回答式のクイズ画面（answerMode='text'）。地図は正解発表時のみ表示 */
+export function TextQuizShell({ questions, quizTitle, prefs, onFinish, onExit }: TextQuizShellProps) {
   const engine = useTextQuizEngine(questions);
   const { current, phase, feedback, misses } = engine;
   const [input, setInput] = useState('');
@@ -53,9 +55,12 @@ export function TextQuizShell({ questions, quizTitle, onFinish, onExit }: TextQu
 
   const multi = current.targets.length > 1;
   const remain = engine.remainingTargets.length;
+  const singlePref = (prefs?.length ?? 0) === 1;
 
   const submit = () => {
-    if (engine.submit(input) === 'hit') setInput('');
+    const result = engine.submit(input);
+    // 空入力の案内時だけ入力を残す（誤答・回答済みは打ち直しやすいようクリア）
+    if (result !== 'empty' && result !== 'ignored') setInput('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -125,14 +130,21 @@ export function TextQuizShell({ questions, quizTitle, onFinish, onExit }: TextQu
         {phase === 'guessing' && misses > 0 && (
           <div className="text-quiz-hints">
             <span className="text-quiz-hints-title">ヒント</span>
-            {engine.remainingTargets.map((t) => (
-              <span key={t.id} className="text-quiz-hint-row">
-                {maskName(t.answer ?? '')}
-                {misses >= 2 && t.answerPref && (
-                  <span className="text-quiz-hint-pref">（{t.answerPref}）</span>
-                )}
-              </span>
-            ))}
+            {engine.remainingTargets.map((t) => {
+              // 1県に絞った出題では都道府県ヒントに意味がないので、読みの文字数を出す
+              const kanaLen = t.rubies?.[0]?.k.length;
+              const secondHint = singlePref
+                ? kanaLen && `読み ${kanaLen} 文字`
+                : t.answerPref;
+              return (
+                <span key={t.id} className="text-quiz-hint-row">
+                  {maskName(t.answer ?? '')}
+                  {misses >= 2 && secondHint && (
+                    <span className="text-quiz-hint-pref">（{secondHint}）</span>
+                  )}
+                </span>
+              );
+            })}
           </div>
         )}
 

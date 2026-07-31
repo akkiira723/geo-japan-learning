@@ -160,9 +160,9 @@ export function RevealMap({ targets, solvedIds }: { targets: Target[]; solvedIds
             data={t.geom}
             style={{ color: solved ? '#1fa588' : '#e8a13d', weight: 2, fillOpacity: 0.25 }}
           >
-            <Tooltip direction="top" permanent>
+            {/* 常時表示だと地図を隠すので、ホバー時のみラベルを出す */}
+            <Tooltip sticky>
               <div className="tt-label">
-                {solved ? '✅ ' : '⭐ '}
                 <RubyText text={t.label} rubies={t.rubies} />
               </div>
             </Tooltip>

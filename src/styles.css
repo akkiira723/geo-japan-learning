@@ -417,10 +417,10 @@ rt {
 
 .text-quiz-map {
   width: 100%;
-  max-width: 640px;
-  height: 42vh;
-  min-height: 260px;
-  max-height: 420px;
+  max-width: 960px;
+  height: 56vh;
+  min-height: 300px;
+  max-height: 640px;
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   overflow: hidden;

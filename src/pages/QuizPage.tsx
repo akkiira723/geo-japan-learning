@@ -71,6 +71,7 @@ export function QuizPage() {
           <TextQuizShell
             questions={state.questions}
             quizTitle={quiz.meta.title}
+            prefs={state.filter.prefs}
             onExit={() => setState({ mode: 'setup' })}
             onFinish={(stats) => {
               saveSession({
