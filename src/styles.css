@@ -413,6 +413,8 @@ rt {
 }
 .text-quiz-hints-title { font-size: 0.78rem; font-weight: 700; color: var(--amber-dark); }
 .text-quiz-hint-row { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.08em; }
+.text-quiz-hint-row ruby { line-height: 2; }
+.text-quiz-hint-row rt { letter-spacing: 0.15em; }
 .text-quiz-hint-pref { font-size: 0.9rem; font-weight: 400; color: var(--muted); letter-spacing: normal; }
 
 .text-quiz-map {

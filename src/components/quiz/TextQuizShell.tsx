@@ -131,16 +131,22 @@ export function TextQuizShell({ questions, quizTitle, prefs, onFinish, onExit }:
           <div className="text-quiz-hints">
             <span className="text-quiz-hints-title">ヒント</span>
             {engine.remainingTargets.map((t) => {
-              // 1県に絞った出題では都道府県ヒントに意味がないので、読みの文字数を出す
+              const mask = maskName(t.answer ?? '');
+              // 1県に絞った出題では都道府県ヒントに意味がないので、ふりがなの文字数を ◯ のルビで出す
               const kanaLen = t.rubies?.[0]?.k.length;
-              const secondHint = singlePref
-                ? kanaLen && `読み ${kanaLen} 文字`
-                : t.answerPref;
+              const showKana = misses >= 2 && singlePref && !!kanaLen;
               return (
                 <span key={t.id} className="text-quiz-hint-row">
-                  {maskName(t.answer ?? '')}
-                  {misses >= 2 && secondHint && (
-                    <span className="text-quiz-hint-pref">（{secondHint}）</span>
+                  {showKana ? (
+                    <ruby>
+                      {mask}
+                      <rt>{'○'.repeat(kanaLen)}</rt>
+                    </ruby>
+                  ) : (
+                    mask
+                  )}
+                  {misses >= 2 && !singlePref && t.answerPref && (
+                    <span className="text-quiz-hint-pref">（{t.answerPref}）</span>
                   )}
                 </span>
               );
