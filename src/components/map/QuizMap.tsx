@@ -94,18 +94,26 @@ interface MapSettings {
   highway: boolean;
 }
 
-/** GeoGuessr/JapanGuessr の回答マップに合わせて Google 地図を既定にする（キー無しビルドでは従来通り） */
-const DEFAULT_MAP_TYPE: MapTypeId = HAS_GOOGLE ? 'google' : 'basic-ja';
+/**
+ * 旧市町村・駅名・国道・高速道路は GeoGuessr/JapanGuessr の回答マップに合わせて Google 地図を既定にする
+ * （キー無しビルドでは従来通り）。市外局番・マンホールはベーシック日本語を既定にする。
+ */
+const GOOGLE_DEFAULT_QUIZZES: ReadonlySet<QuizId> = new Set(['legacy', 'station', 'route', 'highway']);
+
+function defaultMapType(quizId: QuizId): MapTypeId {
+  return HAS_GOOGLE && GOOGLE_DEFAULT_QUIZZES.has(quizId) ? 'google' : 'basic-ja';
+}
 
 function defaultMapSettings(quizId: QuizId): MapSettings {
+  const mapType = defaultMapType(quizId);
   if (quizId === 'station') {
-    return { mapType: DEFAULT_MAP_TYPE, border: false, muniBorder: false, rail: true, highway: false };
+    return { mapType, border: false, muniBorder: false, rail: true, highway: false };
   }
   if (quizId === 'highway') {
     // 高速道路クイズは路線網の学習が主目的なので線形ハイライトのみ on
-    return { mapType: DEFAULT_MAP_TYPE, border: false, muniBorder: false, rail: false, highway: true };
+    return { mapType, border: false, muniBorder: false, rail: false, highway: true };
   }
-  return { mapType: DEFAULT_MAP_TYPE, border: true, muniBorder: true, rail: false, highway: false };
+  return { mapType, border: true, muniBorder: true, rail: false, highway: false };
 }
 
 function loadMapSettings(quizId: QuizId): MapSettings {
