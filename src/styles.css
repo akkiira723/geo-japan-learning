@@ -313,6 +313,14 @@ rt {
   max-width: 560px;
   cursor: zoom-out;
 }
+/* 市章: 80px の小さな PNG を白地に余白付きで拡大表示（拡大時も大きくしすぎない） */
+.quiz-image-emblem img {
+  background: #fff;
+  padding: 10%;
+  box-sizing: border-box;
+}
+.quiz-image-emblem.quiz-image-expanded { max-width: 360px; }
+.filter-toggle { margin-top: 10px; }
 @media (max-width: 600px) {
   .quiz-image { width: 150px; top: 66px; }
   .quiz-image-expanded { width: 88vw; max-width: 480px; }

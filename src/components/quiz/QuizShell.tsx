@@ -84,11 +84,11 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
       <div className="quiz-map-wrap">
         {current.image && (
           <div
-            className={`quiz-image ${imgExpanded ? 'quiz-image-expanded' : ''}`}
+            className={`quiz-image ${imgExpanded ? 'quiz-image-expanded' : ''} ${current.imageKind === 'emblem' ? 'quiz-image-emblem' : ''}`}
             onClick={() => setImgExpanded(!imgExpanded)}
             title="クリックで拡大/縮小"
           >
-            <img src={current.image} alt="マンホールの写真" />
+            <img src={current.image} alt={current.imageAlt ?? 'マンホールの写真'} />
             {phase === 'revealed' && current.imageDesc && (
               <p className="quiz-image-desc">{current.imageDesc}</p>
             )}
@@ -99,7 +99,7 @@ export function QuizShell({ quizId, questions, radiusKm, quizTitle, prefs, hover
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
               >
-                出典: 日本マンホール蓋学会
+                出典: {current.imageSource ?? '日本マンホール蓋学会'}
               </a>
             )}
           </div>

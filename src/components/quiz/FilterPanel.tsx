@@ -5,6 +5,7 @@ import type {
   HighwayFacilityKind,
   HighwayRoadType,
   OperatorFilter,
+  PopulationTop,
   QuizFilter,
   QuizMeta,
   RouteBand,
@@ -39,8 +40,10 @@ const ROUTE_BAND_OPTIONS: [RouteBand, string][] = [
   ['three-high', '300〜507号'],
 ];
 
-/** 出題範囲の選び方（局番帯は市外局番クイズのみ） */
-type ScopeMode = 'region' | 'pref' | 'band';
+const POPULATION_TOP_OPTIONS: PopulationTop[] = [100, 300, 500, 1000];
+
+/** 出題範囲の選び方（局番帯は市外局番クイズ、人口上位は市章クイズのみ） */
+type ScopeMode = 'region' | 'pref' | 'band' | 'pop';
 
 export interface FilterPanelProps {
   meta: QuizMeta;
@@ -51,6 +54,9 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   const [scopeMode, setScopeMode] = useState<ScopeMode>('region');
   const [prefs, setPrefs] = useState<Set<number>>(new Set());
   const [codePrefixes, setCodePrefixes] = useState<Set<string>>(new Set());
+  // 市章クイズ: 人口上位 N（pop モード）と旧市町村の章を含めるか
+  const [populationTop, setPopulationTop] = useState<PopulationTop | null>(null);
+  const [includeLegacy, setIncludeLegacy] = useState(true);
   const [operator, setOperator] = useState<OperatorFilter>('all');
   const [questionCount, setQuestionCount] = useState(Infinity);
   const [radiusKm, setRadiusKm] = useState(3);
@@ -105,6 +111,7 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
     setScopeMode(mode);
     setPrefs(new Set());
     setCodePrefixes(new Set());
+    setPopulationTop(null);
   };
 
   const toggleIn = <T,>(set: Dispatch<SetStateAction<Set<T>>>, value: T) => {
@@ -121,14 +128,16 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       (!meta.hasRouteFilters || routeBands.size > 0)
     : scopeMode === 'band'
       ? codePrefixes.size > 0
-      : prefs.size > 0;
+      : scopeMode === 'pop'
+        ? populationTop !== null
+        : prefs.size > 0;
 
   const start = () => {
     onStart({
-      // 全国クイズは県で絞らない（prefs 空 = 地図も日本全域のまま）。局番帯モードも全国から局番で絞る
+      // 全国クイズは県で絞らない（prefs 空 = 地図も日本全域のまま）。局番帯・人口上位モードも全国から絞る
       prefs:
         meta.nationwide ? []
-        : scopeMode === 'band' ? [...ALL_PREF_CODES]
+        : scopeMode === 'band' || scopeMode === 'pop' ? [...ALL_PREF_CODES]
         : [...prefs].sort((a, b) => a - b),
       operator,
       questionCount,
@@ -138,6 +147,8 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
       facilityKinds: meta.hasHighwayFilters ? [...facilityKinds] : undefined,
       roadTypes: meta.hasHighwayFilters ? [...roadTypes] : undefined,
       routeBands: meta.hasRouteFilters ? [...routeBands] : undefined,
+      populationTop: scopeMode === 'pop' && populationTop !== null ? populationTop : undefined,
+      includeLegacy: meta.hasLegacyToggle && scopeMode !== 'pop' ? includeLegacy : undefined,
     });
   };
 
@@ -170,6 +181,13 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
         </label>
       ))}
     </div>
+  );
+
+  const legacyToggle = meta.hasLegacyToggle && (
+    <label className="pref-check filter-toggle">
+      <input type="checkbox" checked={includeLegacy} onChange={() => setIncludeLegacy(!includeLegacy)} />
+      旧市町村（消滅した自治体）の章も含める
+    </label>
   );
 
   return (
@@ -218,6 +236,47 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
                   ))}
                 </div>
                 <p className="filter-note">03・06 は単独の局番のため、地方・都道府県から選ぶと出題されます</p>
+              </>
+            )}
+          </>
+        ) : meta.hasPopulationFilter ? (
+          <>
+            <div className="chip-row">
+              {(
+                [
+                  ['region', '地方で選ぶ'],
+                  ['pref', '都道府県で選ぶ'],
+                  ['pop', '人口上位で選ぶ'],
+                ] as [ScopeMode, string][]
+              ).map(([mode, label]) => (
+                <button
+                  key={mode}
+                  className={`chip ${scopeMode === mode ? 'chip-on' : ''}`}
+                  onClick={() => switchScopeMode(mode)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {scopeMode === 'region' && regionChips}
+            {scopeMode === 'pref' && prefGrid}
+            {scopeMode !== 'pop' && legacyToggle}
+            {scopeMode === 'pop' && (
+              <>
+                <div className="chip-row">
+                  {POPULATION_TOP_OPTIONS.map((n) => (
+                    <button
+                      key={n}
+                      className={`chip ${populationTop === n ? 'chip-on' : ''}`}
+                      onClick={() => setPopulationTop(n)}
+                    >
+                      人口 Top{n}
+                    </button>
+                  ))}
+                </div>
+                <p className="filter-note">
+                  2020年国勢調査の人口順（現行の市・東京特別区・町村。政令市は市全体で1件）。人口上位は現行の章のみ
+                </p>
               </>
             )}
           </>
@@ -373,7 +432,9 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
             ? '番号帯を1つ以上選んでください'
             : meta.nationwide
               ? '施設の種別と道路タイプを1つ以上選んでください'
-              : '出題範囲を選んでください'}
+              : scopeMode === 'pop'
+                ? '人口の範囲（Top100〜1000）を選んでください'
+                : '出題範囲を選んでください'}
         </p>
       )}
     </div>

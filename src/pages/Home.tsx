@@ -10,6 +10,7 @@ const QUIZ_ICONS: Record<string, string> = {
   legacy: '🗾',
   legacyname: '📝',
   manhole: '🕳️',
+  emblem: '🏵️',
 };
 
 const PLANNED: { id: string; title: string; description: string }[] = [
