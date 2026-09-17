@@ -5,7 +5,7 @@ export function About() {
     <div className="page about">
       <h1>このツールについて</h1>
       <p>
-        GeoGuessr の日本マップ攻略に役立つ「市外局番」「旧市町村名」「駅名」「高速道路施設」「国道番号」を、地図クリック型クイズで学習する個人用ツールです。
+        GeoGuessr の日本マップ攻略に役立つ「市外局番」「旧市町村名」「駅名」「高速道路施設」「国道番号」「マンホール」「市章」を、地図クリック型クイズで学習する個人用ツールです。
       </p>
 
       <h2>データ出典</h2>
@@ -41,6 +41,13 @@ export function About() {
           （同会の許諾を得て表示しています。画像の権利は同会・各撮影者に帰属。本ツールは画像を複製・再配布せず同サイトから直接表示し、各問題に出典ページへのリンクを表示します）
         </li>
         <li>
+          市町村章画像: <a href="http://www.chikipage.net/ctvsymbol/list/" target="_blank" rel="noreferrer">ちきページ「市町村章 都道府県別リスト」</a>
+          （同サイトの画像を複製して表示しています。画像の権利は同サイト管理人に帰属。各問題に出典ページへのリンクを表示します）
+        </li>
+        <li>
+          市区町村の人口・人口順位: <a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032143614" target="_blank" rel="noreferrer">e-Stat 令和2年国勢調査「都道府県・市区町村別の主な結果」</a>（総務省統計局）
+        </li>
+        <li>
           地図タイル: <a href="https://mapsplatform.google.com/" target="_blank" rel="noreferrer">Google マップ</a>（Maps JavaScript API 経由）/{' '}
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors /{' '}
           <a href="https://tile.openstreetmap.jp/" target="_blank" rel="noreferrer">OSMFJ タイルサーバー</a>（日本語スタイル）/{' '}
@@ -54,6 +61,7 @@ export function About() {
         <li>市外局番エリアは市区町村単位の近似であり、実際の番号区画（MA）境界とは一部異なります。</li>
         <li>1つの市区町村が複数の市外局番を持つ場合、いずれの局番でもその市区町村を正解として扱います。</li>
         <li>高速道路施設・国道の線形は OpenStreetMap 由来のため、実際の名称・位置・区間と一部異なる場合があります。</li>
+        <li>市章クイズの「旧市町村」は1995年10月以降に消滅した市町村のみで、それ以前に消滅した自治体の章は収録していません。出典サイトで（旧）（古）と注記された旧デザインの章も収録していません。</li>
         <li>地名のふりがなは出典データに基づきますが、一部の高速道路施設など読みが取得できないものは表示されません。</li>
         <li>成績はこのブラウザの localStorage にのみ保存されます。</li>
       </ul>

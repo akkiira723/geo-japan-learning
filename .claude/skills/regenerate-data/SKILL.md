@@ -9,7 +9,7 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 
 ## 使う場面
 
-- 6つの `npm run data:*`（stations / areacodes / legacy / outline / manholes / highways）のいずれかを再実行するとき
+- 8つの `npm run data:*`（stations / areacodes / legacy / outline / manholes / highways / routes / emblems）のいずれかを再実行するとき
 - `scripts/overrides/*.json` を編集した後の再実行
 
 ## 依存関係の注意
@@ -46,6 +46,14 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 1. `data-cache/manho/result/*.json` を退避する（削除ではなく移動が安全）
 2. `npm run data:manholes` の fetch を再実行する（ページ/画像キャッシュが温まっていれば数分で終わる）
 3. 画像は re-download しても再配布はしない — 生成物は出典 URL への参照のみ
+
+## 市章専用: キャッシュ無効化
+
+- ページの再取得は `data-cache/emblems/pages/` を削除（結果 `result/<slug>.json` は毎回作り直される）
+- 画像は `data-cache/emblems/img/` に存在すればスキップ。取り直すときはそのファイルを削除。取得は Referer 必須（`fetch-emblems.ts` が付ける）
+- 人口の再取得は `data-cache/population/census2020.json` と `data-cache/raw/census2020-major-results.xlsx` を削除
+- build は `public/data/emblems/img/` を全生成物として扱い、使われなくなった PNG を削除する。`git status` で画像の増減が想定どおりか見る
+- 消滅章のうち 1995 年以前のものはポリゴンが無いので自動除外され exit しない（`data-cache/emblems/excluded-pre1995.txt`）。件数が急増したら legacy データ側を疑う
 
 ## 完了後チェックリスト
 

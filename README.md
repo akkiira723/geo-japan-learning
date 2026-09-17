@@ -13,8 +13,9 @@ GeoGuessr 日本マップ対策の地図クイズ。市外局番・旧市町村�
 | 旧市町村 | 消滅市町村名（同名は全箇所回答） | 旧市町村ポリゴン内クリックで正解 | 1,746件（1995年10月以降に消滅） |
 | 旧市町村 名前 | 消滅市町村名（同名・同読みは1問にまとめて全回答） | 現在の市町村名をテキスト入力（正式名の完全一致。政令市の区は市名だけでも正解）。ミス1回で文字数ヒント、2回で都道府県ヒント、3回で正解表示 | 同上（回答中は地図なし。正解発表時に旧市町村の場所と所属する現市町村の輪郭を地図でハイライト） |
 | マンホール | ご当地マンホール写真 | 自治体ポリゴン内クリックで正解 | 各自治体 市章蓋1枚＋デザイン蓋最大3枚 |
+| 市章 | 市町村章（市章・町章・村章）の画像 | 自治体ポリゴン内クリックで正解（旧市町村の章は旧町村域） | 現行約1,750＋1995年10月以降に消滅した旧市町村約1,730（出典サイトで（旧）（古）と注記された別版は除外） |
 
-共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、高速道路は全国一律出題＋施設種別（IC/JCT/SA・PA）と道路タイプ（都市間高速/都市高速）フィルタ、国道番号は全国一律出題＋番号帯（1〜58/101〜299/300〜507）フィルタ+出題順（ランダム/番号の昇順）、市外局番は出題範囲を地方/都道府県/局番帯（01台〜09台。03・06 は単独局番のため帯なし）のいずれかで選択+出題順（ランダム/局番の昇順）、地図タイプ切替（OSM Bright 日本語・ベーシック日本語・地理院 淡色/標準・CARTO Voyager・OSM）＋県境・市町村境・鉄道・高速道路線形オーバーレイ、回答後の正解エリア表示、成績の localStorage 保存。
+共通機能: 地方・都道府県フィルタ、駅の事業者フィルタ（JR/JR以外）、高速道路は全国一律出題＋施設種別（IC/JCT/SA・PA）と道路タイプ（都市間高速/都市高速）フィルタ、国道番号は全国一律出題＋番号帯（1〜58/101〜299/300〜507）フィルタ+出題順（ランダム/番号の昇順）、市外局番は出題範囲を地方/都道府県/局番帯（01台〜09台。03・06 は単独局番のため帯なし）のいずれかで選択+出題順（ランダム/局番の昇順）、市章は出題範囲を地方/都道府県/人口上位（Top100・300・500・1000。2020年国勢調査の現行市・特別区・町村の人口順）のいずれかで選択+旧市町村の章を含めるかのトグル、地図タイプ切替（OSM Bright 日本語・ベーシック日本語・地理院 淡色/標準・CARTO Voyager・OSM）＋県境・市町村境・鉄道・高速道路線形オーバーレイ、回答後の正解エリア表示、成績の localStorage 保存。
 
 ## 開発
 
@@ -35,6 +36,7 @@ npm run data:areacodes  # 市外局番表 + N03ポリゴン → public/data/area
 npm run data:legacy     # Geoshapeスナップショット差分 → public/data/legacy/
 npm run data:outline    # 県境・市町村境オーバーレイ → public/data/prefs-outline.json ほか
 npm run data:manholes   # 日本マンホール蓋学会をクロール（1時間弱・再開可能） → public/data/manholes/
+npm run data:emblems    # ちきページ市町村章 + e-Stat 国勢調査人口（画像約4,000枚・20分強・再開可能） → public/data/emblems/
 npm run data:highways   # OSM Overpass API（IC/JCT/SA/PA + 本線線形） → public/data/highways/
 npm run data:routes     # OSM Overpass API（国道 route リレーション → 路線別線形） → public/data/routes/
 ```
@@ -69,4 +71,6 @@ GeoGuessr / JapanGuessr の回答マップと同じ本物の Google 地図をベ
 - 市外局番の区画: 総務省「[市外局番の一覧](https://www.soumu.go.jp/main_content/000141817.pdf)」
 - 高速道路施設（IC・JCT・SA/PA）・本線線形・国道線形: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors（ODbL）、Overpass API 経由で取得・加工
 - 町丁・字等（小地域）ポリゴン: 国勢調査2020 小地域境界データを [Geoshape](https://geoshape.ex.nii.ac.jp/ka/) 経由で加工
+- 市町村章画像: [ちきページ「市町村章 都道府県別リスト」](http://www.chikipage.net/ctvsymbol/list/)（画像は Referer 制限によりホットリンクできないため複製して配信。各問題に出典ページへのリンクを表示）
+- 市区町村の人口・人口順位: [e-Stat 令和2年国勢調査「都道府県・市区町村別の主な結果」](https://www.e-stat.go.jp/stat-search/files?stat_infid=000032143614)（総務省統計局）
 - 地図タイル: Google マップ（Maps JavaScript API 経由・任意） / © OpenStreetMap contributors / OSMFJ タイルサーバー（日本語スタイル） / 国土地理院 地理院タイル / © CARTO
