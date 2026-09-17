@@ -1,14 +1,11 @@
 import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import type { Feature, MultiPolygon, Polygon } from 'geojson';
+import type { MultiPolygon, Polygon } from 'geojson';
+import { bboxOf, loadPrefGeo, round5, type MultiCoords } from '../lib/muni-geo.ts';
 import { normalizeName } from '../lib/normalize.ts';
 import { loadSacDict, resolveMuniYomi, sacCurrentByName, type Yomi } from '../lib/yomi.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
-
-type Ring = [number, number][];
-type PolyCoords = Ring[];
-type MultiCoords = PolyCoords[];
 
 interface MuniResult {
   pref: number;
@@ -32,83 +29,6 @@ interface OutItem {
   point: [number, number];
   bbox: [number, number, number, number];
   geom: MultiPolygon;
-}
-
-interface N03Props {
-  N03_003: string | null;
-  N03_004: string | null;
-}
-
-function toMulti(geom: Polygon | MultiPolygon): MultiCoords {
-  return geom.type === 'Polygon' ? [geom.coordinates as PolyCoords] : (geom.coordinates as MultiCoords);
-}
-
-function round5(coords: MultiCoords): MultiCoords {
-  return coords.map((poly) =>
-    poly.map((ring) => {
-      const out: Ring = [];
-      for (const [x, y] of ring) {
-        const p: [number, number] = [Math.round(x * 1e5) / 1e5, Math.round(y * 1e5) / 1e5];
-        const prev = out[out.length - 1];
-        if (!prev || prev[0] !== p[0] || prev[1] !== p[1]) out.push(p);
-      }
-      return out;
-    }),
-  );
-}
-
-function bboxOf(coords: MultiCoords): [number, number, number, number] {
-  let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
-  for (const poly of coords)
-    for (const ring of poly)
-      for (const [x, y] of ring) {
-        if (x < w) w = x;
-        if (y < s) s = y;
-        if (x > e) e = x;
-        if (y > n) n = y;
-      }
-  const r = (v: number) => Math.round(v * 1e4) / 1e4;
-  return [r(w), r(s), r(e), r(n)];
-}
-
-interface PrefGeoIndex {
-  bySeirei: Map<string, MultiCoords>;
-  byCity: Map<string, MultiCoords>;
-  byGunTown: Map<string, MultiCoords>;
-  byTown: Map<string, MultiCoords>;
-}
-
-const prefGeo = new Map<number, PrefGeoIndex>();
-
-async function loadPrefGeo(pref: number): Promise<PrefGeoIndex> {
-  let idx = prefGeo.get(pref);
-  if (idx) return idx;
-  const pp = String(pref).padStart(2, '0');
-  const gj = JSON.parse(await readFile(`data-cache/geo/muni/pref-${pp}.geojson`, 'utf8'));
-  idx = { bySeirei: new Map(), byCity: new Map(), byGunTown: new Map(), byTown: new Map() };
-  const add = (m: Map<string, MultiCoords>, k: string, coords: MultiCoords) => {
-    m.set(k, (m.get(k) ?? []).concat(coords));
-  };
-  for (const f of gj.features as Feature<Polygon | MultiPolygon, N03Props>[]) {
-    const g3raw = f.properties.N03_003;
-    const g3 = g3raw && !/支庁$|振興局$/.test(g3raw) ? normalizeName(g3raw) : null;
-    const g4 = f.properties.N03_004 ? normalizeName(f.properties.N03_004) : null;
-    if (!g4) continue;
-    const coords = toMulti(f.geometry);
-    if (g3 && g3.endsWith('郡')) {
-      add(idx.byGunTown, g3 + g4, coords);
-      add(idx.byTown, g4, coords);
-    } else if (g3) {
-      add(idx.bySeirei, g3, coords); // 政令市全体
-      add(idx.byCity, g3 + g4, coords); // 「仙台市青葉区」
-      add(idx.byTown, g4, coords); // 「青葉区」
-    } else {
-      add(idx.byCity, g4, coords);
-      add(idx.byTown, g4, coords);
-    }
-  }
-  prefGeo.set(pref, idx);
-  return idx;
 }
 
 interface LegacyTown {
