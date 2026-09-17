@@ -16,6 +16,8 @@ export interface EmblemItem {
   page: string;
   /** 旧市町村（消滅自治体）の章 */
   legacy?: true;
+  /** 旧市町村のみ: 郡名（同名の旧町村の区別用。ラベルの先頭に付ける） */
+  gun?: string;
   into?: string;
   intoYomi?: Ruby[];
   /** 現行章のみ: 2020年国勢調査の人口順位・人口 */
@@ -79,7 +81,7 @@ async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
     targets: [
       {
         id: item.id,
-        label: `${item.name}（${prefName(item.pref)}）`,
+        label: `${item.gun ?? ''}${item.name}（${prefName(item.pref)}）`,
         rubies: emblemRuby(item),
         sublabel: item.into ? `現在: ${item.into}` : undefined,
         sublabelRubies: item.intoYomi,

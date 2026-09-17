@@ -6,7 +6,7 @@ import { EMBLEM_PAGES, emblemImageCachePath, type EmblemEntry } from '../lib/emb
 import { bboxOf, loadPrefGeo, lookupMuniCoords, round5 } from '../lib/muni-geo.ts';
 import { normalizeName } from '../lib/normalize.ts';
 import { rankMunicipalities, type CensusEntry } from '../lib/population.ts';
-import { loadSacDict, resolveMuniYomi, sacCurrentByName, type Yomi } from '../lib/yomi.ts';
+import { loadSacDict, resolveMuniYomi, sacByName, type Yomi } from '../lib/yomi.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
 
 /**
@@ -36,6 +36,8 @@ interface OutItem {
   /** 出典ページ URL */
   page: string;
   legacy?: true;
+  /** 旧市町村のみ: 郡名（同名の旧町村が同県に複数あるので表示・識別に使う） */
+  gun?: string;
   into?: string;
   intoYomi?: Yomi[];
   /** 現行章のみ: 2020年国勢調査 人口順位・人口 */
@@ -112,6 +114,8 @@ async function main() {
   const unresolvedYomi = new Set<string>();
   const pre1995: string[] = [];
   const byPref = new Map<number, OutItem[]>();
+  /** 県内での重複検出キー → 画像キー（北海道は市が2ページ両方に載る） */
+  const seenKeys = new Map<string, string>();
   const usedIds = new Set<string>();
   let excludedVariants = 0;
 
@@ -145,8 +149,11 @@ async function main() {
         const bbox = bboxOf(merged);
         const kana = muniYomiOverride[`${pref}|${name}`] ?? resolveMuniYomi(sacDict, pref, name)?.k;
         if (!kana) unresolvedYomi.add(`  "${pref}|${name}": ""`);
-        const code = sacCurrentByName(sacDict, pref, name)?.code;
-        const pr = code ? popRank.get(code) : undefined;
+        // 同名の現行自治体が同県に複数ある場合（北海道の泊村: 古宇郡と国後郡）は人口データがある方を採る
+        const pr = sacByName(sacDict, pref, name)
+          .filter((s) => s.to === null)
+          .map((s) => popRank.get(s.code))
+          .find((r) => r !== undefined);
         out = {
           ...base,
           name,
@@ -165,6 +172,7 @@ async function main() {
             name: `${name}（旧）`,
             kana: legacy.kana,
             legacy: true,
+            gun: legacy.gun || undefined,
             into: legacy.into,
             intoYomi: legacy.intoYomi,
             point: center(legacy.bbox),
@@ -178,12 +186,16 @@ async function main() {
         }
       }
       if (!out) continue;
-      // 同じ自治体が2回載る（ページ分割の重複等）場合は最初の1件だけ使う
-      const dup = items.some((it) => it.name === out!.name);
-      if (dup) {
-        console.warn(`  ⚠ 重複: ${PREFECTURES[pref]} ${out.name}（2件目をスキップ）`);
+      // 同じ自治体が2回載る場合（北海道の市は2ページ両方に載る）は最初の1件だけ使う。
+      // 同名の旧町村（群馬県の3つの東村など）は郡で区別する
+      const dupKey = `${pref}|${out.name}|${out.gun ?? ''}`;
+      const imgKey = `${e.dir}|${e.src}|${e.fn}`;
+      const prevImg = seenKeys.get(dupKey);
+      if (prevImg !== undefined) {
+        if (prevImg !== imgKey) console.warn(`  ⚠ 重複（画像違い）: ${PREFECTURES[pref]} ${out.gun ?? ''}${out.name}（2件目をスキップ）`);
         continue;
       }
+      seenKeys.set(dupKey, imgKey);
       if (usedIds.has(id)) throw new Error(`id 衝突: ${id} (${key})`);
       usedIds.add(id);
       await copyFile(emblemImageCachePath(e), `${imgDir}/${id}.png`);
