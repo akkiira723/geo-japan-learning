@@ -13,6 +13,7 @@
     "data:legacy": "tsx scripts/fetch/fetch-legacy-geo.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-legacy.ts",
     "data:outline": "tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-pref-outline.ts && tsx scripts/build/build-muni-outline.ts",
     "data:manholes": "tsx scripts/fetch/fetch-manholes.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/build/build-manholes.ts",
+    "select:manholes": "tsx scripts/select/manhole-select-server.ts",
     "data:emblems": "tsx scripts/fetch/fetch-emblems.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-sac-yomi.ts && tsx scripts/fetch/fetch-population.ts && tsx scripts/build/build-emblems.ts",
     "data:highways": "tsx scripts/fetch/fetch-highways.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/fetch/fetch-highway-yomi.ts && tsx scripts/build/build-highways.ts && tsx scripts/build/build-highway-lines.ts",
     "data:routes": "tsx scripts/fetch/fetch-routes.ts && tsx scripts/fetch/fetch-muni-geo.ts && tsx scripts/build/build-route-lines.ts"
