@@ -184,10 +184,13 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
   );
 
   const legacyToggle = meta.hasLegacyToggle && (
-    <label className="pref-check filter-toggle">
-      <input type="checkbox" checked={includeLegacy} onChange={() => setIncludeLegacy(!includeLegacy)} />
-      旧市町村（消滅した自治体）の章も含める
-    </label>
+    <>
+      <label className="pref-check filter-toggle">
+        <input type="checkbox" checked={includeLegacy} onChange={() => setIncludeLegacy(!includeLegacy)} />
+        旧市町村（消滅した自治体）のものも含める
+      </label>
+      {includeLegacy && meta.legacyNote && <p className="filter-note">{meta.legacyNote}</p>}
+    </>
   );
 
   return (
@@ -287,6 +290,7 @@ export function FilterPanel({ meta, onStart }: FilterPanelProps) {
               {showPrefs ? '都道府県を閉じる' : '都道府県ごとに選ぶ'}
             </button>
             {showPrefs && prefGrid}
+            {legacyToggle}
           </>
         )}
       </section>

@@ -121,6 +121,8 @@ export interface QuizMeta {
   hasPopulationFilter?: boolean;
   /** 「旧市町村の章も含める」トグルを出すか（市章クイズ） */
   hasLegacyToggle?: boolean;
+  /** 旧市町村トグルの下に出す補足（判定方式の注意など） */
+  legacyNote?: string;
   /**
    * 回答方式。'select' = ホバーでハイライトした線形をクリックで選択し、
    * 選択 id とターゲット id の一致で判定（正解半径は使わない）。
