@@ -9,8 +9,12 @@ export interface ManholeItem {
   name: string;
   /** 自治体名のひらがな読み（「（旧）」サフィックスは含まない） */
   kana?: string;
+  /** 旧市町村のみ: 郡名（同名の旧町村の区別用。ラベルの先頭に付ける） */
+  gun?: string;
   page: string;
-  imgs: { url: string; kind: string; desc?: string }[];
+  /** page: 画像が載っているページ（省略時はアイテムの page） */
+  imgs: { url: string; kind: string; desc?: string; page?: string }[];
+  /** 旧市町村の蓋のみ: 現在の自治体 */
   into?: string;
   /** into の各市区町村の読み */
   intoYomi?: Ruby[];
@@ -39,25 +43,25 @@ export async function loadManholeItems(prefs: number[]): Promise<{ item: Manhole
 }
 
 async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
-  const all = await loadManholeItems(filter.prefs);
+  const all = (await loadManholeItems(filter.prefs)).filter(
+    ({ item }) => filter.includeLegacy !== false || !item.into,
+  );
 
-  const picked = shuffled(all).slice(0, filter.questionCount);
-  return picked.map(({ item, pref }) => {
-    // デザイン蓋を優先しつつランダムに1枚
-    const designs = item.imgs.filter((i) => i.kind === 'design');
-    const pool = designs.length > 0 ? designs : item.imgs;
-    const img = pool[Math.floor(Math.random() * pool.length)];
+  // 1自治体に複数の画像があればすべて出題する（画像ごとに1問）
+  const pool = all.flatMap(({ item, pref }) => item.imgs.map((img, k) => ({ item, pref, img, k })));
+  const picked = shuffled(pool).slice(0, filter.questionCount);
+  return picked.map(({ item, pref, img, k }) => {
     return {
-      id: `manhole:${item.id}`,
+      id: `manhole:${item.id}:${k}`,
       prompt: 'このマンホールはどこ？',
       sub: 'マンホールクイズ',
       image: img.url,
-      imageLink: item.page,
+      imageLink: img.page ?? item.page,
       imageDesc: img.desc,
       targets: [
         {
           id: item.id,
-          label: `${item.name}（${prefName(pref)}）`,
+          label: `${item.gun ?? ''}${item.name}（${prefName(pref)}）`,
           rubies: manholeRuby(item),
           sublabel: item.into ? `現在: ${item.into}` : undefined,
           sublabelRubies: item.intoYomi,
@@ -80,6 +84,8 @@ export const manholeQuiz: QuizModule = {
     usesRadius: false,
     hasOperatorFilter: false,
     hoverKind: 'muni',
+    hasLegacyToggle: true,
+    legacyNote: '旧市町村のマンホールは、現在の市町村ではなく旧市町村の区域にピンを置かないと正解になりません。',
   },
   loadQuestions,
 };

@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>マンホール画像選定</title>
+<style>
+  :root { --bg: #f6f6f4; --fg: #1f2328; --muted: #6b7280; --line: #d9d9d4; --blue: #2563eb; --green: #16a34a; --orange: #ea580c; --panel: #fff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+  #app { height: 100%; }
+  kbd { display: inline-block; padding: 0 5px; margin: 0 1px; border: 1px solid #bbb; border-bottom-width: 2px; border-radius: 4px; background: #fafafa; font: 11px/1.6 inherit; color: #333; }
+  .btn { padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; font: inherit; }
+  .btn:hover { background: #f0f0ee; }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { background: #1d4ed8; }
+  .btn.primary kbd { color: #1e3a8a; }
+  .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .muted { color: var(--muted); }
+  .loading, .empty { padding: 24px; color: var(--muted); }
+
+  /* 都道府県選択 */
+  .prefs { max-width: 1100px; margin: 0 auto; padding: 32px 16px; }
+  .prefs h1 { margin: 0 0 8px; font-size: 22px; }
+  .pref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 20px; }
+  .pref-btn { display: flex; flex-direction: column; gap: 4px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; text-align: left; font: inherit; }
+  .pref-btn:hover { border-color: var(--blue); }
+  .pref-name { font-weight: 600; font-size: 15px; }
+  .pref-prog { color: var(--muted); font-size: 12px; }
+  .bar { display: block; height: 5px; border-radius: 3px; background: #e5e7eb; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--green); }
+
+  /* 選定画面 */
+  .review { display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: 280px 1fr; height: 100%; }
+  .top { grid-column: 1 / 3; display: flex; align-items: center; gap: 14px; padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .top h1 { margin: 0; font-size: 18px; }
+  .top .prog { color: var(--muted); }
+  .top .hint { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .side { overflow-y: auto; border-right: 1px solid var(--line); background: var(--panel); }
+  .side-item { display: flex; gap: 8px; align-items: center; padding: 5px 10px; cursor: pointer; border-left: 4px solid transparent; text-decoration: none; color: inherit; }
+  .side-item:hover { background: #f0f0ee; }
+  .side-item.cur { background: #e8f0fe; border-left-color: var(--blue); }
+  .side-item .code { font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--muted); }
+  .side-item .nm { flex: 1; }
+  .side-item.todo .nm { font-weight: 600; }
+  .mark { font-size: 11px; padding: 0 6px; border-radius: 10px; }
+  .mark.ok { background: #dcfce7; color: #166534; }
+  .mark.lg { background: #ffedd5; color: #9a3412; }
+  .mark.skip { background: #e5e7eb; color: #374151; }
+  .side-sep { padding: 10px 10px 4px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 8px; }
+  .main { overflow-y: auto; padding: 14px 18px 40px; }
+  .muni-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  .muni-head h2 { margin: 0; font-size: 24px; }
+  .muni-head .code { font-family: ui-monospace, Consolas, monospace; color: var(--muted); }
+  .muni-head .gun { color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 10px; margin-bottom: 12px; border: 1px dashed var(--line); border-radius: 8px; background: #fff; }
+  .tags-label { color: var(--muted); font-size: 12px; margin-right: 4px; }
+  .chip { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; cursor: pointer; font: inherit; font-size: 13px; }
+  .chip.on { border-color: var(--blue); background: #e8f0fe; color: #1e3a8a; }
+  .chip.legacy.on { border-color: var(--orange); background: #ffedd5; color: #9a3412; }
+  .page h3 { margin: 18px 0 8px; font-size: 15px; }
+  .page h3 a { color: inherit; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow: hidden; cursor: pointer; outline: 3px solid transparent; outline-offset: -3px; transition: outline-color .08s; }
+  .card:hover { border-color: #999; }
+  .card.checked { outline-color: var(--blue); }
+  .card.adopted { outline-color: var(--green); }
+  .card.adopted.legacy { outline-color: var(--orange); }
+  .card.hit { border-color: var(--orange); background: #fff7ed; box-shadow: 0 0 0 1px var(--orange); }
+  .card.hit .desc mark { background: #fde68a; color: #7c2d12; font-weight: 600; padding: 0 1px; border-radius: 2px; }
+  .hit-note { margin: 0 0 10px; font-size: 12px; color: #9a3412; }
+  .card .photo { width: 100%; height: 210px; object-fit: contain; background: #ececea; display: block; }
+  .card .desc { padding: 8px 10px; font-size: 12px; line-height: 1.45; color: #333; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+  .badges { position: absolute; top: 6px; left: 6px; display: flex; gap: 4px; }
+  .badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #fff; background: var(--green); box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+  .badge.legacy { background: var(--orange); }
+  .badge.checked { background: var(--blue); }
+  .auto, .ref { position: absolute; top: 6px; right: 6px; padding: 1px 7px; border-radius: 999px; font-size: 10px; background: rgba(0,0,0,.55); color: #fff; }
+  .ref { top: auto; bottom: 6px; right: 6px; background: rgba(120,60,0,.6); }
+  .foot { grid-column: 1 / 3; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--panel); }
+  .status { color: var(--muted); font-size: 12px; margin-left: 8px; }
+  .toast { margin-left: auto; padding: 4px 12px; border-radius: 8px; background: #1f2328; color: #fff; font-size: 13px; opacity: 0; transition: opacity .2s; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+const state = {
+  prefs: [],
+  pref: null,
+  data: null,
+  idx: 0,
+  pageCache: new Map(),
+  /** url → { page, desc, legacy? } 採用済み（保存済み + 未保存の変更） */
+  adopted: new Map(),
+  /** 採用前にクリックで選択中の url */
+  checked: new Set(),
+  /** 次の採用に付ける旧市町村 id */
+  tag: null,
+  dirty: false,
+  busy: false,
+};
+const $ = (sel) => document.querySelector(sel);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const cur = () => (state.data ? state.data.munis[state.idx] : null);
+const legacyName = (m, id) => { const l = m.legacy.find((x) => x.id === id); return l ? l.n + (l.gun ? '（' + l.gun + '）' : '') : id; };
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  if (!r.ok) {
+    let msg = r.status + ' ' + r.statusText;
+    try { msg = (await r.json()).error || msg; } catch {}
+    throw new Error(msg);
+  }
+  return r.json();
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = $('#toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+function setStatus(msg) { const s = $('#status'); if (s) s.textContent = msg; }
+
+// ---------- 都道府県選択 ----------
+async function showPrefs() {
+  state.pref = null;
+  state.data = null;
+  const app = $('#app');
+  app.innerHTML = '<div class="loading">読み込み中…</div>';
+  state.prefs = await api('/api/prefs');
+  app.innerHTML = `
+    <div class="prefs">
+      <h1>マンホール画像選定</h1>
+      <p class="muted">都道府県を選ぶと市町村コード順に日本マンホール蓋学会の画像一覧を表示します。採用結果は
+        <code>scripts/overrides/manhole-selections.json</code> に保存され、その県の <code>public/data/manholes</code> が即時再生成されます。</p>
+      <div class="pref-grid">
+        ${state.prefs.map((p) => `
+          <button class="pref-btn" data-code="${p.code}">
+            <span class="pref-name">${esc(p.name)}</span>
+            <span class="pref-prog">選定済み ${p.reviewed} / ${p.total} 自治体</span>
+            <span class="bar"><i style="width:${p.total ? Math.round((100 * p.reviewed) / p.total) : 0}%"></i></span>
+          </button>`).join('')}
+      </div>
+    </div>`;
+  app.querySelectorAll('.pref-btn').forEach((b) => b.addEventListener('click', () => openPref(Number(b.dataset.code))));
+}
+
+async function openPref(code) {
+  $('#app').innerHTML = '<div class="loading">県インデックスと旧市町村データを読み込み中…</div>';
+  try {
+    state.data = await api('/api/pref/' + code);
+  } catch (e) {
+    $('#app').innerHTML = `<div class="loading">読み込みに失敗: ${esc(e.message)} <button class="btn" onclick="showPrefs()">戻る</button></div>`;
+    return;
+  }
+  state.pref = code;
+  state.pageCache = new Map();
+  renderShell();
+  // 最初の未選定の自治体から始める
+  let start = state.data.munis.findIndex((m) => !m.selection);
+  if (start < 0) start = 0;
+  await goTo(start);
+}
+
+function renderShell() {
+  $('#app').innerHTML = `
+    <div class="review">
+      <header class="top">
+        <button id="back" class="btn">← 都道府県</button>
+        <h1>${esc(state.data.name)}</h1>
+        <span id="prog" class="prog"></span>
+        <span class="hint">画像クリックで選択 ・ <kbd>Space</kbd> 採用 ・ <kbd>Enter</kbd> 次へ ・ <kbd>←</kbd><kbd>→</kbd> 移動 ・ <kbd>1</kbd>〜<kbd>9</kbd> 旧市町村タグ ・ <kbd>Esc</kbd> タグ解除</span>
+      </header>
+      <aside id="side" class="side"></aside>
+      <main id="main" class="main"></main>
+      <footer class="foot">
+        <button id="prev" class="btn">← 前へ</button>
+        <button id="adopt" class="btn primary">採用 <kbd>Space</kbd></button>
+        <button id="next" class="btn">次へ <kbd>Enter</kbd></button>
+        <button id="reset" class="btn ghost">この自治体の選定を取り消す</button>
+        <span id="status" class="status"></span>
+        <span id="toast" class="toast"></span>
+      </footer>
+    </div>`;
+  const blurring = (fn) => (e) => { e.currentTarget.blur(); fn(); };
+  $('#back').addEventListener('click', blurring(showPrefs));
+  $('#prev').addEventListener('click', blurring(() => goTo(state.idx - 1)));
+  $('#adopt').addEventListener('click', blurring(adopt));
+  $('#next').addEventListener('click', blurring(next));
+  $('#reset').addEventListener('click', blurring(resetMuni));
+}
+
+// ---------- 自治体 ----------
+function loadPage(url) {
+  let p = state.pageCache.get(url);
+  if (!p) {
+    p = api('/api/page?url=' + encodeURIComponent(url));
+    state.pageCache.set(url, p);
+    p.catch(() => state.pageCache.delete(url));
+  }
+  return p;
+}
+
+async function goTo(i) {
+  if (!state.data || state.busy) return;
+  const munis = state.data.munis;
+  if (i < 0 || i >= munis.length) return;
+  state.idx = i;
+  const m = munis[i];
+  state.adopted = new Map((m.selection ? m.selection.imgs : []).map((img) => [img.url, { page: img.page, desc: img.desc, legacy: img.legacy }]));
+  state.checked = new Set();
+  state.tag = null;
+  state.dirty = false;
+  renderSidebar();
+  renderFooter();
+  const main = $('#main');
+  main.innerHTML = muniHeadHtml(m, null) + '<div class="loading">ページを読み込み中…</div>';
+  main.scrollTop = 0;
+  let pages;
+  try {
+    pages = await Promise.all(m.pages.map((p) => loadPage(p.url)));
+  } catch (e) {
+    if (state.idx === i) main.innerHTML = muniHeadHtml(m, null) + `<p class="empty">ページの取得に失敗: ${esc(e.message)}</p>`;
+    return;
+  }
+  if (state.idx !== i) return; // 読み込み中に別の自治体へ移動した
+  renderMuni(m, pages);
+  // 次の自治体のページを先読み
+  const nx = munis[i + 1];
+  if (nx) nx.pages.forEach((p) => loadPage(p.url).catch(() => {}));
+}
+
+function muniHeadHtml(m, pages) {
+  const n = pages ? pages.reduce((s, p) => s + p.imgs.length, 0) : null;
+  return `<div class="muni-head"><span class="code">${esc(m.code)}</span><h2>${esc(m.name)}</h2>${m.gun ? `<span class="gun">${esc(m.gun)}</span>` : ''}<span class="muted">ページ ${m.pages.length}${n === null ? '' : ' ・ 画像 ' + n + ' 枚'}</span></div>`;
+}
+
+function renderMuni(m, pages) {
+  const main = $('#main');
+  let html = muniHeadHtml(m, pages);
+  if (m.legacy.length > 0) {
+    html += `<div class="tags"><span class="tags-label">旧市町村タグ（選んでから採用すると旧市町村の蓋になる）:</span>
+      <button class="chip on" data-tag="">なし = ${esc(m.name)}の蓋</button>
+      ${m.legacy.map((l, k) => `<button class="chip legacy" data-tag="${esc(l.id)}">${k < 9 ? `<kbd>${k + 1}</kbd> ` : ''}旧 ${esc(l.n)}${l.gun ? '（' + esc(l.gun) + '）' : ''}</button>`).join('')}
+    </div>`;
+  } else {
+    html += '<div class="tags muted">旧市町村なし（1995年10月以降に編入・合併した市町村はありません）</div>';
+  }
+  if (m.pages.length === 0) {
+    html += `<p class="empty">日本マンホール蓋学会に ${esc(m.name)} のページがありません。<kbd>Enter</kbd> で次へ（出題対象外として記録されます）。</p>`;
+  }
+  m.pages.forEach((pg, k) => {
+    const data = pages[k];
+    html += `<section class="page"><h3><a href="${esc(pg.url)}" target="_blank" rel="noreferrer">${esc(pg.title)}</a> <span class="muted">${data.imgs.length} 枚${pg.main ? '' : ' ・ サブページ'}</span></h3><div class="grid">`;
+    data.imgs.forEach((img, ord) => { html += cardHtml(img, pg.url, m, ord); });
+    html += '</div></section>';
+  });
+  main.innerHTML = html;
+  main.querySelectorAll('.card').forEach((c) => c.addEventListener('click', () => toggle(c.dataset.url)));
+  main.querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => setTag(c.dataset.tag || null)));
+  main.querySelectorAll('img.photo').forEach((im) =>
+    im.addEventListener('error', () => {
+      // ホットリンクが拒否されたらサーバー経由（data-cache）で取得
+      if (im.dataset.fallback) return;
+      im.dataset.fallback = '1';
+      im.src = '/api/img?url=' + encodeURIComponent(im.dataset.url);
+    }),
+  );
+  updateCards();
+}
+
+function cardHtml(img, pageUrl, m, ord) {
+  const auto = m.auto.includes(img.url);
+  return `<div class="card" data-url="${esc(img.url)}" data-page="${esc(pageUrl)}" data-desc="${esc(img.display)}" data-full="${esc(img.desc)}" data-ord="${ord}">
+    <div class="badges"></div>
+    <img class="photo" loading="lazy" src="${esc(img.url)}" data-url="${esc(img.url)}" alt="">
+    ${auto ? '<span class="auto" title="現在の自動選定で採用されている画像">自動選定中</span>' : ''}
+    ${img.refersAbove ? '<span class="ref" title="説明文が直前の画像を参照している（変種）">上記参照</span>' : ''}
+    <div class="desc" title="${esc(img.desc)}">${img.display ? esc(img.display) : '<span class="muted">（説明なし）</span>'}</div>
+  </div>`;
+}
+
+function updateCards() {
+  const m = cur();
+  if (!m) return;
+  document.querySelectorAll('#main .card').forEach((c) => {
+    const url = c.dataset.url;
+    const a = state.adopted.get(url);
+    const checked = state.checked.has(url);
+    c.classList.toggle('adopted', !!a);
+    c.classList.toggle('legacy', !!(a && a.legacy));
+    c.classList.toggle('checked', checked);
+    const b = c.querySelector('.badges');
+    b.innerHTML = a
+      ? a.legacy ? `<span class="badge legacy">旧 ${esc(legacyName(m, a.legacy))}</span>` : '<span class="badge">採用</span>'
+      : checked ? '<span class="badge checked">選択中</span>' : '';
+  });
+}
+
+function updateChips() {
+  document.querySelectorAll('#main .chip').forEach((c) => c.classList.toggle('on', (c.dataset.tag || null) === state.tag));
+}
+
+function toggle(url) {
+  if (state.adopted.has(url)) {
+    state.adopted.delete(url);
+    state.dirty = true;
+  } else if (state.checked.has(url)) {
+    state.checked.delete(url);
+  } else {
+    state.checked.add(url);
+  }
+  updateCards();
+  renderFooter();
+}
+
+function setTag(id) {
+  const m = cur();
+  if (!m) return;
+  if (id && !m.legacy.some((l) => l.id === id)) return;
+  state.tag = id;
+  updateChips();
+  applyTagHighlight();
+  renderFooter();
+}
+
+/** 旧町村名から照合用の語幹を取る（波方町 → 波方）。1文字になるなら元の名前のまま */
+function legacyStem(name) {
+  const stem = name.replace(/[市町村]$/, '');
+  return stem.length >= 2 ? stem : name;
+}
+
+function markStem(text, stem) {
+  if (!text) return '<span class="muted">（説明なし）</span>';
+  return text.split(stem).map(esc).join(`<mark>${esc(stem)}</mark>`);
+}
+
+/**
+ * 選択中の旧市町村タグの名前（語幹）を説明文に含むカードを各ページの先頭に並べ替えてハイライトする。
+ * タグ解除で元の順序に戻す
+ */
+function applyTagHighlight() {
+  const m = cur();
+  if (!m) return;
+  const legacy = state.tag ? m.legacy.find((l) => l.id === state.tag) : null;
+  const stem = legacy ? legacyStem(legacy.n) : null;
+  let hits = 0;
+  document.querySelectorAll('#main .grid').forEach((grid) => {
+    const cards = [...grid.querySelectorAll('.card')];
+    for (const c of cards) {
+      const hit = !!stem && (c.dataset.desc.includes(stem) || c.dataset.full.includes(stem));
+      c.classList.toggle('hit', hit);
+      c.querySelector('.desc').innerHTML = hit ? markStem(c.dataset.desc, stem) : (c.dataset.desc ? esc(c.dataset.desc) : '<span class="muted">（説明なし）</span>');
+      if (hit) hits++;
+    }
+    cards
+      .sort((a, b) => (b.classList.contains('hit') - a.classList.contains('hit')) || (Number(a.dataset.ord) - Number(b.dataset.ord)))
+      .forEach((c) => grid.appendChild(c));
+  });
+  const main = $('#main');
+  main.querySelectorAll('.hit-note').forEach((n) => n.remove());
+  if (stem) {
+    const note = document.createElement('p');
+    note.className = 'hit-note';
+    note.textContent = hits > 0
+      ? `「${stem}」を説明文に含む画像 ${hits} 枚を各ページの先頭に表示しています`
+      : `「${stem}」を説明文に含む画像はありません`;
+    main.querySelector('.tags').insertAdjacentElement('afterend', note);
+    main.scrollTop = 0;
+  }
+}
+
+function renderSidebar() {
+  const side = $('#side');
+  const munis = state.data.munis;
+  side.innerHTML =
+    munis
+      .map((m, i) => {
+        const s = m.selection;
+        let mark = '';
+        if (s) {
+          if (s.imgs.length === 0) mark = '<span class="mark skip">除外</span>';
+          else {
+            const lg = s.imgs.filter((x) => x.legacy).length;
+            const own = s.imgs.length - lg;
+            mark = (own ? `<span class="mark ok">✓ ${own}</span>` : '') + (lg ? `<span class="mark lg">旧 ${lg}</span>` : '');
+          }
+        }
+        return `<div class="side-item ${i === state.idx ? 'cur' : ''} ${s ? '' : 'todo'}" data-i="${i}"><span class="code">${esc(m.code)}</span><span class="nm">${esc(m.name)}</span>${mark}</div>`;
+      })
+      .join('') +
+    (state.data.unmatched.length
+      ? '<div class="side-sep">自治体に紐付かないページ（参考）</div>' +
+        state.data.unmatched.map((u) => `<a class="side-item muted" href="${esc(u.url)}" target="_blank" rel="noreferrer">${esc(u.text)}</a>`).join('')
+      : '');
+  side.querySelectorAll('.side-item[data-i]').forEach((el) => el.addEventListener('click', () => goTo(Number(el.dataset.i))));
+  const curEl = side.querySelector('.cur');
+  if (curEl) curEl.scrollIntoView({ block: 'nearest' });
+  const reviewed = munis.filter((m) => m.selection).length;
+  $('#prog').textContent = `${state.idx + 1} / ${munis.length} ・ 選定済み ${reviewed}`;
+}
+
+function renderFooter() {
+  const m = cur();
+  if (!m) return;
+  const lg = [...state.adopted.values()].filter((a) => a.legacy).length;
+  const parts = [`選択中 ${state.checked.size} 枚`, `採用済み ${state.adopted.size - lg} 枚` + (lg ? ` + 旧市町村 ${lg} 枚` : '')];
+  if (state.tag) parts.push(`次の採用は「旧 ${legacyName(m, state.tag)}」の蓋として保存`);
+  if (state.dirty) parts.push('未保存の変更あり（採用 or 次へで保存）');
+  if (!m.selection) parts.push('未選定');
+  setStatus(parts.join(' ・ '));
+  $('#reset').disabled = !m.selection;
+}
+
+// ---------- 保存 ----------
+async function save(m) {
+  const imgs = [...state.adopted].map(([url, v]) => ({ url, page: v.page, desc: v.desc, ...(v.legacy ? { legacy: v.legacy } : {}) }));
+  setStatus('保存して再生成中…');
+  const r = await api('/api/select', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: m.code, pref: state.pref, name: m.name, imgs }),
+  });
+  m.selection = { pref: state.pref, name: m.name, imgs };
+  state.dirty = false;
+  renderSidebar();
+  updateCards();
+  renderFooter();
+  return r;
+}
+
+async function withBusy(fn) {
+  if (state.busy) return;
+  state.busy = true;
+  try {
+    await fn();
+  } catch (e) {
+    toast('エラー: ' + e.message);
+    setStatus('保存に失敗しました: ' + e.message);
+  } finally {
+    state.busy = false;
+  }
+}
+
+function adopt() {
+  return withBusy(async () => {
+    const m = cur();
+    if (!m) return;
+    if (state.checked.size === 0) {
+      if (state.dirty) {
+        await save(m);
+        toast('変更を保存しました');
+      } else {
+        toast('画像をクリックして選択してから採用してください');
+      }
+      return;
+    }
+    const tag = state.tag;
+    for (const url of state.checked) {
+      const c = document.querySelector(`#main .card[data-url="${CSS.escape(url)}"]`);
+      state.adopted.set(url, { page: c.dataset.page, desc: c.dataset.desc, legacy: tag || undefined });
+    }
+    const n = state.checked.size;
+    state.checked = new Set();
+    state.tag = null;
+    updateChips();
+    await save(m);
+    toast(`${n} 枚を採用 → ${tag ? '旧 ' + legacyName(m, tag) : m.name}`);
+  });
+}
+
+function next() {
+  return withBusy(async () => {
+    const m = cur();
+    if (!m) return;
+    if (state.checked.size > 0) {
+      // 選択したまま次へ: 採用してから進む
+      const tag = state.tag;
+      for (const url of state.checked) {
+        const c = document.querySelector(`#main .card[data-url="${CSS.escape(url)}"]`);
+        state.adopted.set(url, { page: c.dataset.page, desc: c.dataset.desc, legacy: tag || undefined });
+      }
+      state.checked = new Set();
+      state.tag = null;
+      await save(m);
+    } else if (!m.selection || state.dirty) {
+      await save(m);
+      if (state.adopted.size === 0) toast(`${m.name}: 出題対象外にしました`);
+    }
+    if (state.idx + 1 >= state.data.munis.length) {
+      toast('この県の最後の自治体です');
+      return;
+    }
+    state.busy = false;
+    await goTo(state.idx + 1);
+  });
+}
+
+function resetMuni() {
+  return withBusy(async () => {
+    const m = cur();
+    if (!m || !m.selection) return;
+    if (!confirm(`${m.name} の選定を取り消して「未選定」に戻しますか？（自動選定に戻ります）`)) return;
+    await api('/api/select/' + m.code, { method: 'DELETE' });
+    m.selection = null;
+    state.busy = false;
+    await goTo(state.idx);
+    toast(`${m.name}: 選定を取り消しました`);
+  });
+}
+
+// ---------- キーボード ----------
+document.addEventListener('keydown', (e) => {
+  if (!state.data) return;
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === ' ') {
+    e.preventDefault();
+    adopt();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    next();
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goTo(state.idx - 1);
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    goTo(state.idx + 1);
+  } else if (/^[1-9]$/.test(e.key)) {
+    const m = cur();
+    const l = m && m.legacy[Number(e.key) - 1];
+    if (l) setTag(l.id);
+  } else if (e.key === 'Escape' || e.key === '0') {
+    setTag(null);
+  }
+});
+
+showPrefs();
+</script>
+</body>
+</html>

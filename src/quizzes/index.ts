@@ -1,4 +1,5 @@
 import { areaCodeQuiz } from './areaCode';
+import { emblemQuiz } from './emblem';
 import { highwayQuiz } from './highway';
 import { legacyNameQuiz } from './legacyName';
 import { legacyTownQuiz } from './legacyTown';
@@ -15,6 +16,7 @@ export const QUIZZES: Partial<Record<QuizId, QuizModule>> = {
   route: routeQuiz,
   highway: highwayQuiz,
   manhole: manholeQuiz,
+  emblem: emblemQuiz,
 };
 
 export function getQuiz(id: string | undefined): QuizModule | null {

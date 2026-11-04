@@ -9,7 +9,7 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 
 ## 使う場面
 
-- 6つの `npm run data:*`（stations / areacodes / legacy / outline / manholes / highways）のいずれかを再実行するとき
+- 8つの `npm run data:*`（stations / areacodes / legacy / outline / manholes / highways / routes / emblems）のいずれかを再実行するとき
 - `scripts/overrides/*.json` を編集した後の再実行
 
 ## 依存関係の注意
@@ -39,13 +39,27 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 - Wikipedia 読み辞書の再取得は `data-cache/yomi/wikipedia-highway.json` を削除（パーサだけ直した場合はこれで十分。記事本文も取り直すなら `wp-*.txt` も削除）。市区町村読み辞書（e-Stat SAC）の再取得は `data-cache/yomi/sac.json` と `sac-part-*.json` を削除
 - build は件数のサニティチェック（IC/JCT/SA・PA の想定範囲・道路名欠落率）で exit 1 することがある。OSM 側の大変動でなければ `build-highways.ts` の閾値ではなく取得データを疑う
 
+## マンホール専用: 手動選定との関係
+
+- `scripts/overrides/manhole-selections.json` にエントリがある自治体は build が手動選定を使う（クロール結果は無視。`imgs` 空 = 出題対象外）。画像を選び直すときは `npm run data:manholes` ではなく `npm run select:manholes`（選定ツール）を使う
+- 選定ツールは採用のたびに `public/data/manholes/pref-XX.json` と `index.json` を再生成するので、`npm run data:manholes` を回し直す必要はない
+- 旧市町村タグ付きの画像は `public/data/legacy` の id を参照する。`data:legacy` を再生成して id が変わった場合は build が「旧市町村 id が legacy データに無い」と警告する（exit はしない）
+
 ## マンホール専用: キャッシュ無効化
 
-画像選定ロジック（`scripts/lib/image.ts`）を直した後などに `manholes` の `result` を作り直す場合:
+画像選定ロジック（`scripts/lib/image.ts`）を直した後などに `manholes` の `result` を作り直す場合（未選定の自治体にだけ影響する）:
 
 1. `data-cache/manho/result/*.json` を退避する（削除ではなく移動が安全）
 2. `npm run data:manholes` の fetch を再実行する（ページ/画像キャッシュが温まっていれば数分で終わる）
 3. 画像は re-download しても再配布はしない — 生成物は出典 URL への参照のみ
+
+## 市章専用: キャッシュ無効化
+
+- ページの再取得は `data-cache/emblems/pages/` を削除（結果 `result/<slug>.json` は毎回作り直される）
+- 画像は `data-cache/emblems/img/` に存在すればスキップ。取り直すときはそのファイルを削除。取得は Referer 必須（`fetch-emblems.ts` が付ける）
+- 人口の再取得は `data-cache/population/census2020.json` と `data-cache/raw/census2020-major-results.xlsx` を削除
+- build は `public/data/emblems/img/` を全生成物として扱い、使われなくなった PNG を削除する。`git status` で画像の増減が想定どおりか見る
+- 消滅章のうち 1995 年以前のものはポリゴンが無いので自動除外され exit しない（`data-cache/emblems/excluded-pre1995.txt`）。件数が急増したら legacy データ側を疑う
 
 ## 完了後チェックリスト
 

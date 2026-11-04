@@ -313,6 +313,14 @@ rt {
   max-width: 560px;
   cursor: zoom-out;
 }
+/* 市章: 80px の小さな PNG を白地に余白付きで拡大表示（拡大時も大きくしすぎない） */
+.quiz-image-emblem img {
+  background: #fff;
+  padding: 10%;
+  box-sizing: border-box;
+}
+.quiz-image-emblem.quiz-image-expanded { max-width: 360px; }
+.filter-toggle { margin-top: 10px; }
 @media (max-width: 600px) {
   .quiz-image { width: 150px; top: 66px; }
   .quiz-image-expanded { width: 88vw; max-width: 480px; }
@@ -512,6 +520,15 @@ rt {
 }
 
 .flashcard-img-wrap { position: relative; }
+/* 市章: 80px の小さな PNG を白地に余白付きで表示 */
+.flashcard-emblem img {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 8%;
+  box-sizing: border-box;
+  max-height: 340px;
+}
+.flashcard-gun { font-size: 0.95rem; font-weight: 700; color: var(--muted); margin-right: 2px; }
 .flashcard-img-wrap img {
   display: block;
   width: 100%;
@@ -532,18 +549,9 @@ rt {
   background: rgba(38, 54, 58, 0.72);
   color: #fff;
   border-radius: 999px;
-  padding: 2px 6px;
+  padding: 3px 12px;
   font-size: 0.8rem;
-}
-.flashcard-img-nav button {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.1rem;
-  font-family: inherit;
-  line-height: 1;
-  padding: 2px 8px;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 .flashcard-hidden {

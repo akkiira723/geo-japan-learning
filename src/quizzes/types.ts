@@ -53,10 +53,16 @@ export interface Question {
   imageLink?: string;
   /** 画像の説明文（回答後に表示） */
   imageDesc?: string;
+  /** 画像の種類。'emblem' = 市章（小さな PNG を白地に拡大表示） */
+  imageKind?: 'photo' | 'emblem';
+  /** 画像の alt（省略時はマンホール） */
+  imageAlt?: string;
+  /** 出典リンクの表示名（省略時は日本マンホール蓋学会） */
+  imageSource?: string;
   targets: Target[];
 }
 
-export type QuizId = 'station' | 'areacode' | 'legacy' | 'legacyname' | 'manhole' | 'highway' | 'route';
+export type QuizId = 'station' | 'areacode' | 'legacy' | 'legacyname' | 'manhole' | 'highway' | 'route' | 'emblem';
 
 export type OperatorFilter = 'all' | 'jr' | 'nonjr';
 
@@ -68,6 +74,8 @@ export type HighwayRoadType = 'inter' | 'urban';
 
 /** 国道番号クイズの番号帯（データチャンクと 1:1 対応） */
 export type RouteBand = 'two' | 'three-low' | 'three-high';
+/** 市章クイズ: 人口上位 N 件（2020年国勢調査の現行市・特別区・町村） */
+export type PopulationTop = 100 | 300 | 500 | 1000;
 
 export interface QuizFilter {
   prefs: number[];
@@ -85,6 +93,10 @@ export interface QuizFilter {
   roadTypes?: HighwayRoadType[];
   /** 国道番号クイズの番号帯フィルタ。空/省略はすべて */
   routeBands?: RouteBand[];
+  /** 市章クイズ: 人口上位 N 件から出題（指定時は都道府県で絞らない） */
+  populationTop?: PopulationTop;
+  /** 市章クイズ: 旧市町村（消滅自治体）の章も含めるか（省略 = 含める） */
+  includeLegacy?: boolean;
 }
 
 export type HoverKind = 'areacode' | 'legacy' | 'muni';
@@ -105,6 +117,12 @@ export interface QuizMeta {
   hasHighwayFilters?: boolean;
   /** 国道番号向けの番号帯・出題順フィルタを出すか */
   hasRouteFilters?: boolean;
+  /** 出題範囲に「人口上位で選ぶ」（Top100〜1000）モードを出すか（市章クイズ） */
+  hasPopulationFilter?: boolean;
+  /** 「旧市町村の章も含める」トグルを出すか（市章クイズ） */
+  hasLegacyToggle?: boolean;
+  /** 旧市町村トグルの下に出す補足（判定方式の注意など） */
+  legacyNote?: string;
   /**
    * 回答方式。'select' = ホバーでハイライトした線形をクリックで選択し、
    * 選択 id とターゲット id の一致で判定（正解半径は使わない）。

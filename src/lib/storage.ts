@@ -33,12 +33,12 @@ export function saveSession(record: SessionRecord): void {
   }
 }
 
-const LEARNED_KEY = 'geo-japan-learning:manhole-learned';
+const MANHOLE_LEARNED_KEY = 'geo-japan-learning:manhole-learned';
+const EMBLEM_LEARNED_KEY = 'geo-japan-learning:emblem-learned';
 
-/** 単語帳で「覚えた」にした蓋の item id 集合 */
-export function loadLearnedManholes(): Set<string> {
+function loadLearned(key: string): Set<string> {
   try {
-    const raw = localStorage.getItem(LEARNED_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return new Set();
     const parsed = JSON.parse(raw);
     return new Set(Array.isArray(parsed) ? parsed.filter((v) => typeof v === 'string') : []);
@@ -47,10 +47,18 @@ export function loadLearnedManholes(): Set<string> {
   }
 }
 
-export function saveLearnedManholes(ids: Set<string>): void {
+function saveLearned(key: string, ids: Set<string>): void {
   try {
-    localStorage.setItem(LEARNED_KEY, JSON.stringify([...ids]));
+    localStorage.setItem(key, JSON.stringify([...ids]));
   } catch {
     // localStorage 不可の環境では保存をあきらめる
   }
 }
+
+/** マンホール単語帳で「覚えた」にした自治体の item id 集合 */
+export const loadLearnedManholes = (): Set<string> => loadLearned(MANHOLE_LEARNED_KEY);
+export const saveLearnedManholes = (ids: Set<string>): void => saveLearned(MANHOLE_LEARNED_KEY, ids);
+
+/** 市章単語帳で「覚えた」にした自治体の item id 集合 */
+export const loadLearnedEmblems = (): Set<string> => loadLearned(EMBLEM_LEARNED_KEY);
+export const saveLearnedEmblems = (ids: Set<string>): void => saveLearned(EMBLEM_LEARNED_KEY, ids);
