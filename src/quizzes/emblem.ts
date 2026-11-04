@@ -54,7 +54,7 @@ export async function loadTopEmblemItems(top: PopulationTop): Promise<EmblemItem
   return chunks.flatMap((c) => c.items);
 }
 
-function emblemRuby(item: EmblemItem): Ruby[] | undefined {
+export function emblemRuby(item: EmblemItem): Ruby[] | undefined {
   if (!item.kana) return undefined;
   return [{ b: item.name.replace(/（旧）$/, ''), k: item.kana }];
 }
