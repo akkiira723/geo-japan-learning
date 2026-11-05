@@ -1,6 +1,301 @@
 {
  "version": 1,
  "munis": {
+  "13101": {
+   "pref": 13,
+   "name": "千代田区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/tiyoda/tiyoda23.jpg",
+     "page": "https://we-love-manho.com/toukyou/tiyoda/tiyoda.html",
+     "desc": "区章入り丸形、歩道模様の化粧蓋。"
+    }
+   ]
+  },
+  "13102": {
+   "pref": 13,
+   "name": "中央区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/tyuuou/tyuuou12.jpg",
+     "page": "https://we-love-manho.com/toukyou/tyuuou/tyuuou.html",
+     "desc": "歩道レンガ仕様、中央区のシンボルマーク入り小型蓋。「DOISEISAKUSHO」製。"
+    }
+   ]
+  },
+  "13103": {
+   "pref": 13,
+   "name": "港区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/minato/2-1minatoku6.jpg",
+     "page": "https://we-love-manho.com/toukyou/minato/minato.html",
+     "desc": "「港区区章入りで、歩道のタイルと同じ仕様。 汚水管マンホール蓋」と枠や区章が四角内に入っているのが違う。"
+    }
+   ]
+  },
+  "13104": {
+   "pref": 13,
+   "name": "新宿区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/sinnjyuku/sinnjyukuku-2.jpg",
+     "page": "https://we-love-manho.com/toukyou/sinnjyuku/sinnjyuku.html",
+     "desc": "中央に区章入りの四角の蓋です。"
+    }
+   ]
+  },
+  "13105": {
+   "pref": 13,
+   "name": "文京区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/bunnkyou/bunnkyouku6.jpg",
+     "page": "https://we-love-manho.com/toukyou/bunnkyou/bunnkyou.html",
+     "desc": "文京区が誕生してから70年を迎えることをきっかけに平成29年3月15日に制定された文京区のシンボルマークが蓋一面に散りばめられた地模様です。 中央に区章入りのマンホール蓋。 シンボルマークの制作者は、東京2020オリンピック・パラリンピック競技大会エンブレムをデザインした文京区在住の野老朝雄（ところあさお）氏（区のＨＰより）"
+    }
+   ]
+  },
+  "13106": {
+   "pref": 13,
+   "name": "台東区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/taitou/taitouku11.jpg",
+     "page": "https://we-love-manho.com/toukyou/taitou/taitou.html",
+     "desc": "三角形の鱗模様、中央に台東区章。 用途不明"
+    }
+   ]
+  },
+  "13107": {
+   "pref": 13,
+   "name": "墨田区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/sumida/sumidaku.jpg",
+     "page": "https://we-love-manho.com/toukyou/sumida/sumida.html",
+     "desc": "歩道面仕様で中央に墨田区章。受枠も同じ地模様の四角形。"
+    }
+   ]
+  },
+  "13108": {
+   "pref": 13,
+   "name": "江東区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/koutouku/koutoukusinnboruma-ku.jpg",
+     "page": "https://we-love-manho.com/toukyou/koutouku/koutouku.html",
+     "desc": "江東区のシンボルマーク入り、▲地模様のマンホール蓋。"
+    }
+   ]
+  },
+  "13109": {
+   "pref": 13,
+   "name": "品川区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/sinagawa/sinagawaku36.jpg",
+     "page": "https://we-love-manho.com/toukyou/sinagawa/sinagawa.html",
+     "desc": "穴あきJIS、中央に区章、上下に鍵穴、左右の鍵穴は塞がれています。"
+    }
+   ]
+  },
+  "13110": {
+   "pref": 13,
+   "name": "目黒区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/meguro/meguro6.jpg",
+     "page": "https://we-love-manho.com/toukyou/meguro/meguro.html",
+     "desc": "黄色の格子模様、区章と「防火貯水槽」の文字入り。７００Φ。 目を図案化した市章なので真ん中の線が横になる向きが正しい。 防火貯水槽蓋"
+    }
+   ]
+  },
+  "13111": {
+   "pref": 13,
+   "name": "大田区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/oota/ootaku16.jpg",
+     "page": "https://we-love-manho.com/toukyou/oota/oota.html",
+     "desc": "穴あき規格、中央に大田区区章、そのすぐ下に「雨水」の文字。"
+    }
+   ]
+  },
+  "13112": {
+   "pref": 13,
+   "name": "世田谷区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/setagaya/setagayaku2.jpg",
+     "page": "https://we-love-manho.com/toukyou/setagaya/setagaya.html",
+     "desc": "「穴あきＪＩＳ規格蓋、中央に世田谷区章、その下に「雨水」の文字入り」と１２時６時等が違うタイプの蓋に、区章入り。"
+    }
+   ]
+  },
+  "13113": {
+   "pref": 13,
+   "name": "渋谷区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/sibuya/sibuyaku3.jpg",
+     "page": "https://we-love-manho.com/toukyou/sibuya/sibuya.html",
+     "desc": "三角の字模様に区章とＣ・Ｃ・ＢＯＸの文字。"
+    }
+   ]
+  },
+  "13114": {
+   "pref": 13,
+   "name": "中野区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/nakanoku/nakanoku2.jpg",
+     "page": "https://we-love-manho.com/toukyou/nakanoku/nakanoku.html",
+     "desc": "亀甲模様の小型蓋で、区章と「点検口」の文字入りです。"
+    }
+   ]
+  },
+  "13115": {
+   "pref": 13,
+   "name": "杉並区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/suginami/suginami9.jpg",
+     "page": "https://we-love-manho.com/toukyou/suginami/suginami.html",
+     "desc": "杉並区コミュニケーションマーク入り側溝の蓋。"
+    }
+   ]
+  },
+  "13116": {
+   "pref": 13,
+   "name": "豊島区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/tosima/tosimaku.jpg",
+     "page": "https://we-love-manho.com/toukyou/tosima/tosima.html",
+     "desc": "網目模様の親子。子蓋は黄色に塗って菊花の内側に「豊」を配した豊島区章入り、 親蓋に「防災貯水槽」の文字。"
+    }
+   ]
+  },
+  "13117": {
+   "pref": 13,
+   "name": "北区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/kitaku/kitaku4.jpg",
+     "page": "https://we-love-manho.com/toukyou/kitaku/kitaku.html",
+     "desc": "中央に北区の区章、その上に「公共基準点」、下に「北区・建設部」の文字入り。 公共基準点"
+    }
+   ]
+  },
+  "13118": {
+   "pref": 13,
+   "name": "荒川区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/arakawa/arakawaku3-2.jpg",
+     "page": "https://we-love-manho.com/toukyou/arakawa/arakawa.html",
+     "desc": "中央に荒川区シンボルマーク入り耐スリップ蓋。 区章は、「ARAKAWA」の「A」という文字と「人の力」や「元気」を図案化し、組み合わせたものです。また、「人の和（WA）」という意味も表しています。"
+    }
+   ]
+  },
+  "13119": {
+   "pref": 13,
+   "name": "板橋区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/itabasi/itabasiku5.jpg",
+     "page": "https://we-love-manho.com/toukyou/itabasi/itabasi.html",
+     "desc": "十字をL字4つで囲んだ模様が並べられたデザイン、中央に板橋区章。 用途不明"
+    }
+   ]
+  },
+  "13120": {
+   "pref": 13,
+   "name": "練馬区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/nerima/nerimaku12.jpg",
+     "page": "https://we-love-manho.com/toukyou/nerima/nerima.html",
+     "desc": "亀甲地模様、中央に区章入り。 丸型電線共同溝蓋"
+    }
+   ]
+  },
+  "13121": {
+   "pref": 13,
+   "name": "足立区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/adati/adatiku18.jpg",
+     "page": "https://we-love-manho.com/toukyou/adati/adati.html",
+     "desc": "JIS穴あき蓋、中央に区章入り。"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/adati/adati36.jpg",
+     "page": "https://we-love-manho.com/toukyou/adati/adati.html",
+     "desc": "「オーストラリアのベルモントと姉妹都市の記念の蓋で、ADACHIとBELMONTの文字と 下水の文字を図案化しその中に東京都章を入れた下水のマークとカワセミが描かれています。「雨」と表記のカラー版。 雨水管マンホール蓋」のノンカラー「雨」表記です。"
+    }
+   ]
+  },
+  "13122": {
+   "pref": 13,
+   "name": "葛飾区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/katusika/katusikaku10.jpg",
+     "page": "https://we-love-manho.com/toukyou/katusika/katusika.html",
+     "desc": "穴あき東京市型、区章入りマンホール蓋。 １２時６時に鍵穴あり、９時３時にゴムキャップ、５時に「L1」の文字。"
+    }
+   ]
+  },
+  "13123": {
+   "pref": 13,
+   "name": "江戸川区",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/edogawa/edogawaku4.jpg",
+     "page": "https://we-love-manho.com/toukyou/edogawa/edogawa.html",
+     "desc": "「ＪＩＳ規格蓋に江戸川区章入り」と同じタイプの蓋で、区章の下に「雨」の文字入りの都の紋章があります。 雨水"
+    }
+   ]
+  },
+  "13201": {
+   "pref": 13,
+   "name": "八王子市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/hatiouji/hatiouji32.jpg",
+     "page": "https://we-love-manho.com/toukyou/hatiouji/hatiouji.html",
+     "desc": "「マンホールカード座標の蓋です」と同デザインですが受け枠に模様が無いタイプです。"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/hatiouji/hatioujisi70.jpg",
+     "page": "https://we-love-manho.com/toukyou/hatiouji/hatiouji.html",
+     "desc": "中央が市章だけで、「雨水」の文字無し。 左の鍵穴の下がボルトで塞がれています。 雨水"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/hatiouji/hatioujisi60.jpg",
+     "page": "https://we-love-manho.com/toukyou/hatiouji/hatiouji.html",
+     "desc": "「八王子市章入り少し大柄の亀甲模様。下鍵穴の左にN の文字」に似ていますが、亀甲模様の中に小さなリングがありません。 ２時１０時のこじり穴が無く、６時の方向の開閉器具穴が横長になっています。"
+    }
+   ]
+  },
+  "13202": {
+   "pref": 13,
+   "name": "立川市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/tatikawa/tatikawa3-2.jpg",
+     "page": "https://we-love-manho.com/toukyou/tatikawa/tatikawa.html",
+     "desc": "「蓋全面が歩道の地色に合わせた白塗りタイプ」と同じデザインのノンカラー版。"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/tatikawa/tatikawasi29.jpg",
+     "page": "https://we-love-manho.com/toukyou/tatikawa/tatikawa.html",
+     "desc": "ＪＩＳ規格模様、中心が立川市の市章のみのタイプのマンホール蓋です。 空気抜き穴が４箇所だけ空いているのもちょっと変わり種です。"
+    }
+   ]
+  },
   "38201": {
    "pref": 38,
    "name": "松山市",
@@ -750,6 +1045,562 @@
      "url": "https://we-love-manho.com/aomori/mutusi/mutusi-2.jpg",
      "page": "https://we-love-manho.com/aomori/mutusi/mutusi.html",
      "desc": "「むつ市 ・市章の周りに下から市の花ハマナス、市の木ヒバ、4羽の市の鳥オオハクチョウが空を飛んでいる様子が描かれたカラー版です。 （雪のため少し画像が汚いです）」のノンカラー。"
+    }
+   ]
+  },
+  "02209": {
+   "pref": 2,
+   "name": "つがる市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/kidukurimati.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "旧木造町（きづくりまち） ・この町の亀ヶ岡遺跡から出土した、 重要文化財に指定されているいわゆる遮光器土偶が中央に大きく描かれ、旧町章の「銀杏松」をバラバラにしたマツとイチョウが 周囲に描かれています（旧町の木には黒松が指定されていました）。 上縁に「木造町」「クリーン」と文字が入っています。市のＨＰによれば、汚水と明示する予定であったが、暗い感じがするので クリーンと明示したそうです。 公共下水道の汚水",
+     "legacy": "gci:02322A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/kasiwamura.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "旧柏村 ・岩木山と日本最古のりんごの木を図案化。 農業集落排水",
+     "legacy": "gci:02326A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/inagakimura.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "旧稲垣村（いながきむら） ・村章と岩木山、稲穂を図案化したもので、岩木山と田んぼの稲と旧稲垣村の村章を中央に描き、その周りにも稲穂を配して、「いながき村」「しけほ」の文字が入っています。 しげほ処理区の汚水",
+     "legacy": "gci:02327A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/inagakimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "村章と村の花「ノハナショウブ」、村の鳥「カワラヒワ」及び田園風景を図案化。 上部に「いながき村」下部に「さいか」の文字入り。 さいか処理区の汚水",
+     "legacy": "gci:02327A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/inagakimura4.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "毘沙門亀甲地模様、中央に村章入りマンホール蓋。",
+     "legacy": "gci:02327A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/inagakimura3.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "中央に村章。 村の花である「ノハナショウブ」と村の鳥である「カワラヒワ」と稲穂が描かれている「いながき」の文字入り。 カワラヒワの描き方が結構リアル。 いながき処理区の汚水",
+     "legacy": "gci:02327A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/tugarusi2.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "旧車力村のデザインで、中央につがる市章、下部の文字が「CITY OF TSUGARU」の文字になっています。 特定環境保全公共下水道 汚水",
+     "legacy": "gci:02328A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/tugaru/tugarusi.jpg",
+     "page": "https://we-love-manho.com/aomori/tugaru/tugaru.html",
+     "desc": "つがる市 ・ＪＩＳ規格蓋の穴あきですが、市章と「汚水」の文字入りです。 つがる市の頭文字の「つ」を図案化し、たわわに実った稲穂、日本海の美しい波を表現している。 稲と波しぶきを表している楕円の数は、旧5町村を指す。自然と調和しながら、市の円満な発展を意味します。（市HPより）"
+    }
+   ]
+  },
+  "02210": {
+   "pref": 2,
+   "name": "平川市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/hirakawasi/hirakamati.jpg",
+     "page": "https://we-love-manho.com/aomori/hirakawasi/hirakawasi.html",
+     "desc": "旧平賀町（ひらかまち） ・中央に町の鳥ヤマドリを二羽、その周りに町の木サワラ、外周に町の花 リンゴの花を描いています。「ひらか」の文字。",
+     "legacy": "gci:02365A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hirakawasi/onoemati.jpg",
+     "page": "https://we-love-manho.com/aomori/hirakawasi/hirakawasi.html",
+     "desc": "旧尾上町（おのえまち） ・中央に町章、周りの町の木クロマツに町の鳥キジバトが 止まっています。 外周は町の花のハスの花を描き、下部に「尾上町」「公共下水道」の文字入り。",
+     "legacy": "gci:02363A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hirakawasi/ikarigasekimura.jpg",
+     "page": "https://we-love-manho.com/aomori/hirakawasi/hirakawasi.html",
+     "desc": "旧碇ヶ関村（いかりがせきむら） ・３つの輪の様な物は村章で、それぞれの輪の中に村の木スギ、村の花シャクナゲ、 村の鳥ウグイスを入れています。「公共下水」の文字。",
+     "legacy": "gci:02368A1968"
+    }
+   ]
+  },
+  "02301": {
+   "pref": 2,
+   "name": "平内町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/hiranai/hiranai-2.jpg",
+     "page": "https://we-love-manho.com/aomori/hiranai/hiranai.html",
+     "desc": "ホタテ養殖発祥の地であることからホタテと、町の鳥白鳥、町の花ツバキ（ツバキの北限自生地帯）、町の木マツの デザインです。「平内町」の文字入り。12時6時違いを山崎さんから頂いています。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hiranai/hiranai2.jpg",
+     "page": "https://we-love-manho.com/aomori/hiranai/hiranai.html",
+     "desc": "中央の町章の周囲に町の花・ツバキを配しています。「ひらない町」「しゅうはい」の文字。 農業集落排水管"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hiranai/hiranaimati.jpg",
+     "page": "https://we-love-manho.com/aomori/hiranai/hiranai.html",
+     "desc": "中央に漁船が３隻と上部に町章、その周りに養殖ホタテ水揚げ高日本一のホタテをデザイン。下部に「漁集排」の文字。 漁業集落排水管"
+    }
+   ]
+  },
+  "02307": {
+   "pref": 2,
+   "name": "外ヶ浜町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/sotogahamamati/tairadatemura.jpg",
+     "page": "https://we-love-manho.com/aomori/sotogahamamati/sotogahamamati.html",
+     "desc": "旧平舘村（たいらだてむら） ・やぐら形の旧平舘灯台（現在の 平舘灯台 は塔型です）が 中央に大きく描かれ、旧村の花：ハマナスが左側に、旧村の木：クロマツが右側に、そして旧村の鳥：ウミネコが左右の上部に描かれています。 左上方のクロマツとウミネコの間に「TAIRADATE」の文字が入っています。 12時6時違いを山崎さんから頂いています。 特定環境保全公共下水道の汚水",
+     "legacy": "gci:02305A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sotogahamamati/minnmayamura2.jpg",
+     "page": "https://we-love-manho.com/aomori/sotogahamamati/sotogahamamati.html",
+     "desc": "旧三厩村（みんまやむら） ・上部中央に旧三厩村章。 龍飛崎の風車の向こうに見えるのは北海道松前半島、村の花「アジサイ」と村の鳥「カモメ」も描かれています。 特定環境保全公共下水道",
+     "legacy": "gci:02306A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sotogahamamati/higashitsugarugun_sotogahamamachi.jpg",
+     "page": "https://we-love-manho.com/aomori/sotogahamamati/sotogahamamati.html",
+     "desc": "外ヶ浜町 ・旧蟹田町のものと同じデザインですが、中央に合併後の外ヶ浜町の町章が入っています。 下記と同じ鍵穴タイプを山崎さんから頂いています。 公共下水道の汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sotogahamamati/kanitamati6.jpg",
+     "page": "https://we-love-manho.com/aomori/sotogahamamati/sotogahamamati.html",
+     "desc": "「旧蟹田町（かにたまち） ・カニの甲羅を象ったホームベース型の六つの駒に旧町の木：クロマツ、 旧町の花：タンポポ、旧町の鳥：カモメを二つずつぐるっと配列しています。 中央のピーナツ型の模様は旧町章ではないのですが、何か不明。そのそばに「KANITA」の文字が入っています。 「Ａ」の文字は横棒を省略した発音記号のような形をしています。 公共下水道の汚水」と同デザインですが、受枠の本来なら地中に入っている部分の形が歯車の形の様で変わっています。 公共下水道の汚水",
+     "legacy": "gci:02302A1968"
+    }
+   ]
+  },
+  "02321": {
+   "pref": 2,
+   "name": "鰺ヶ沢町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/ajigasawamati/ajigasawamati.jpg",
+     "page": "https://we-love-manho.com/aomori/ajigasawamati/ajigasawamati.html",
+     "desc": "鰺ヶ沢町のマンホール蓋には当町のマスコットである「アジ丸」がデザインされています。 上部に「鰺ヶ沢町」「公共下水道」の文字。 「アジ丸」は、町政施行百周年記念事業として町のマスコットを募集した際、最優秀に 選ばれた加藤典子さん（現在芸術家として幅広く活躍中、当時中三）の作品に海のイメージ を加えたデザインとなっています。鰺ヶ沢町には公共下水道の他に農業集落排水がありますが こちらも同様に「アジ丸」がデザインされています。鰺ヶ沢町のHPよ"
+    }
+   ]
+  },
+  "02323": {
+   "pref": 2,
+   "name": "深浦町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/hukauramati/hukauramati.jpg",
+     "page": "https://we-love-manho.com/aomori/hukauramati/hukauramati.html",
+     "desc": "深浦町 ・江戸期に北前船の「風待ち港」として栄え、十二湖や、世界遺産の白神山地等の 観光スポットも多くある、西津軽郡深浦町の汚水管マンホールです。 日本海に沈む夕陽が綺麗な町でも有名で『夕陽海岸』とも呼ばれています。 町の鳥カモメと日本海に沈みゆく夕陽の模様がデザインされています。 「夕陽海岸」と「ふかうら」「汚水」の文字が有ります。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hukauramati/iwasakimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/hukauramati/hukauramati.html",
+     "desc": "旧岩崎村 ・トナカイと二人の子供を両膝に乗せたサンタクロースのデザインです。 外周に☆と「Santa Land Iwasaki」の文字。旧岩崎村にあった「サンタランド白神」のこと。 特定環境保全公共下水道",
+     "legacy": "gci:02325A1968"
+    }
+   ]
+  },
+  "02343": {
+   "pref": 2,
+   "name": "西目屋村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/nisimeyamura/nisimeyamura.jpg",
+     "page": "https://we-love-manho.com/aomori/nisimeyamura/nisimeyamura.html",
+     "desc": "中央円内に、「に」「し」を鳩のイメージにした西目屋村の村章。その上部に「集排事業」、下部に「西目屋村」の表記。 地の模様は「毘沙門亀甲文様」です。受け枠に平行四辺形模様。 農業集落排水の"
+    }
+   ]
+  },
+  "02361": {
+   "pref": 2,
+   "name": "藤崎町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati.jpg",
+     "page": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati.html",
+     "desc": "藤崎町 ・町の鳥白鳥のデザイン。「FUJISAKI TOWN」の表示。 汚水マンホール蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati8.jpg",
+     "page": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati.html",
+     "desc": "毘沙門亀甲模様に、町章入り。 汚水マンホール蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hujisakimati/tokiwamura7.jpg",
+     "page": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati.html",
+     "desc": "毘沙門亀甲地模様、中央に村章、上に「榊地区」、下に「集排事業」の文字入り。（榊は木へんに神です） 常盤村榊地区農集排",
+     "legacy": "gci:02366A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hujisakimati/tokiwamura2.jpg",
+     "page": "https://we-love-manho.com/aomori/hujisakimati/hujisakimati.html",
+     "desc": "旧常盤村（ときわむら） ・中央に徳下八幡宮のおんこの木、周囲におんこの葉のデザイン。村章と上部に「公共」 下部に「おんこの木」の文字。おんこの木は村の木イチイのことです。 汚水マンホール蓋。",
+     "legacy": "gci:02366A1968"
+    }
+   ]
+  },
+  "02362": {
+   "pref": 2,
+   "name": "大鰐町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/oowanimati/oowanimati-2.jpg",
+     "page": "https://we-love-manho.com/aomori/oowanimati/oowanimati.html",
+     "desc": "大鰐町はスキーと温泉の町で、町の動物のワニが雪が降るゲレンデでスキーを肩にＶサインをしているデザインです。 上部に大鰐町の「Ｏ」の字を二つクロスさせている町のシンボルマーク、下部には「ＯＷＡＮＩ」の文字。 １２時が「岩木川水きらきらセンター展示蓋。下記デザインのカラー蓋。 水きらきらセンター岩木川流域の４市３町１村（青森市、弘前市、黒石市、平川市、藤崎町、大鰐町、板柳町、田舎館村）の汚水を処理。 岩木川流域関連公共下水道」のタイプと、すぎSUNさんからは１２時６時が下記のタイプを頂いています。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/oowanimati/oowanimati2-2.jpg",
+     "page": "https://we-love-manho.com/aomori/oowanimati/oowanimati.html",
+     "desc": "中心に大鰐町の町章、周囲に町花「ツツジ」のデザイン。「うすい」の文字入り。 受枠に模様のないタイプをtakakarnさんから頂いています。"
+    }
+   ]
+  },
+  "02367": {
+   "pref": 2,
+   "name": "田舎館村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/inakadatemura/inakadatemura.jpg",
+     "page": "https://we-love-manho.com/aomori/inakadatemura/inakadatemura.html",
+     "desc": "田舎館式土器と稲穂と村章のデザイン。「田舎館式土器」「垂柳遺跡」の文字。 垂柳遺跡は、約2000年前の弥生時代の遺跡で、水田跡が発見されたことから東北地方北部にも弥生時代に稲を作っていたことが証明されました。 稲の花は村の花にもなっています。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/inakadatemura/inakadatemura4.jpg",
+     "page": "https://we-love-manho.com/aomori/inakadatemura/inakadatemura.html",
+     "desc": "手毬風模様の角型蓋が水玉模様の受枠に入った斜め分割式蓋です。中央に村章下に「汚水」の文字。"
+    }
+   ]
+  },
+  "02381": {
+   "pref": 2,
+   "name": "板柳町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/itayanagimati/itayanagimati.jpg",
+     "page": "https://we-love-manho.com/aomori/itayanagimati/itayanagimati.html",
+     "desc": "「中央にリンゴの実を付けた木が一本描かれ、周りにリンゴの花が描かれています。町章と「りんごの里」の文字」と１２時と６時付近が違う。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/itayanagimati/itayanagimati6.jpg",
+     "page": "https://we-love-manho.com/aomori/itayanagimati/itayanagimati.html",
+     "desc": "「１周ごとに●と台形を並べた小型蓋。町章と「おすい」の文字。 汚水枡」より同心円が多い白色プラスチック製。 汚水枡"
+    }
+   ]
+  },
+  "02384": {
+   "pref": 2,
+   "name": "鶴田町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/turutamati/turutamati2.jpg",
+     "page": "https://we-love-manho.com/aomori/turutamati/turutamati.html",
+     "desc": "「津軽富士見湖に架かる三連太鼓橋では日本一長い鶴の舞橋と、 町の鳥タンチョウヅル２羽が空を飛び、右に町の木クロマツ、左に町の花リンゴが描かれたカラーデザインです。 江戸時代、多くの鶴が飛来したことから町名にその名がついたという鶴田町は、丹頂鶴自然公園で飼育されているタンチョウヅルを 見ることが出来ます」のノンカラー版。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/turutamati/turutamati6.jpg",
+     "page": "https://we-love-manho.com/aomori/turutamati/turutamati.html",
+     "desc": "農業集落排水（菖蒲川地区）の蓋。 図案化された鶴と稲穂が描かれているが、よく見るとその外側がリンゴの形をしている。 水稲もリンゴも町の農業の中核である"
+    }
+   ]
+  },
+  "02387": {
+   "pref": 2,
+   "name": "中泊町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/nakadomarimati/nakasatomati.jpg",
+     "page": "https://we-love-manho.com/aomori/nakadomarimati/nakadomarimati.html",
+     "desc": "旧中里町 ・旧中里町の町章を使用しておりますが、これは左から武田地区、中里地区、内潟地区を表しており、顔はこの地域に住む町民を表したものです。 また、被っている笠につきましては、無形民俗文化財「中里なにもささ踊り」の笠をイメージしております。 笠についている丸いものは特産品である「ブルーベリー」です。 上部の縦線ですが、中里にある「不動の滝」をイメージしたものです。 下部の葉ですが、特産品である「ハトムギ」の葉を表しているものです。（中",
+     "legacy": "gci:02383A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/nakadomarimati/kodomarimura.jpg",
+     "page": "https://we-love-manho.com/aomori/nakadomarimati/nakadomarimati.html",
+     "desc": "旧小泊村（こどまりむら） ・中央円内に旧小泊村の「村章」と特産の「イカ」のデザインです。 「小泊村」「下水」の表記。 イカの漁獲高は全体の７０％近くを占め、町の漁業を支えている。 漁業集落排水の",
+     "legacy": "gci:02386A1968"
+    }
+   ]
+  },
+  "02401": {
+   "pref": 2,
+   "name": "野辺地町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/nohejimati/nohejimati.jpg",
+     "page": "https://we-love-manho.com/aomori/nohejimati/nohejimati.html",
+     "desc": "中央に町指定文化財「浜町の常夜燈」、右側に町の木「サクラ」、左側に町の鳥「カモメ」、外周に町の花「ハマナス」を配したデザインです。「のへじ」「おすい」の表記。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/nohejimati/nohejimati3.jpg",
+     "page": "https://we-love-manho.com/aomori/nohejimati/nohejimati.html",
+     "desc": "規格蓋の中央に「の」と「波頭」を合わせて図案化した町章が入った、穴あきマンホール蓋。 雨水用"
+    }
+   ]
+  },
+  "02402": {
+   "pref": 2,
+   "name": "七戸町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/sitinohemati/sitinohemati4.jpg",
+     "page": "https://we-love-manho.com/aomori/sitinohemati/sitinohemati.html",
+     "desc": "「七戸町 ・馬を抽象化したデザインです。周囲に小さな馬を組み合わせて波形の円を描き、中央に大きな馬を配しています。「しちのへ」「七戸処理区」の表記。 七戸町は古来より名馬の産地として知られ、現在は「競走馬のふるさと」となっており、道の駅しちのへ(七戸町文化村)には２頭のダービー馬の像があります。 また、「南部小絵馬」はこの地方独特の文化として引き継がれています。 到着が夜になってしまったため、ただでさえ黄色い蓋が街灯のオレンジ色も加わって」と同デザインで、下部の文字が「しちのへ」「おすい」の文字です。 公共下水道の汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sitinohemati/tennmabayasimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/sitinohemati/sitinohemati.html",
+     "desc": "「旧天間林村（てんまばやしむら） ・中央に「円と翼」を組み合わせて「天」を模した旧天間林村の村章。３つに仕切られた上部に村の木「ケヤキ」、 左に村の鳥「キジ」、右に村の花「キキョウ」を配したデザイン。 「てんまばやし」「公共下水道」の表記。 公共下水道の汚水」と同じデザインで、中央に旧天間林村の村章。 下部左に「てんまばやし」、下部右に「農業集落排水」の文字。 農業集落排水の汚水",
+     "legacy": "gci:02409A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sitinohemati/sitinohemati9.jpg",
+     "page": "https://we-love-manho.com/aomori/sitinohemati/sitinohemati.html",
+     "desc": "丸と長方形を１周ごとに並べたプラ製小型蓋。中央に市章入り。 汚水枡"
+    }
+   ]
+  },
+  "02405": {
+   "pref": 2,
+   "name": "六戸町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/rokunohemati/rokunohemati2.jpg",
+     "page": "https://we-love-manho.com/aomori/rokunohemati/rokunohemati.html",
+     "desc": "町の木カエデが１本蓋全面に描かれています。町章と「ろくのへ」「おすい」の文字。 公共下水道"
+    }
+   ]
+  },
+  "02406": {
+   "pref": 2,
+   "name": "横浜町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/yokohamamati/yokohamamati.jpg",
+     "page": "https://we-love-manho.com/aomori/yokohamamati/yokohamamati.html",
+     "desc": "中央部に「町章」、上部に町の花「菜の花」、左下に町の鳥「浜千鳥」、右下に町の木「ツキケヤキ」 「横浜町」「公共下水道」の表記。 横浜町は、毎年、菜の花の「作付面積日本一」の座を北海道の滝川市と競っています。 「餃子日本一」を競う宇都宮市と浜松市の様な関係ですね。 ツキケヤキ（槻欅）は、横浜町の主な神社仏閣に自生しており、特に庁舎前のつきけやきは古く、 神明宮跡地神木として由緒があり永年風雪に耐えて現在なお厳然として立って、 日常多くの人"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/yokohamamati/yokohamamati2.jpg",
+     "page": "https://we-love-manho.com/aomori/yokohamamati/yokohamamati.html",
+     "desc": "中央に「よ」と円を組み合わせた町章。全体を4つに仕切り、町の鳥「浜千鳥」と町の花「菜の花」を それぞれ対角に配したデザイン。「よこはま」「おすい」の表記。 農業集落排水の汚水"
+    }
+   ]
+  },
+  "02408": {
+   "pref": 2,
+   "name": "東北町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/touhokumati/touhokumati5.jpg",
+     "page": "https://we-love-manho.com/aomori/touhokumati/touhokumati.html",
+     "desc": "小川原湖に浮かぶ町の鳥ハクチョウと、町の花サクラ、町の木甲地赤松 のデザイン。 市章と「緑の大地と小川原湖 東北町」の表示。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/touhokumati/touhokumati4.jpg",
+     "page": "https://we-love-manho.com/aomori/touhokumati/touhokumati.html",
+     "desc": "旧東北町 ・中央に町の木甲地赤松と旧町の鳥ヤマドリ、外周に旧町の花ヤマツツジをデザイン。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/touhokumati/kamikitamati2.jpg",
+     "page": "https://we-love-manho.com/aomori/touhokumati/touhokumati.html",
+     "desc": "毘沙門亀甲模様の中心に町章。下に「空気弁」の文字。 空気弁蓋"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/touhokumati/kamikitamati.jpg",
+     "page": "https://we-love-manho.com/aomori/touhokumati/touhokumati.html",
+     "desc": "旧上北町 ・中心に上北町の町章、周囲に町木「銀杏」と町花「三色菫」のデザイン。 下部に「湖といで湯の里」「上北町」の文字があります。",
+     "legacy": "gci:02407A1968"
+    }
+   ]
+  },
+  "02411": {
+   "pref": 2,
+   "name": "六ヶ所村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/rokkasyomura/rokkasyomura3.jpg",
+     "page": "https://we-love-manho.com/aomori/rokkasyomura/rokkasyomura.html",
+     "desc": "「中央部分に村の鳥オジロワシ、村の花ニッコウキスゲ、村章を描き、それらの周囲に村の木マツを描いている。 受枠の周りにギザギザがあります。これは除雪対応型受枠で、除雪車のブレードが衝突しないように傾斜を持たせています。 傾斜があるため経年により舗装の薄い部分が削れ、 受け枠が少し見える場合があります」と12時6時の仕様違い。"
+    }
+   ]
+  },
+  "02412": {
+   "pref": 2,
+   "name": "おいらせ町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/oirasetyou/simodamati-2.jpg",
+     "page": "https://we-love-manho.com/aomori/oirasetyou/oirasetyou.html",
+     "desc": "旧下田町（しもだまち） ・「おいらせ町（ちょう） ・旧下田町からのデザインで、奥入瀬川を遡上する大小の鮭が2匹描かれている。 「おいらせ町」「下水」の表示。 ※正向きの画像と差し替え希望」と同デザインで、「下田町」「下水」の表示になっています。",
+     "legacy": "gci:02410A1969"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/oirasetyou/simodamati2.jpg",
+     "page": "https://we-love-manho.com/aomori/oirasetyou/oirasetyou.html",
+     "desc": "水からハクチョウが飛び立とうとしているデザイン。「しもだ」「下水」の表示。",
+     "legacy": "gci:02410A1969"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/oirasetyou/momoisimati.jpg",
+     "page": "https://we-love-manho.com/aomori/oirasetyou/oirasetyou.html",
+     "desc": "旧百石町（ももいしまち） ・太く立派な町の木イチョウの木と町章が描かれています。",
+     "legacy": "gci:02403A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/oirasetyou/momoisimati2.jpg",
+     "page": "https://we-love-manho.com/aomori/oirasetyou/oirasetyou.html",
+     "desc": "汚水枡に使われる汎用デザインの中央にイチョウの葉っぱと「自由の女神」。百石町がニューヨークと同じ緯度にあることから、ふるさと創生資金で４分の１の像を作ったのだそうです。 実物は見ていませんが、この蓋の女神だとちょっと太めでかわいいけれど……。 汚水枡",
+     "legacy": "gci:02403A1968"
+    }
+   ]
+  },
+  "02423": {
+   "pref": 2,
+   "name": "大間町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/oomamati/oomamati.jpg",
+     "page": "https://we-love-manho.com/aomori/oomamati/oomamati.html",
+     "desc": "中央部に「町章」、左上に町の木「クロマツ」、右上に町の鳥「カモメ」、下部に町の花「ハマナス」 空白部にスリップ止めでしょうか◆の模様。 特環下水道の汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/oomamati/oomamati3.jpg",
+     "page": "https://we-love-manho.com/aomori/oomamati/oomamati.html",
+     "desc": "変形テトラポッド模様に町章と「汚水」文字入り小型蓋。"
+    }
+   ]
+  },
+  "02424": {
+   "pref": 2,
+   "name": "東通村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/higasidoorimura/higasidoorimura.jpg",
+     "page": "https://we-love-manho.com/aomori/higasidoorimura/higasidoorimura.html",
+     "desc": "左側に民俗芸能の「能舞」、右上に「尻屋埼灯台」、右下に「寒立馬」、 「寒立馬と能舞の里」「ひがしどおりむら」の表記。 能舞は、語りもの舞などの中世芸能の姿をよく残している修験能の典型だといわれます。 修験能は、修験道の行法を基にして、猿楽、田楽、曲舞などを取り入れて創作したとされます。 東通村には、15世紀末に目名不動院によって伝えられ、能舞と呼ばれました。 目名不動院が中心となって継承し、今では、村内14の集落で伝えています。 平成元"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/higasidoorimura/higasidoorimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/higasidoorimura/higasidoorimura.html",
+     "desc": "特産物の「サケ」の背景に「アワビ」「ウニ」「スルメイカ」「昆布」など盛りだくさんのデザイン。 下部に「東通村」「おすい」の文字があります。"
+    }
+   ]
+  },
+  "02426": {
+   "pref": 2,
+   "name": "佐井村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/saimura/saimura.jpg",
+     "page": "https://we-love-manho.com/aomori/saimura/saimura.html",
+     "desc": "津軽海峡の荒波をかき分けて進む北前船のデザインです。「佐井村」「汚水」の表記。 佐井村は、江戸～明治にかけて、北前船による交易で大変栄え、今のお金で数千億円という取引を していたといわれます。現在も、その遺構や、もたらされた多数の文化が残されています。(佐井村観光協会) 特環下水道の汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/saimura/saimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/saimura/saimura.html",
+     "desc": "村の木：ヒバと村の花：スカシユリが外周を飾り、中央には名勝「仏ヶ浦」と「サケ」が描かれています。 中央下部に村章が入っています。 牛滝処理区漁業"
+    }
+   ]
+  },
+  "02441": {
+   "pref": 2,
+   "name": "三戸町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/sannnohemati/sannnohemati.jpg",
+     "page": "https://we-love-manho.com/aomori/sannnohemati/sannnohemati.html",
+     "desc": "県立城山公園内にある天守閣風の建物三戸城温故館とサクラが描かれています。 左横にいるのは、町の公式マスコット「ぬかべえ」で、町の鳥であるコノハズクだと思われます。 汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/sannnohemati/sannnohemati4.jpg",
+     "page": "https://we-love-manho.com/aomori/sannnohemati/sannnohemati.html",
+     "desc": "「県立城山公園内にある天守閣風の建物三戸城温故館とサクラが描かれています。 左横にいるのは、町の公式マスコット「ぬかべえ」で、町の鳥であるコノハズクだと思われます。 汚水」の親蓋と同じ火の字の様な地模様の小型蓋。町章と「おすい」「14」の文字入り。 汚水枡"
+    }
+   ]
+  },
+  "02442": {
+   "pref": 2,
+   "name": "五戸町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/gonohemati/gonohemati.jpg",
+     "page": "https://we-love-manho.com/aomori/gonohemati/gonohemati.html",
+     "desc": "五戸町 ・牧場を走るお馬の親子のデザインで、外周を町の木イチイの葉と実で囲んでいます。 「ごのへ」「おすい」の文字。 農業集落排水"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/gonohemati/gonohemati8.jpg",
+     "page": "https://we-love-manho.com/aomori/gonohemati/gonohemati.html",
+     "desc": "規格蓋、中央に町章、両脇に鍵穴。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/gonohemati/kuraisimura.jpg",
+     "page": "https://we-love-manho.com/aomori/gonohemati/gonohemati.html",
+     "desc": "旧倉石村 ・中央に村の花コブシ、周りに村の木アカマツ、下部に村章。「倉石」の文字。 6時違いを山崎さんから頂いています。 農業集落排水",
+     "legacy": "gci:02449A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/gonohemati/kuraisimura2.jpg",
+     "page": "https://we-love-manho.com/aomori/gonohemati/gonohemati.html",
+     "desc": "水玉地模様に手毬風模様の斜め分割式角型蓋。 農業集落排水",
+     "legacy": "gci:02449A1968"
+    }
+   ]
+  },
+  "02445": {
+   "pref": 2,
+   "name": "南部町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/nannbu/nannbu-2.jpg",
+     "page": "https://we-love-manho.com/aomori/nannbu/nannbu.html",
+     "desc": "烏帽子をかぶった太夫達が、田植え作業を唄と踊りで表現した えんぶりを舞っているデザインに（新）南部町町章入り。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/nannbu/nagawamati.jpg",
+     "page": "https://we-love-manho.com/aomori/nannbu/nannbu.html",
+     "desc": "旧名川町（ながわまち） ・通常型の蓋です。旧名川町の名産品であるサクランボにちなんだ マスコットキャラクター「チェリーちゃん」がサクランボに乗って空を飛んでいます。周囲にも二つ繋がったサクランボが四組描かれています。 中央下部に四角い枠で囲まれた「ながわ」の文字。",
+     "legacy": "gci:02444A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/nannbu/sannohegunfukuchimura.jpg",
+     "page": "https://we-love-manho.com/aomori/nannbu/nannbu.html",
+     "desc": "旧福地村（ふくちむら） ・中央に旧福地村章（真ん中に「福」の字、 その左右にひらがなの「つ」とそれを裏返したような形）、上に旧村の鳥：ウグイス、左右に旧村の木：けやき、 下に旧村の花：きくを描いています。旧福地村苫米地地区の農業集落排水です。 12時6時違いを山崎さんから頂いています。"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/nannbu/hukutimura.jpg",
+     "page": "https://we-love-manho.com/aomori/nannbu/nannbu.html",
+     "desc": "同心円地模様の小型蓋、村章と「おすい」の文字入り。 汚水枡小型の蓋",
+     "legacy": "gci:02447A1968"
+    }
+   ]
+  },
+  "02446": {
+   "pref": 2,
+   "name": "階上町",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/hasikamityou/hasikamityou.jpg",
+     "page": "https://we-love-manho.com/aomori/hasikamityou/hasikamityou.html",
+     "desc": "町のシンボルキャラクター「はしかみキッズ」が描かれています。 町のHPによると、 「町特産のウニ・ツツジ・アブラメをモチーフに「かぜ丸」（※うに＝かぜ）「つつじ姫」「あぶらめくん」とし、 『はしかみキッズ』と名付けられました」とのことです。バックにリアス式海岸か白波か三角のギザギザが上方に、 中段～下方にはコンブのような海藻とあぶくが描かれ海中であることを示しています。 中央下部に町章、下辺左側に「公共下水道」、右側に「汚水」の文字が入"
+    },
+    {
+     "url": "https://we-love-manho.com/aomori/hasikamityou/hasikamityou2.jpg",
+     "page": "https://we-love-manho.com/aomori/hasikamityou/hasikamityou.html",
+     "desc": "中央に町の魚：アブラメ、外周左右に町の花：ツツジ、上下に町の木：ケヤキの葉っぱが描かれ、中央上部に町章、 下縁に「魚集排汚水」の文字が入っています。 ちなみに階上町の漁業集落排水は処理区域内人口816人、処理区域面積1.17平方km（平成26年）とごく規模の小さいものだそうです。 漁業"
+    }
+   ]
+  },
+  "02450": {
+   "pref": 2,
+   "name": "新郷村",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aomori/sinngoumura/sinngoumura.jpg",
+     "page": "https://we-love-manho.com/aomori/sinngoumura/sinngoumura.html",
+     "desc": "村章の周りに村の木トチの葉と村の花ミズバショウを対角に描いています。 「しんごう」「おすい」の文字。"
     }
    ]
   }
