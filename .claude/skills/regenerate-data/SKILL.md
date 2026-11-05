@@ -42,7 +42,8 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 ## マンホール専用: 手動選定との関係
 
 - `scripts/overrides/manhole-selections.json` にエントリがある自治体は build が手動選定を使う（クロール結果は無視。`imgs` 空 = 出題対象外）。画像を選び直すときは `npm run data:manholes` ではなく `npm run select:manholes`（選定ツール）を使う
-- 選定ツールは採用のたびに `public/data/manholes/pref-XX.json` と `index.json` を再生成するので、`npm run data:manholes` を回し直す必要はない
+- 選定ツールは起動時に全県を、採用のたびにその県の `public/data/manholes/pref-XX.json` と `index.json`・人口順位帯ファイル `rank-XXXX.json` を再生成するので、`npm run data:manholes` を回し直す必要はない
+- 人口順位帯ファイル（`rank-XXXX.json`、100 位刻み 18 本）は全県の `pref-XX.json` から組む派生物。クロールし直さずに作り直すだけなら `npx tsx scripts/build/build-manholes.ts`（1〜2秒、ネットワーク不要）。人口は市章と同じ `data-cache/population/census2020.json` を使う
 - 旧市町村タグ付きの画像は `public/data/legacy` の id を参照する。`data:legacy` を再生成して id が変わった場合は build が「旧市町村 id が legacy データに無い」と警告する（exit はしない）
 
 ## マンホール専用: キャッシュ無効化
@@ -59,6 +60,7 @@ description: geo-japan-learning のクイズデータ（駅・市外局番・旧
 - 画像は `data-cache/emblems/img/` に存在すればスキップ。取り直すときはそのファイルを削除。取得は Referer 必須（`fetch-emblems.ts` が付ける）
 - 人口の再取得は `data-cache/population/census2020.json` と `data-cache/raw/census2020-major-results.xlsx` を削除
 - build は `public/data/emblems/img/` を全生成物として扱い、使われなくなった PNG を削除する。`git status` で画像の増減が想定どおりか見る
+- 人口順位帯ファイルは `rank-XXXX.json`（100 位刻み 18 本・現行章のみ）。build だけやり直すなら `npx tsx scripts/build/build-emblems.ts`（ネットワーク不要）
 - 消滅章のうち 1995 年以前のものはポリゴンが無いので自動除外され exit しない（`data-cache/emblems/excluded-pre1995.txt`）。件数が急増したら legacy データ側を疑う
 
 ## 完了後チェックリスト

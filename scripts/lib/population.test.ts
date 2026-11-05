@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isRankedMunicipality, rankMunicipalities, type CensusEntry } from './population.ts';
+import { groupByBand, isRankedMunicipality, rankMunicipalities, type CensusEntry } from './population.ts';
 
 const entries: CensusEntry[] = [
   { code: '00000', name: '全国', kind: 'a', pop: 126146099 },
@@ -32,5 +32,27 @@ describe('rankMunicipalities', () => {
     expect(r.has('01101')).toBe(false);
     expect(r.has('13000')).toBe(false);
     expect(r.has('13100')).toBe(false);
+  });
+});
+
+describe('groupByBand', () => {
+  const g = groupByBand([
+    { id: 'c', rank: 150 },
+    { id: 'a', rank: 100 },
+    { id: 'legacy-of-b', rank: 2 },
+    { id: 'b', rank: 2 },
+    { id: 'norank' },
+    { id: 'last', rank: 1740 },
+    { id: 'out', rank: 1741 },
+  ]);
+  it('100 位刻みの帯に分け、帯の中は順位順（同順位は元の並び）', () => {
+    expect(g.get(1)?.map((x) => x.id)).toEqual(['legacy-of-b', 'b', 'a']);
+    expect(g.get(101)?.map((x) => x.id)).toEqual(['c']);
+    expect(g.get(1701)?.map((x) => x.id)).toEqual(['last']);
+  });
+  it('空の帯も含む全 18 帯を返し、順位なし・範囲外は含めない', () => {
+    expect(g.size).toBe(18);
+    expect(g.get(201)).toEqual([]);
+    expect([...g.values()].flat()).toHaveLength(5);
   });
 });

@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { bandFromOf, bandLabel, POPULATION_BANDS } from '../../src/lib/populationBands.ts';
 import { ALL_PREF_CODES, PREFECTURES } from '../../src/lib/prefectures.ts';
 import {
   buildManholePref,
@@ -32,6 +33,7 @@ import {
   type MuniPage,
   type MuniSelection,
   type SelectedImg,
+  type SelectionFile,
 } from '../lib/manhole-selection.ts';
 import { loadMuniUnits, lookupUnit } from '../lib/muni-units.ts';
 
@@ -40,9 +42,10 @@ import { loadMuniUnits, lookupUnit } from '../lib/muni-units.ts';
  *
  *   npm run select:manholes   → http://localhost:5188/
  *
- * 都道府県 → 市町村コード順に、日本マンホール蓋学会の該当ページ（デザイン１/２・その他・上水道等のサブページ込み）の
+ * 都道府県 → 市町村コード順、または全国の人口順位帯（100 位刻み・県またぎ）→ 順位順に、
+ * 日本マンホール蓋学会の該当ページ（デザイン１/２・その他・上水道等のサブページ込み）の
  * 画像と説明文を一覧表示する。採用した画像は scripts/overrides/manhole-selections.json に保存され、
- * その県の public/data/manholes/pref-XX.json がその場で再生成される（クイズ・単語帳にすぐ反映）。
+ * その県の public/data/manholes/pref-XX.json と人口順位帯ファイルがその場で再生成される（クイズ・単語帳にすぐ反映）。
  */
 
 const PORT = Number(process.env.PORT ?? 5188);
@@ -52,6 +55,12 @@ interface MuniView {
   code: string;
   name: string;
   gun: string;
+  /** 所属する都道府県（人口順位帯の画面は県をまたぐので自治体ごとに持つ） */
+  pref: number;
+  prefName: string;
+  /** 2020年国勢調査の人口順位・人口（順位が無い自治体は省略） */
+  rank?: number;
+  pop?: number;
   pages: MuniPage[];
   legacy: { id: string; n: string; gun: string; kana?: string }[];
   /** クロール（ヒューリスティック）が現在採用している画像 URL（参考表示用） */
@@ -106,7 +115,36 @@ async function listPrefs(): Promise<{ code: number; name: string; total: number;
   return out;
 }
 
-async function prefView(pref: number): Promise<{ pref: number; name: string; munis: MuniView[]; unmatched: { text: string; url: string }[] }> {
+/** 人口順位が付いている全国の出題単位（順位順）。N03 と国勢調査は起動中に変わらないので一度だけ作る */
+let rankedUnitsCache: { code: string; pref: number; rank: number }[] | null = null;
+async function rankedUnits(): Promise<{ code: string; pref: number; rank: number }[]> {
+  if (!rankedUnitsCache) {
+    const out: { code: string; pref: number; rank: number }[] = [];
+    for (const pref of ALL_PREF_CODES) {
+      for (const u of (await loadMuniUnits(pref)).units) {
+        const pr = ctx.popRank.get(u.code);
+        if (pr) out.push({ code: u.code, pref, rank: pr.rank });
+      }
+    }
+    rankedUnitsCache = out.sort((a, b) => a.rank - b.rank);
+  }
+  return rankedUnitsCache;
+}
+
+async function listBands(): Promise<{ from: number; to: number; total: number; reviewed: number }[]> {
+  const selections = await loadSelections();
+  const units = await rankedUnits();
+  return POPULATION_BANDS.map(({ from, to }) => {
+    const inBand = units.filter((u) => u.rank >= from && u.rank <= to);
+    return { from, to, total: inBand.length, reviewed: inBand.filter((u) => u.code in selections.munis).length };
+  });
+}
+
+/** 1県分の自治体ビュー（県別画面・人口順位帯画面で共用） */
+async function prefMunis(
+  pref: number,
+  selections: SelectionFile,
+): Promise<{ munis: MuniView[]; unmatched: { text: string; url: string }[] }> {
   const prefName = PREFECTURES[pref];
   const units = await loadMuniUnits(pref);
   const indexUrl = prefIndexUrl(pref);
@@ -114,7 +152,6 @@ async function prefView(pref: number): Promise<{ pref: number; name: string; mun
   if (!html) throw new Error(`県インデックスを取得できません: ${indexUrl}`);
   const grouped = groupIndexLinks(parseIndexLinks(html, indexUrl), units, ctx.fixes, prefName);
   const legacyTowns = await loadLegacyTowns(pref);
-  const selections = await loadSelections();
 
   // クロール結果（あれば）: 自治体コード → 採用中 URL
   const auto = new Map<string, string[]>();
@@ -136,12 +173,41 @@ async function prefView(pref: number): Promise<{ pref: number; name: string; mun
     code: u.code,
     name: u.name,
     gun: u.gun,
+    pref,
+    prefName,
+    rank: ctx.popRank.get(u.code)?.rank,
+    pop: ctx.popRank.get(u.code)?.pop,
     pages: grouped.byCode.get(u.code) ?? [],
     legacy: legacyTownsForUnit(u, legacyTowns).map((t) => ({ id: t.id, n: t.n, gun: t.gun, kana: t.kana })),
     auto: auto.get(u.code) ?? [],
     selection: selections.munis[u.code] ?? null,
   }));
-  return { pref, name: prefName, munis, unmatched: grouped.unmatched };
+  return { munis, unmatched: grouped.unmatched };
+}
+
+async function prefView(pref: number) {
+  const { munis, unmatched } = await prefMunis(pref, await loadSelections());
+  return { pref, name: PREFECTURES[pref], munis, unmatched };
+}
+
+/** 人口順位帯の自治体を県をまたいで順位順に並べる */
+async function bandView(from: number) {
+  const band = POPULATION_BANDS.find((b) => b.from === from);
+  if (!band) return null;
+  const inBand = (await rankedUnits()).filter((u) => bandFromOf(u.rank) === from);
+  const selections = await loadSelections();
+  const byCode = new Map<string, MuniView>();
+  // 県インデックスはディスクキャッシュ経由。未取得の県があってもサイトに同時アクセスしないよう1県ずつ
+  for (const pref of [...new Set(inBand.map((u) => u.pref))]) {
+    for (const m of (await prefMunis(pref, selections)).munis) byCode.set(m.code, m);
+  }
+  return {
+    pref: null,
+    band,
+    name: `人口順 ${bandLabel(band)}`,
+    munis: inBand.map((u) => byCode.get(u.code)!),
+    unmatched: [],
+  };
 }
 
 async function pageView(url: string) {
@@ -208,6 +274,17 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     json(res, 200, await prefView(pref));
     return;
   }
+  if (req.method === 'GET' && path === '/api/bands') {
+    json(res, 200, await listBands());
+    return;
+  }
+  const bandM = path.match(/^\/api\/band\/(\d{1,4})$/);
+  if (req.method === 'GET' && bandM) {
+    const view = await bandView(Number(bandM[1]));
+    if (!view) return json(res, 404, { error: '不明な人口順位帯' });
+    json(res, 200, view);
+    return;
+  }
   if (req.method === 'GET' && path === '/api/page') {
     const target = siteUrl(url.searchParams.get('url'));
     if (!target) return json(res, 400, { error: 'url が不正' });
@@ -246,9 +323,21 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   json(res, 404, { error: 'not found' });
 }
 
+/**
+ * 起動時に全県を再生成する（1〜2秒）。人口順位帯ファイルは全県ファイルから組むので、
+ * 選定ファイルを手で直した・古いコードのまま生成した県が残っている、といった場合でも
+ * 起動した時点で public/data/manholes が選定ファイルと現在のコードに一致するようにする
+ */
+async function rebuildAll(): Promise<void> {
+  for (const pref of ALL_PREF_CODES) await buildManholePref(pref, ctx);
+  const index = await writeManholeIndex(Object.keys(ctx.selections.munis).length);
+  console.log(`全県を再生成: ${index.total} 自治体 / ${index.totalImgs} 枚（人口順位付き ${index.rankedCount}）`);
+}
+
 async function main() {
   await ensureManhoCacheDirs();
   ctx = await createBuildContext();
+  await rebuildAll();
   const server = createServer((req, res) => {
     handle(req, res).catch((err) => {
       console.error(err);

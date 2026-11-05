@@ -5,21 +5,20 @@ import { FlashcardStudy, type FlashCard } from '../components/cards/FlashcardStu
 import { ALL_PREF_CODES } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
 import { loadLearnedEmblems, saveLearnedEmblems } from '../lib/storage';
-import { emblemRuby, loadEmblemItems, loadTopEmblemItems, type EmblemItem } from '../quizzes/emblem';
-import type { PopulationTop } from '../quizzes/types';
+import { PopulationBandPicker } from '../components/quiz/PopulationBandPicker';
+import { emblemRuby, loadEmblemBandItems, loadEmblemItems, type EmblemItem } from '../quizzes/emblem';
 
 type RangeMode = 'area' | 'pop';
 type CardOrder = 'shuffle' | 'natural';
 type CardScope = 'all' | 'unlearned';
 
-const POPULATION_TOP_OPTIONS: PopulationTop[] = [100, 300, 500, 1000];
-
 interface StudySettings {
   mode: RangeMode;
   prefs: number[];
-  top: PopulationTop;
+  /** 人口順位帯（帯の開始順位） */
+  bands: number[];
   includeLegacy: boolean;
-  /** 'natural' = 都道府県順（人口上位モードでは人口順） */
+  /** 'natural' = 都道府県順（人口順位モードでは人口順） */
   order: CardOrder;
   scope: CardScope;
 }
@@ -31,7 +30,7 @@ type PageState =
   | { mode: 'studying'; cards: FlashCard[]; settings: StudySettings };
 
 async function loadItems(settings: StudySettings): Promise<EmblemItem[]> {
-  if (settings.mode === 'pop') return loadTopEmblemItems(settings.top);
+  if (settings.mode === 'pop') return loadEmblemBandItems(settings.bands);
   const items = await loadEmblemItems(settings.prefs);
   return settings.includeLegacy ? items : items.filter((it) => !it.legacy);
 }
@@ -117,12 +116,12 @@ export function EmblemCards() {
 function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) {
   const [mode, setMode] = useState<RangeMode>('area');
   const [prefs, setPrefs] = useState<Set<number>>(new Set(ALL_PREF_CODES));
-  const [top, setTop] = useState<PopulationTop>(100);
+  const [bands, setBands] = useState<Set<number>>(new Set([1]));
   const [includeLegacy, setIncludeLegacy] = useState(true);
   const [order, setOrder] = useState<CardOrder>('shuffle');
   const [scope, setScope] = useState<CardScope>('all');
 
-  const canStart = mode === 'pop' || prefs.size > 0;
+  const canStart = mode === 'pop' ? bands.size > 0 : prefs.size > 0;
 
   return (
     <div className="page">
@@ -139,7 +138,7 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
               地方・都道府県で選ぶ
             </button>
             <button className={`chip ${mode === 'pop' ? 'chip-on' : ''}`} onClick={() => setMode('pop')}>
-              人口上位で選ぶ
+              人口順位で選ぶ
             </button>
           </div>
           {mode === 'area' ? (
@@ -151,18 +150,11 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
               </label>
             </>
           ) : (
-            <>
-              <div className="chip-row">
-                {POPULATION_TOP_OPTIONS.map((n) => (
-                  <button key={n} className={`chip ${top === n ? 'chip-on' : ''}`} onClick={() => setTop(n)}>
-                    人口 Top{n}
-                  </button>
-                ))}
-              </div>
-              <p className="filter-note">
-                2020年国勢調査の人口順（現行の市・東京特別区・町村。政令市は市全体で1件）。人口上位は現行の章のみ
-              </p>
-            </>
+            <PopulationBandPicker
+              bands={bands}
+              onChange={setBands}
+              note="人口順位で選ぶ場合は現行の自治体の章のみ"
+            />
           )}
         </section>
 
@@ -194,7 +186,14 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
           className="btn btn-primary btn-large"
           disabled={!canStart}
           onClick={() =>
-            onStart({ mode, prefs: [...prefs].sort((a, b) => a - b), top, includeLegacy, order, scope })
+            onStart({
+              mode,
+              prefs: [...prefs].sort((a, b) => a - b),
+              bands: [...bands].sort((a, b) => a - b),
+              includeLegacy,
+              order,
+              scope,
+            })
           }
         >
           はじめる

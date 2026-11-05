@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { groupIndexLinks, legacyTownsForUnit, mergeSelections, type MuniSelection } from './manhole-selection.ts';
+import {
+  groupIndexLinks,
+  legacyParentRank,
+  legacyTownsForUnit,
+  mergeSelections,
+  type MuniSelection,
+} from './manhole-selection.ts';
 import { buildUnitIndex, lookupUnit, seireiCodeOf } from './muni-units.ts';
 
 const idx = buildUnitIndex([
@@ -78,6 +84,29 @@ describe('legacyTownsForUnit', () => {
     expect(legacyTownsForUnit({ code: '14100', name: '横浜市', gun: '' }, towns).map((t) => t.id)).toEqual(['a']);
     expect(legacyTownsForUnit({ code: '11100', name: 'さいたま市', gun: '' }, towns).map((t) => t.id)).toEqual(['b']);
     expect(legacyTownsForUnit({ code: '10209', name: '藤岡市', gun: '' }, towns).map((t) => t.id)).toEqual(['c']);
+  });
+});
+
+describe('legacyParentRank', () => {
+  const units = [
+    { code: '10202', name: '高崎市', gun: '' },
+    { code: '10209', name: '藤岡市', gun: '' },
+    { code: '11100', name: 'さいたま市', gun: '' },
+    { code: '14100', name: '横浜市', gun: '' },
+  ];
+  const ranks: Record<string, number> = { '10202': 60, '10209': 500, '11100': 9 };
+  const rankOf = (code: string) => ranks[code];
+  const town = (into: string) => ({ id: 'x', n: '甲町', gun: 'X郡', into });
+  it('合併先の自治体の順位を返す（政令市の区は市の順位）', () => {
+    expect(legacyParentRank(town('藤岡市'), units, rankOf)).toBe(500);
+    expect(legacyParentRank(town('さいたま市岩槻区'), units, rankOf)).toBe(9);
+  });
+  it('複数の自治体に分かれた場合は最上位の順位', () => {
+    expect(legacyParentRank(town('藤岡市・高崎市'), units, rankOf)).toBe(60);
+  });
+  it('合併先が県内に無い・順位が無い場合は undefined', () => {
+    expect(legacyParentRank(town('中津川市'), units, rankOf)).toBeUndefined();
+    expect(legacyParentRank(town('横浜市'), units, rankOf)).toBeUndefined();
   });
 });
 

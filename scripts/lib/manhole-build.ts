@@ -1,9 +1,11 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import type { MultiPolygon, Polygon } from 'geojson';
+import { bandFile, POPULATION_BANDS } from '../../src/lib/populationBands.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
 import { sha1, stripKanaHeading } from './manhole-parse.ts';
 import {
+  legacyParentRank,
   loadSelections,
   mergeSelections,
   selectionsForPref,
@@ -14,10 +16,11 @@ import {
 import { bboxOf, round5, type MultiCoords } from './muni-geo.ts';
 import { loadMuniUnits, lookupUnit } from './muni-units.ts';
 import { normalizeName } from './normalize.ts';
+import { groupByBand, loadPopRank, type PopRank } from './population.ts';
 import { loadSacDict, resolveMuniYomi, sacCurrentByName, type SacDict, type Yomi } from './yomi.ts';
 
 /**
- * public/data/manholes/pref-XX.json の生成本体。
+ * public/data/manholes/pref-XX.json と人口順位帯ファイル rank-XXXX.json の生成本体。
  * build-manholes.ts（全県）と選定ツールのサーバー（採用のたびに1県だけ再生成）で共用する。
  */
 
@@ -43,6 +46,10 @@ export interface OutItem {
   into?: string;
   /** into の各市区町村の読み */
   intoYomi?: Yomi[];
+  /** 2020年国勢調査の人口順位。旧市町村の蓋は合併先の自治体の順位（人口順位帯の出題で同じ帯に入れる） */
+  rank?: number;
+  /** 現行自治体のみ: 2020年国勢調査の人口 */
+  pop?: number;
   point: [number, number];
   bbox: [number, number, number, number];
   geom: MultiPolygon;
@@ -76,6 +83,8 @@ export interface BuildContext {
   sacDict: SacDict;
   muniYomi: Record<string, string>;
   selections: SelectionFile;
+  /** 出題単位コード（政令市は末尾 00）→ 2020年国勢調査の人口・順位 */
+  popRank: Map<string, PopRank>;
 }
 
 export async function createBuildContext(): Promise<BuildContext> {
@@ -84,6 +93,7 @@ export async function createBuildContext(): Promise<BuildContext> {
     sacDict: await loadSacDict(),
     muniYomi: JSON.parse(await readFile('scripts/overrides/muni-yomi.json', 'utf8')),
     selections: await loadSelections(),
+    popRank: (await loadPopRank()).popRank,
   };
 }
 
@@ -98,7 +108,7 @@ export interface PrefBuildResult {
   unresolvedYomi: string[];
 }
 
-function legacyOut(town: LegacyTown, id: string, page: string, imgs: ImgOut[]): OutItem {
+function legacyOut(town: LegacyTown, id: string, page: string, imgs: ImgOut[], rank: number | undefined): OutItem {
   return {
     id,
     name: `${town.n}（旧）`,
@@ -108,6 +118,7 @@ function legacyOut(town: LegacyTown, id: string, page: string, imgs: ImgOut[]): 
     imgs,
     into: town.into,
     intoYomi: town.intoYomi,
+    rank,
     point: [(town.bbox[1] + town.bbox[3]) / 2, (town.bbox[0] + town.bbox[2]) / 2],
     bbox: town.bbox,
     geom:
@@ -125,6 +136,7 @@ export async function buildManholePref(pref: number, ctx: BuildContext): Promise
   const legacyById = new Map(legacyTowns.map((t) => [t.id, t]));
   const unresolved: string[] = [];
   const unresolvedYomi = new Set<string>();
+  const parentRank = (town: LegacyTown) => legacyParentRank(town, units.units, (code) => ctx.popRank.get(code)?.rank);
 
   // 読み辞書（e-Stat SAC）: 現行自治体の読みを引く。政令市の「市+区」複合名は連結、未解決は muni-yomi.json へ
   const muniKanaOf = (name: string): string | undefined => {
@@ -168,7 +180,7 @@ export async function buildManholePref(pref: number, ctx: BuildContext): Promise
       const t = normalizeName(name);
       const legacy = legacyTowns.find((l) => normalizeName(l.n) === t);
       if (legacy) {
-        fallbackItems.push(legacyOut(legacy, sha1(m.page).slice(0, 10), m.page, m.imgs));
+        fallbackItems.push(legacyOut(legacy, sha1(m.page).slice(0, 10), m.page, m.imgs, parentRank(legacy)));
       } else {
         unresolved.push(`${pref} ${key}`);
       }
@@ -181,12 +193,15 @@ export async function buildManholePref(pref: number, ctx: BuildContext): Promise
     const unit = units.byCode.get(cur.code)!;
     const coords = round5(unit.coords!);
     const bbox = bboxOf(coords);
+    const pr = ctx.popRank.get(cur.code);
     items.push({
       id: cur.id,
       name: unit.name,
       kana: muniKanaOf(unit.name),
       page: cur.page,
       imgs: cur.imgs,
+      rank: pr?.rank,
+      pop: pr?.pop,
       point: [(bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2],
       bbox,
       geom: { type: 'MultiPolygon', coordinates: coords },
@@ -199,7 +214,7 @@ export async function buildManholePref(pref: number, ctx: BuildContext): Promise
       unresolved.push(`${pref} 旧市町村 id が legacy データに無い: ${leg.legacyId}（manhole-selections.json）`);
       continue;
     }
-    items.push(legacyOut(town, leg.legacyId, leg.page, leg.imgs));
+    items.push(legacyOut(town, leg.legacyId, leg.page, leg.imgs, parentRank(town)));
     legacyCount++;
   }
   items.push(...fallbackItems);
@@ -216,9 +231,16 @@ export async function buildManholePref(pref: number, ctx: BuildContext): Promise
   };
 }
 
-/** 全県ファイルを読み直して index.json を書く（1県だけ再生成したあとでも合計が合うように） */
-export async function writeManholeIndex(selectedMunis: number): Promise<{ total: number; totalImgs: number; legacyCount: number }> {
+/**
+ * 全県ファイルを読み直して index.json と人口順位帯ファイル rank-XXXX.json を書く
+ * （1県だけ再生成したあとでも合計・帯の中身が合うように）。
+ * 帯ファイルは県をまたぐので各アイテムに pref を付ける。旧市町村の蓋は合併先の順位の帯に入る
+ */
+export async function writeManholeIndex(
+  selectedMunis: number,
+): Promise<{ total: number; totalImgs: number; legacyCount: number; rankedCount: number }> {
   let total = 0, totalImgs = 0, legacyCount = 0;
+  const ranked: (OutItem & { pref: number })[] = [];
   for (let pref = 1; pref <= 47; pref++) {
     const p = `public/data/manholes/pref-${String(pref).padStart(2, '0')}.json`;
     if (!existsSync(p)) continue;
@@ -227,7 +249,16 @@ export async function writeManholeIndex(selectedMunis: number): Promise<{ total:
     for (const it of items) {
       totalImgs += it.imgs.length;
       if (it.into) legacyCount++;
+      if (it.rank !== undefined) ranked.push({ ...it, pref });
     }
+  }
+  const byBand = groupByBand(ranked);
+  for (const { from, to } of POPULATION_BANDS) {
+    await writeFile(
+      `public/data/manholes/${bandFile(from)}`,
+      JSON.stringify({ from, to, items: byBand.get(from) ?? [] }),
+      'utf8',
+    );
   }
   await writeFile(
     'public/data/manholes/index.json',
@@ -237,11 +268,12 @@ export async function writeManholeIndex(selectedMunis: number): Promise<{ total:
       total,
       totalImgs,
       legacyCount,
+      rankedCount: ranked.length,
       selectedMunis,
       source:
         '日本マンホール蓋学会 (we-love-manho.com) — 画像は同サイトから直接読み込み（再配布なし）。選定: 手動（scripts/overrides/manhole-selections.json）+ 未選定の自治体は自動選定 + 読み仮名: e-Stat 統計LOD 標準地域コード',
     }),
     'utf8',
   );
-  return { total, totalImgs, legacyCount };
+  return { total, totalImgs, legacyCount, rankedCount: ranked.length };
 }

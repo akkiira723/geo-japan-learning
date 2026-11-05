@@ -154,6 +154,25 @@ export function legacyTownsForUnit<T extends LegacyTownRef>(unit: MuniUnit, town
   );
 }
 
+/**
+ * 旧市町村の「人口順位」= 合併先の現行自治体の順位（複数の自治体に分かれた場合は最上位）。
+ * 人口順位帯の出題で、旧市町村の蓋を合併先と同じ帯に入れるために使う。
+ * 合併先が units に無い（県をまたぐ編入など）・順位が無い場合は undefined
+ */
+export function legacyParentRank(
+  town: LegacyTownRef,
+  units: MuniUnit[],
+  rankOf: (code: string) => number | undefined,
+): number | undefined {
+  let best: number | undefined;
+  for (const u of units) {
+    if (legacyTownsForUnit(u, [town]).length === 0) continue;
+    const r = rankOf(u.code);
+    if (r !== undefined && (best === undefined || r < best)) best = r;
+  }
+  return best;
+}
+
 // ---- クロール結果と手動選定のマージ ----
 
 export interface ImgOut {
