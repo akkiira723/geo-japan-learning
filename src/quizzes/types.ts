@@ -74,8 +74,6 @@ export type HighwayRoadType = 'inter' | 'urban';
 
 /** 国道番号クイズの番号帯（データチャンクと 1:1 対応） */
 export type RouteBand = 'two' | 'three-low' | 'three-high';
-/** 市章クイズ: 人口上位 N 件（2020年国勢調査の現行市・特別区・町村） */
-export type PopulationTop = 100 | 300 | 500 | 1000;
 
 export interface QuizFilter {
   prefs: number[];
@@ -93,9 +91,12 @@ export interface QuizFilter {
   roadTypes?: HighwayRoadType[];
   /** 国道番号クイズの番号帯フィルタ。空/省略はすべて */
   routeBands?: RouteBand[];
-  /** 市章クイズ: 人口上位 N 件から出題（指定時は都道府県で絞らない） */
-  populationTop?: PopulationTop;
-  /** 市章クイズ: 旧市町村（消滅自治体）の章も含めるか（省略 = 含める） */
+  /**
+   * 市章・マンホールクイズ: 人口順位帯（100 位刻み）から出題。値は帯の開始順位（1, 101, …。lib/populationBands）。
+   * 指定時は都道府県で絞らない
+   */
+  populationBands?: number[];
+  /** 市章・マンホールクイズ: 旧市町村（消滅自治体）のものも含めるか（省略 = 含める） */
   includeLegacy?: boolean;
 }
 
@@ -117,9 +118,14 @@ export interface QuizMeta {
   hasHighwayFilters?: boolean;
   /** 国道番号向けの番号帯・出題順フィルタを出すか */
   hasRouteFilters?: boolean;
-  /** 出題範囲に「人口上位で選ぶ」（Top100〜1000）モードを出すか（市章クイズ） */
+  /** 出題範囲に「人口順位で選ぶ」（100 位刻みの帯）モードを出すか（市章・マンホールクイズ） */
   hasPopulationFilter?: boolean;
-  /** 「旧市町村の章も含める」トグルを出すか（市章クイズ） */
+  /**
+   * 人口順位モードでも旧市町村のものを出題できるか（マンホール: 旧市町村の蓋は合併先の自治体の順位帯に入る）。
+   * false/省略 = 人口順位モードは現行自治体のみ（市章）
+   */
+  popIncludesLegacy?: boolean;
+  /** 「旧市町村のものも含める」トグルを出すか（市章・マンホールクイズ） */
   hasLegacyToggle?: boolean;
   /** 旧市町村トグルの下に出す補足（判定方式の注意など） */
   legacyNote?: string;

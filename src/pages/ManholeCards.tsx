@@ -5,13 +5,19 @@ import { FlashcardStudy, type FlashCard } from '../components/cards/FlashcardStu
 import { ALL_PREF_CODES } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
 import { loadLearnedManholes, saveLearnedManholes } from '../lib/storage';
-import { loadManholeItems, manholeRuby, type ManholeItem } from '../quizzes/manhole';
+import { PopulationBandPicker } from '../components/quiz/PopulationBandPicker';
+import { loadManholeBandItems, loadManholeItems, manholeRuby, type ManholeItem } from '../quizzes/manhole';
 
-type CardOrder = 'shuffle' | 'pref';
+type RangeMode = 'area' | 'pop';
+type CardOrder = 'shuffle' | 'natural';
 type CardScope = 'all' | 'unlearned';
 
 interface StudySettings {
+  mode: RangeMode;
   prefs: number[];
+  /** 人口順位帯（帯の開始順位） */
+  bands: number[];
+  /** 'natural' = 都道府県順（人口順位モードでは人口順） */
   order: CardOrder;
   scope: CardScope;
 }
@@ -58,7 +64,8 @@ export function ManholeCards() {
   const start = async (settings: StudySettings) => {
     setState({ mode: 'loading' });
     try {
-      const all = await loadManholeItems(settings.prefs);
+      const all =
+        settings.mode === 'pop' ? await loadManholeBandItems(settings.bands) : await loadManholeItems(settings.prefs);
       const cards = buildCards(all, settings, learned);
       if (cards.length === 0) {
         setState({
@@ -101,9 +108,13 @@ export function ManholeCards() {
 }
 
 function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) {
+  const [mode, setMode] = useState<RangeMode>('area');
   const [prefs, setPrefs] = useState<Set<number>>(new Set(ALL_PREF_CODES));
+  const [bands, setBands] = useState<Set<number>>(new Set([1]));
   const [order, setOrder] = useState<CardOrder>('shuffle');
   const [scope, setScope] = useState<CardScope>('all');
+
+  const canStart = mode === 'pop' ? bands.size > 0 : prefs.size > 0;
 
   return (
     <div className="page">
@@ -115,7 +126,23 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
 
         <section>
           <h3>範囲</h3>
-          <AreaPicker prefs={prefs} onChange={setPrefs} />
+          <div className="chip-row">
+            <button className={`chip ${mode === 'area' ? 'chip-on' : ''}`} onClick={() => setMode('area')}>
+              地方・都道府県で選ぶ
+            </button>
+            <button className={`chip ${mode === 'pop' ? 'chip-on' : ''}`} onClick={() => setMode('pop')}>
+              人口順位で選ぶ
+            </button>
+          </div>
+          {mode === 'area' ? (
+            <AreaPicker prefs={prefs} onChange={setPrefs} />
+          ) : (
+            <PopulationBandPicker
+              bands={bands}
+              onChange={setBands}
+              note="旧市町村の蓋は合併先の自治体の順位に含めます"
+            />
+          )}
         </section>
 
         <section>
@@ -124,8 +151,8 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
             <button className={`chip ${order === 'shuffle' ? 'chip-on' : ''}`} onClick={() => setOrder('shuffle')}>
               シャッフル
             </button>
-            <button className={`chip ${order === 'pref' ? 'chip-on' : ''}`} onClick={() => setOrder('pref')}>
-              都道府県順
+            <button className={`chip ${order === 'natural' ? 'chip-on' : ''}`} onClick={() => setOrder('natural')}>
+              {mode === 'pop' ? '人口順' : '都道府県順'}
             </button>
           </div>
         </section>
@@ -144,12 +171,20 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
 
         <button
           className="btn btn-primary btn-large"
-          disabled={prefs.size === 0}
-          onClick={() => onStart({ prefs: [...prefs].sort((a, b) => a - b), order, scope })}
+          disabled={!canStart}
+          onClick={() =>
+            onStart({
+              mode,
+              prefs: [...prefs].sort((a, b) => a - b),
+              bands: [...bands].sort((a, b) => a - b),
+              order,
+              scope,
+            })
+          }
         >
           はじめる
         </button>
-        {prefs.size === 0 && <p className="filter-warn">範囲を選んでください</p>}
+        {!canStart && <p className="filter-warn">範囲を選んでください</p>}
         <p className="filter-note">
           <Link to="/">ホームへ戻る</Link>
         </p>

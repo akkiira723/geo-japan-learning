@@ -5,8 +5,9 @@ import type { MultiPolygon, Polygon } from 'geojson';
 import { EMBLEM_PAGES, emblemImageCachePath, type EmblemEntry } from '../lib/emblem-parse.ts';
 import { bboxOf, loadPrefGeo, lookupMuniCoords, round5 } from '../lib/muni-geo.ts';
 import { normalizeName } from '../lib/normalize.ts';
-import { rankMunicipalities, type CensusEntry } from '../lib/population.ts';
+import { groupByBand, loadPopRank } from '../lib/population.ts';
 import { loadSacDict, resolveMuniYomi, sacByName, type Yomi } from '../lib/yomi.ts';
+import { bandFile, POPULATION_BANDS } from '../../src/lib/populationBands.ts';
 import { PREFECTURES } from '../../src/lib/prefectures.ts';
 
 /**
@@ -15,7 +16,7 @@ import { PREFECTURES } from '../../src/lib/prefectures.ts';
  * - 消滅章: public/data/legacy（1995年10月以降の消滅市町村）に名寄せ。無いものは 1995 年より前の消滅とみなして自動除外
  * - 人口順位: data-cache/population/census2020.json（現行章のみ。SAC で 5 桁コードを引く）
  * - 画像: data-cache/emblems/img → public/data/emblems/img/<id>.png に複製
- * 出力: pref-NN.json（県別・現行+旧）、top-0100/0300/0500/1000.json（人口順位帯）、index.json
+ * 出力: pref-NN.json（県別・現行+旧）、rank-XXXX.json（人口順位帯 100 位刻み・現行章のみ）、index.json
  */
 interface PageResult {
   slug: string;
@@ -58,13 +59,6 @@ interface LegacyTown {
   geom: Polygon | MultiPolygon;
 }
 
-const TOP_BANDS: [from: number, to: number, file: string][] = [
-  [1, 100, 'top-0100'],
-  [101, 300, 'top-0300'],
-  [301, 500, 'top-0500'],
-  [501, 1000, 'top-1000'],
-];
-
 const legacyCache = new Map<number, LegacyTown[]>();
 async function loadLegacy(pref: number): Promise<LegacyTown[]> {
   let t = legacyCache.get(pref);
@@ -101,11 +95,8 @@ async function main() {
     await readFile('scripts/overrides/muni-yomi.json', 'utf8'),
   );
   const sacDict = await loadSacDict();
-  const census = JSON.parse(await readFile('data-cache/population/census2020.json', 'utf8')) as {
-    entries: CensusEntry[];
-  };
-  const popRank = rankMunicipalities(census.entries);
-  const censusByCode = new Map(census.entries.map((e) => [e.code, e]));
+  const { entries: censusEntries, popRank } = await loadPopRank();
+  const censusByCode = new Map(censusEntries.map((e) => [e.code, e]));
 
   const imgDir = 'public/data/emblems/img';
   await mkdir(imgDir, { recursive: true });
@@ -251,9 +242,17 @@ async function main() {
       missingTop.push(`${pr.rank}位 ${censusByCode.get(code)?.name ?? code}`);
     }
   }
-  for (const [from, to, file] of TOP_BANDS) {
-    const items = ranked.filter((it) => it.rank! >= from && it.rank! <= to);
-    await writeFile(`public/data/emblems/${file}.json`, JSON.stringify({ from, to, items }), 'utf8');
+  const byBand = groupByBand(ranked);
+  for (const { from, to } of POPULATION_BANDS) {
+    await writeFile(
+      `public/data/emblems/${bandFile(from)}`,
+      JSON.stringify({ from, to, items: byBand.get(from) ?? [] }),
+      'utf8',
+    );
+  }
+  // 旧形式（累積 Top100/300/500/1000 用の top-XXXX.json）は使わなくなったので消す
+  for (const f of await readdir('public/data/emblems')) {
+    if (/^top-\d+\.json$/.test(f)) await unlink(`public/data/emblems/${f}`);
   }
 
   await writeFile(

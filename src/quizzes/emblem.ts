@@ -1,8 +1,9 @@
 import type { MultiPolygon } from 'geojson';
 import { loadChunk } from '../hooks/useChunkLoader';
+import { bandFile } from '../lib/populationBands';
 import { prefName } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
-import type { PopulationTop, Question, QuizFilter, QuizModule, Ruby } from './types';
+import type { Question, QuizFilter, QuizModule, Ruby } from './types';
 
 export interface EmblemItem {
   id: string;
@@ -29,15 +30,7 @@ export interface EmblemItem {
 }
 
 interface EmblemChunk { pref: number; items: EmblemItem[]; }
-interface TopChunk { from: number; to: number; items: EmblemItem[]; }
-
-/** 人口順位帯ごとのファイル（順位 1–100 / 101–300 / 301–500 / 501–1000）。Top N は N 以下の帯だけ読む */
-const TOP_FILES: [upTo: PopulationTop, file: string][] = [
-  [100, 'top-0100'],
-  [300, 'top-0300'],
-  [500, 'top-0500'],
-  [1000, 'top-1000'],
-];
+interface BandChunk { from: number; to: number; items: EmblemItem[]; }
 
 /** 指定した都道府県の市章データ（現行 + 旧市町村） */
 export async function loadEmblemItems(prefs: number[]): Promise<EmblemItem[]> {
@@ -47,10 +40,10 @@ export async function loadEmblemItems(prefs: number[]): Promise<EmblemItem[]> {
   return chunks.flatMap((c) => c.items);
 }
 
-/** 人口上位 N の現行市区町村の市章（順位順） */
-export async function loadTopEmblemItems(top: PopulationTop): Promise<EmblemItem[]> {
-  const files = TOP_FILES.filter(([upTo]) => upTo <= top).map(([, f]) => f);
-  const chunks = await Promise.all(files.map((f) => loadChunk<TopChunk>(`emblems/${f}.json`)));
+/** 指定した人口順位帯（帯の開始順位）の現行市区町村の市章（順位順） */
+export async function loadEmblemBandItems(bands: number[]): Promise<EmblemItem[]> {
+  const froms = [...new Set(bands)].sort((a, b) => a - b);
+  const chunks = await Promise.all(froms.map((from) => loadChunk<BandChunk>(`emblems/${bandFile(from)}`)));
   return chunks.flatMap((c) => c.items);
 }
 
@@ -60,8 +53,8 @@ export function emblemRuby(item: EmblemItem): Ruby[] | undefined {
 }
 
 async function loadQuestions(filter: QuizFilter): Promise<Question[]> {
-  const pool = filter.populationTop
-    ? await loadTopEmblemItems(filter.populationTop)
+  const pool = filter.populationBands?.length
+    ? await loadEmblemBandItems(filter.populationBands)
     : (await loadEmblemItems(filter.prefs)).filter((it) => filter.includeLegacy !== false || !it.legacy);
 
   const picked = shuffled(pool).slice(0, filter.questionCount);
@@ -99,7 +92,7 @@ export const emblemQuiz: QuizModule = {
     id: 'emblem',
     title: '市章クイズ',
     description:
-      '市町村章（市章・町章・村章）からその自治体を当てる。自治体（旧市町村の章なら旧町村域）内をクリックで正解。人口上位 100〜1000 の市区町村に絞った出題もできる。',
+      '市町村章（市章・町章・村章）からその自治体を当てる。自治体（旧市町村の章なら旧町村域）内をクリックで正解。人口順位（1–100位、101–200位… の100位刻み）で絞った出題もできる。',
     usesRadius: false,
     hasOperatorFilter: false,
     hoverKind: 'muni',

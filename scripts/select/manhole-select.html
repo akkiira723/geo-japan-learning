@@ -23,6 +23,9 @@
   /* 都道府県選択 */
   .prefs { max-width: 1100px; margin: 0 auto; padding: 32px 16px; }
   .prefs h1 { margin: 0 0 8px; font-size: 22px; }
+  .prefs h2 { margin: 28px 0 0; font-size: 16px; }
+  .prefs h2 small { margin-left: 8px; font-weight: 400; font-size: 12px; color: var(--muted); }
+  .prefs h2 + .pref-grid { margin-top: 10px; }
   .pref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 20px; }
   .pref-btn { display: flex; flex-direction: column; gap: 4px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; text-align: left; font: inherit; }
   .pref-btn:hover { border-color: var(--blue); }
@@ -43,6 +46,7 @@
   .side-item.cur { background: #e8f0fe; border-left-color: var(--blue); }
   .side-item .code { font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--muted); }
   .side-item .nm { flex: 1; }
+  .side-item .pf { margin-left: 6px; font-size: 11px; font-weight: 400; color: var(--muted); }
   .side-item.todo .nm { font-weight: 600; }
   .mark { font-size: 11px; padding: 0 6px; border-radius: 10px; }
   .mark.ok { background: #dcfce7; color: #166534; }
@@ -90,7 +94,11 @@
 'use strict';
 const state = {
   prefs: [],
+  bands: [],
+  /** 県別画面で開いている都道府県コード（人口順位帯の画面では null） */
   pref: null,
+  /** 人口順位帯の画面で開いている帯 { from, to }（県別画面では null） */
+  band: null,
   data: null,
   idx: 0,
   pageCache: new Map(),
@@ -106,6 +114,8 @@ const state = {
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const cur = () => (state.data ? state.data.munis[state.idx] : null);
+/** 自治体の都道府県コード。人口順位帯の画面は県をまたぐので自治体ごとの pref を使う（無ければ開いている県） */
+const muniPref = (m) => m.pref ?? state.pref;
 const legacyName = (m, id) => { const l = m.legacy.find((x) => x.id === id); return l ? l.n + (l.gun ? '（' + l.gun + '）' : '') : id; };
 
 async function api(path, opts) {
@@ -129,39 +139,66 @@ function toast(msg) {
 }
 function setStatus(msg) { const s = $('#status'); if (s) s.textContent = msg; }
 
-// ---------- 都道府県選択 ----------
+// ---------- トップ（人口順位帯・都道府県の選択） ----------
+const progHtml = (x) => `
+            <span class="pref-prog">選定済み ${x.reviewed} / ${x.total} 自治体</span>
+            <span class="bar"><i style="width:${x.total ? Math.round((100 * x.reviewed) / x.total) : 0}%"></i></span>`;
+
 async function showPrefs() {
   state.pref = null;
+  state.band = null;
   state.data = null;
   const app = $('#app');
   app.innerHTML = '<div class="loading">読み込み中…</div>';
-  state.prefs = await api('/api/prefs');
+  // /api/bands が無い（このページより古いサーバーが起動したまま）ときは県別だけ出して再起動を促す
+  let oldServer = false;
+  [state.bands, state.prefs] = await Promise.all([
+    api('/api/bands').catch(() => { oldServer = true; return []; }),
+    api('/api/prefs'),
+  ]);
   app.innerHTML = `
     <div class="prefs">
       <h1>マンホール画像選定</h1>
-      <p class="muted">都道府県を選ぶと市町村コード順に日本マンホール蓋学会の画像一覧を表示します。採用結果は
+      <p class="muted">人口順位帯（全国・県またぎ）を選ぶと人口の多い順に、都道府県を選ぶと市町村コード順に、日本マンホール蓋学会の画像一覧を表示します。採用結果は
         <code>scripts/overrides/manhole-selections.json</code> に保存され、その県の <code>public/data/manholes</code> が即時再生成されます。</p>
+      <h2>人口順で選定<small>全国の人口順位で 100 自治体ずつ（2020年国勢調査。クイズの「人口順位で選ぶ」と同じ区切り）</small></h2>
+      ${oldServer ? '<p class="hit-note">人口順の選定を使うには、選定ツールのサーバーを再起動してください（<code>npm run select:manholes</code>）。県別の選定はこのまま続けられます。</p>' : ''}
+      <div class="pref-grid">
+        ${state.bands.map((b) => `
+          <button class="pref-btn band-btn" data-from="${b.from}">
+            <span class="pref-name">${b.from}–${b.to}位</span>${progHtml(b)}
+          </button>`).join('')}
+      </div>
+      <h2>都道府県別に選定<small>市町村コード順</small></h2>
       <div class="pref-grid">
         ${state.prefs.map((p) => `
           <button class="pref-btn" data-code="${p.code}">
-            <span class="pref-name">${esc(p.name)}</span>
-            <span class="pref-prog">選定済み ${p.reviewed} / ${p.total} 自治体</span>
-            <span class="bar"><i style="width:${p.total ? Math.round((100 * p.reviewed) / p.total) : 0}%"></i></span>
+            <span class="pref-name">${esc(p.name)}</span>${progHtml(p)}
           </button>`).join('')}
       </div>
     </div>`;
-  app.querySelectorAll('.pref-btn').forEach((b) => b.addEventListener('click', () => openPref(Number(b.dataset.code))));
+  app.querySelectorAll('.pref-btn[data-code]').forEach((b) => b.addEventListener('click', () => openPref(Number(b.dataset.code))));
+  app.querySelectorAll('.band-btn').forEach((b) => b.addEventListener('click', () => openBand(Number(b.dataset.from))));
 }
 
-async function openPref(code) {
-  $('#app').innerHTML = '<div class="loading">県インデックスと旧市町村データを読み込み中…</div>';
+function openPref(code) {
+  return openView('/api/pref/' + code, '県インデックスと旧市町村データを読み込み中…');
+}
+
+function openBand(from) {
+  return openView('/api/band/' + from, '人口順位帯の自治体（複数の県）を読み込み中…');
+}
+
+async function openView(path, loadingMsg) {
+  $('#app').innerHTML = `<div class="loading">${esc(loadingMsg)}</div>`;
   try {
-    state.data = await api('/api/pref/' + code);
+    state.data = await api(path);
   } catch (e) {
     $('#app').innerHTML = `<div class="loading">読み込みに失敗: ${esc(e.message)} <button class="btn" onclick="showPrefs()">戻る</button></div>`;
     return;
   }
-  state.pref = code;
+  state.pref = state.data.pref ?? null;
+  state.band = state.data.band ?? null;
   state.pageCache = new Map();
   renderShell();
   // 最初の未選定の自治体から始める
@@ -174,7 +211,7 @@ function renderShell() {
   $('#app').innerHTML = `
     <div class="review">
       <header class="top">
-        <button id="back" class="btn">← 都道府県</button>
+        <button id="back" class="btn">← トップ</button>
         <h1>${esc(state.data.name)}</h1>
         <span id="prog" class="prog"></span>
         <span class="hint">画像クリックで選択 ・ <kbd>Space</kbd> 採用 ・ <kbd>Enter</kbd> 次へ ・ <kbd>←</kbd><kbd>→</kbd> 移動 ・ <kbd>1</kbd>〜<kbd>9</kbd> 旧市町村タグ ・ <kbd>Esc</kbd> タグ解除</span>
@@ -240,7 +277,9 @@ async function goTo(i) {
 
 function muniHeadHtml(m, pages) {
   const n = pages ? pages.reduce((s, p) => s + p.imgs.length, 0) : null;
-  return `<div class="muni-head"><span class="code">${esc(m.code)}</span><h2>${esc(m.name)}</h2>${m.gun ? `<span class="gun">${esc(m.gun)}</span>` : ''}<span class="muted">ページ ${m.pages.length}${n === null ? '' : ' ・ 画像 ' + n + ' 枚'}</span></div>`;
+  const where = (state.band ? m.prefName + ' ' : '') + (m.gun || '');
+  const pop = m.rank ? `<span class="muted">全国 ${m.rank} 位 ・ 人口 ${Number(m.pop).toLocaleString('ja-JP')} 人</span>` : '';
+  return `<div class="muni-head"><span class="code">${esc(m.code)}</span><h2>${esc(m.name)}</h2>${where ? `<span class="gun">${esc(where)}</span>` : ''}${pop}<span class="muted">ページ ${m.pages.length}${n === null ? '' : ' ・ 画像 ' + n + ' 枚'}</span></div>`;
 }
 
 function renderMuni(m, pages) {
@@ -394,7 +433,10 @@ function renderSidebar() {
             mark = (own ? `<span class="mark ok">✓ ${own}</span>` : '') + (lg ? `<span class="mark lg">旧 ${lg}</span>` : '');
           }
         }
-        return `<div class="side-item ${i === state.idx ? 'cur' : ''} ${s ? '' : 'todo'}" data-i="${i}"><span class="code">${esc(m.code)}</span><span class="nm">${esc(m.name)}</span>${mark}</div>`;
+        // 人口順位帯の画面はコードの代わりに順位、名前の横に県名を出す
+        const lead = state.band ? `${m.rank}位` : m.code;
+        const pf = state.band ? `<span class="pf">${esc(m.prefName)}</span>` : '';
+        return `<div class="side-item ${i === state.idx ? 'cur' : ''} ${s ? '' : 'todo'}" data-i="${i}"><span class="code">${esc(lead)}</span><span class="nm">${esc(m.name)}${pf}</span>${mark}</div>`;
       })
       .join('') +
     (state.data.unmatched.length
@@ -427,9 +469,9 @@ async function save(m) {
   const r = await api('/api/select', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code: m.code, pref: state.pref, name: m.name, imgs }),
+    body: JSON.stringify({ code: m.code, pref: muniPref(m), name: m.name, imgs }),
   });
-  m.selection = { pref: state.pref, name: m.name, imgs };
+  m.selection = { pref: muniPref(m), name: m.name, imgs };
   state.dirty = false;
   renderSidebar();
   updateCards();
@@ -496,7 +538,7 @@ function next() {
       if (state.adopted.size === 0) toast(`${m.name}: 出題対象外にしました`);
     }
     if (state.idx + 1 >= state.data.munis.length) {
-      toast('この県の最後の自治体です');
+      toast(state.band ? 'この順位帯の最後の自治体です' : 'この県の最後の自治体です');
       return;
     }
     state.busy = false;

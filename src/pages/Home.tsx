@@ -50,7 +50,7 @@ export function Home() {
             🃏
           </span>
           <h2>市章単語帳</h2>
-          <p>市町村章を1つずつめくって自治体名を暗記。人口上位や旧市町村の絞り込み、覚えた章のチェックつき。</p>
+          <p>市町村章を1つずつめくって自治体名を暗記。人口順位や旧市町村の絞り込み、覚えた章のチェックつき。</p>
         </Link>
         {PLANNED.filter((p) => !availableIds.has(p.id)).map((p) => (
           <div key={p.id} className="quiz-card quiz-card-disabled">
