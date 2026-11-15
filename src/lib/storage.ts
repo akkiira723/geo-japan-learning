@@ -55,7 +55,10 @@ function saveLearned(key: string, ids: Set<string>): void {
   }
 }
 
-/** マンホール単語帳で「覚えた」にした自治体の item id 集合 */
+/**
+ * マンホール単語帳で「覚えた」にした画像の id 集合（画像単位。id は manholeLearnId）。
+ * 旧形式の自治体 item id が混ざっていることがある（migrateLearnedManholes が学習開始時に変換する）
+ */
 export const loadLearnedManholes = (): Set<string> => loadLearned(MANHOLE_LEARNED_KEY);
 export const saveLearnedManholes = (ids: Set<string>): void => saveLearned(MANHOLE_LEARNED_KEY, ids);
 

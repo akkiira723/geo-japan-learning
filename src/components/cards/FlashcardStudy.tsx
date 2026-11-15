@@ -7,7 +7,7 @@ import { RubyText } from '../quiz/RubyText';
 export interface FlashCard {
   /** カードの一意キー */
   key: string;
-  /** 「覚えた」の単位（自治体 id。同じ自治体の別画像のカードは同じ id） */
+  /** 「覚えた」の単位の id（マンホール = 画像ごと、市章 = 自治体ごと）。同じ id のカードは一緒に「覚えた」になる */
   learnId: string;
   pref: number;
   name: string;
@@ -32,6 +32,8 @@ interface FlashcardStudyProps {
   cards: FlashCard[];
   learned: Set<string>;
   onLearnedChange: (next: Set<string>) => void;
+  /** 「覚えた x / y ○○」の単位の表示名（既定: 自治体） */
+  learnUnit?: string;
   onExit: () => void;
   /** 「もう一度」「未習得だけもう一度」 */
   onAgain: (scope: 'all' | 'unlearned') => void;
@@ -41,7 +43,14 @@ interface FlashcardStudyProps {
  * カードをめくる画面（学習中 → めくり終わり）。
  * Space: 答えを表示/隠す、→/←: 次/前、Enter: 覚えた
  */
-export function FlashcardStudy({ cards, learned, onLearnedChange, onExit, onAgain }: FlashcardStudyProps) {
+export function FlashcardStudy({
+  cards,
+  learned,
+  onLearnedChange,
+  learnUnit = '自治体',
+  onExit,
+  onAgain,
+}: FlashcardStudyProps) {
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [done, setDone] = useState(false);
@@ -104,7 +113,7 @@ export function FlashcardStudy({ cards, learned, onLearnedChange, onExit, onAgai
   // 次のカードの画像を先読みしてめくり待ちを減らす
   const nextImgUrl = !done && index + 1 < cards.length ? cards[index + 1].img : undefined;
 
-  // 「覚えた」は自治体単位（同じ自治体の別の画像のカードにも付く）
+  // 「覚えた」は learnId 単位で数える（同じ learnId のカードが複数あっても 1 と数える）
   const unitCount = useMemo(() => new Set(cards.map((c) => c.learnId)).size, [cards]);
   const learnedInRange = useMemo(
     () => new Set(cards.filter((c) => learned.has(c.learnId)).map((c) => c.learnId)).size,
@@ -118,7 +127,7 @@ export function FlashcardStudy({ cards, learned, onLearnedChange, onExit, onAgai
         <div className="result-card">
           <p className="result-accuracy">{cards.length} 枚</p>
           <p>
-            めくり終わり ・ この範囲で覚えた {learnedInRange} / {unitCount} 自治体
+            めくり終わり ・ この範囲で覚えた {learnedInRange} / {unitCount} {learnUnit}
           </p>
         </div>
         <div className="result-actions">
@@ -147,7 +156,7 @@ export function FlashcardStudy({ cards, learned, onLearnedChange, onExit, onAgai
           終了
         </button>
         <span className="cards-progress">
-          {index + 1} / {cards.length} 枚 ・ 覚えた {learnedInRange} / {unitCount} 自治体
+          {index + 1} / {cards.length} 枚 ・ 覚えた {learnedInRange} / {unitCount} {learnUnit}
         </span>
       </header>
 
