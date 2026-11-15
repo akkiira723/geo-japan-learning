@@ -34,6 +34,32 @@ export function manholeRuby(item: ManholeItem): Ruby[] | undefined {
   return [{ b: item.name.replace(/（旧）$/, ''), k: item.kana }];
 }
 
+/**
+ * 単語帳の「覚えた」の単位（画像ごと）。
+ * 添字ではなく URL で識別する（手動選定で画像の並び・枚数が変わっても別の蓋にずれないように）
+ */
+export function manholeLearnId(item: Pick<ManholeItem, 'id'>, img: { url: string }): string {
+  return `${item.id}|${img.url}`;
+}
+
+/**
+ * 旧形式（自治体 id 単位）の「覚えた」を、その自治体の全画像の「覚えた」に展開する。
+ * 画像一覧が要るので、読み込んだ items の分だけ変換する。変更が無ければ同じ Set を返す
+ */
+export function migrateLearnedManholes(
+  learned: Set<string>,
+  items: Pick<ManholeItem, 'id' | 'imgs'>[],
+): Set<string> {
+  let next: Set<string> | undefined;
+  for (const item of items) {
+    if (!learned.has(item.id)) continue;
+    next ??= new Set(learned);
+    next.delete(item.id);
+    for (const img of item.imgs) next.add(manholeLearnId(item, img));
+  }
+  return next ?? learned;
+}
+
 interface ManholeChunk {
   pref: number;
   items: ManholeItem[];

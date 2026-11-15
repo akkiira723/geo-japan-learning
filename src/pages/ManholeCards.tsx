@@ -6,7 +6,14 @@ import { ALL_PREF_CODES } from '../lib/prefectures';
 import { shuffled } from '../lib/shuffle';
 import { loadLearnedManholes, saveLearnedManholes } from '../lib/storage';
 import { PopulationBandPicker } from '../components/quiz/PopulationBandPicker';
-import { loadManholeBandItems, loadManholeItems, manholeRuby, type ManholeItem } from '../quizzes/manhole';
+import {
+  loadManholeBandItems,
+  loadManholeItems,
+  manholeLearnId,
+  manholeRuby,
+  migrateLearnedManholes,
+  type ManholeItem,
+} from '../quizzes/manhole';
 
 type RangeMode = 'area' | 'pop';
 type CardOrder = 'shuffle' | 'natural';
@@ -29,13 +36,11 @@ type PageState =
   | { mode: 'studying'; cards: FlashCard[]; settings: StudySettings };
 
 function buildCards(all: { item: ManholeItem; pref: number }[], settings: StudySettings, learned: Set<string>): FlashCard[] {
-  let picked = all;
-  if (settings.scope === 'unlearned') picked = picked.filter(({ item }) => !learned.has(item.id));
-  // クイズと同様、1自治体に複数の画像があればすべてカードにする（画像ごとに1枚）
-  const cards: FlashCard[] = picked.flatMap(({ item, pref }) =>
+  // クイズと同様、1自治体に複数の画像があればすべてカードにする（画像ごとに1枚）。「覚えた」も画像単位
+  let cards: FlashCard[] = all.flatMap(({ item, pref }) =>
     item.imgs.map((img, k) => ({
       key: `${item.id}:${k}`,
-      learnId: item.id,
+      learnId: manholeLearnId(item, img),
       pref,
       name: item.name,
       rubies: manholeRuby(item),
@@ -49,6 +54,7 @@ function buildCards(all: { item: ManholeItem; pref: number }[], settings: StudyS
       link: img.page ?? item.page,
     })),
   );
+  if (settings.scope === 'unlearned') cards = cards.filter((c) => !learned.has(c.learnId));
   return settings.order === 'shuffle' ? shuffled(cards) : cards;
 }
 
@@ -66,7 +72,13 @@ export function ManholeCards() {
     try {
       const all =
         settings.mode === 'pop' ? await loadManholeBandItems(settings.bands) : await loadManholeItems(settings.prefs);
-      const cards = buildCards(all, settings, learned);
+      // 旧形式（自治体単位）の「覚えた」が残っていれば、読み込んだ範囲の分を画像単位に変換して保存
+      const current = migrateLearnedManholes(
+        learned,
+        all.map(({ item }) => item),
+      );
+      if (current !== learned) onLearnedChange(current);
+      const cards = buildCards(all, settings, current);
       if (cards.length === 0) {
         setState({
           mode: 'error',
@@ -99,6 +111,7 @@ export function ManholeCards() {
         <FlashcardStudy
           cards={state.cards}
           learned={learned}
+          learnUnit="枚"
           onLearnedChange={onLearnedChange}
           onExit={() => setState({ mode: 'setup' })}
           onAgain={(scope) => start({ ...state.settings, scope })}
