@@ -1,6 +1,104 @@
 {
  "version": 1,
  "munis": {
+  "10201": {
+   "pref": 10,
+   "name": "前橋市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/maebasisi40.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "前橋市 ・市の花バラが蓋一面い描かれています。OSUI1（T-25）です。 汚水管マンホール蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/maebasi12.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "前橋市章の「まる」の中に「市」の文字。左右に鍵穴があり、右の鍵穴の側に「２」の数字。"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/hujimimura2.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "中央に村章、周りに村の花レンゲツツジのデザイン。 「ふじみ」「おすい」の文字。",
+     "legacy": "gci:10303A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/hujimimura7.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "村章の周りに、村の花レンゲツツジ、村の鳥キジ、村の木クロマツをデザイン。 「農集排 白川東地区」の文字。 白川東地区の農業集落排水管",
+     "legacy": "gci:10303A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/oogomati2.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "「旧大胡町（おおごまち） ・赤城山と町の木ケヤキ、町の花サツキのデザイン。 「大胡」「おおご」「おすい」の文字。受枠に■模様」と同デザインですが、12時6時違い。受枠に斜線模様。",
+     "legacy": "gci:10304A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/miyagimura.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "「旧宮城村 ・中央に村の花ツツジ、その周りに「みやぎ MIYAGI」村章を配し、外周に 村の木モミジのカラーデザイン。「おすい」の文字」のノンカラー。",
+     "legacy": "gci:10305A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/maebasi/kasukawamura.jpg",
+     "page": "https://we-love-manho.com/gunnma/maebasi/maebasi.html",
+     "desc": "「旧粕川村（かすかわむら） ・4分割し村の木クロマツと村の花キクをそれぞれ対角に描いています。 「粕川村」「農集排」の文字。 集落排水マンホール蓋」と6時部分が違います。",
+     "legacy": "gci:10306A1968"
+    }
+   ]
+  },
+  "10202": {
+   "pref": 10,
+   "name": "高崎市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/1.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「高崎市 ・高崎祭りの山車と花火のデザインのカラー版です。 汚水管マンホール蓋」のノンカラーデザイン。 山車は３８台もあって、その保有台数は日本一だそうですが、現在は輪番制で約半数の山車が出るそうです。平成１５年からは、高崎山車祭りとして独立。 ・"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/3takasakisi.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「規格模様に高崎市の下水マークと左右に鍵穴、受け枠は幅広で6分割された 中にモルタル詰めです。φ650。 汚水」の穴あき。"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/harunamati.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「旧榛名町 ・中央に町のシンボル榛名湖と榛名山、 町の木・スギ、町の花・ナシとユウスゲ、町の鳥・セキレイをデザイン。「はるな」「げすい」の文字。 ・」と同デザインの12時6時違い、受枠に斜線模様あり。",
+     "legacy": "gci:10321A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/misatomati.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "旧箕郷町（みさとまち） ・ウメと、国指定史跡の城「箕輪城 」の石垣のデザインです。 町の木はアカマツ、町の花はツツジ。「みさと」「げすい」の文字 。（高崎市合併後は「おすい」となるようですね。） 6時の鍵穴違いを山崎さんから頂いています。",
+     "legacy": "gci:10323A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/gunnmamati7.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「旧群馬町（ぐんままち） ・群馬支所に展示されている蓋。 多くの埴輪が出土している群馬町の蓋は、埴輪馬の周囲に町の木マツ、町の花ウメを描いている。 下部に「ぐんままち」「おすい」の文字」と12時6時違いのノンカラーデザイン。。 ・",
+     "legacy": "gci:10324A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/takasakisi12.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「旧新町の町の花ハナミズキのデザインの雨水バージョンですが、「たかさきし」に変わっています」の「おすい」です。",
+     "legacy": "gci:10361A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/yosii4.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "「旧吉井町 ・多胡碑記念館内に展示されていたカラー蓋です。 「吉井町では、平成４年（１９９２）から下水道の供用を開始。多胡碑の覆屋と、町の花・サザンカをデザイン化したマンホール蓋を製作しました。」と書かれています。 ・」のノンカラー。国の特別史跡に指定されている多胡碑（たごひ）を納めている 館を町の木ケヤキと町の花サザンカで囲んだデザイン。 多胡碑とは高崎市吉井町にある古碑（金石文）で国の特別史跡に指定されている。 書道史の上から、日本三大古碑の一つとされ、建碑は8世紀後半とされています。受枠に模様のないタイプも山崎さんから頂いています。 ・",
+     "legacy": "gci:10363A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/gunnma/takasaki/yosiimati4.jpg",
+     "page": "https://we-love-manho.com/gunnma/takasaki/takasaki.html",
+     "desc": "中央に町章、下に「汚水」文字入りの変形テトラポッド地模様の蓋です。",
+     "legacy": "gci:10363A1968"
+    }
+   ]
+  },
   "11100": {
    "pref": 11,
    "name": "さいたま市",
@@ -345,6 +443,22 @@
     }
    ]
   },
+  "11222": {
+   "pref": 11,
+   "name": "越谷市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/saitama/kosigaya/kosigaya2.jpg",
+     "page": "https://we-love-manho.com/saitama/kosigaya/kosigaya.html",
+     "desc": "「マンホールカードのモデルになったマンホール蓋です」のノンカラー版。「おすい」の文字。下部の鍵穴なし。 ・"
+    },
+    {
+     "url": "https://we-love-manho.com/saitama/kosigaya/kosigayasi15.jpg",
+     "page": "https://we-love-manho.com/saitama/kosigaya/kosigaya.html",
+     "desc": "穴あきＪＩＳ規格、中央の市章のすぐ下に平仮名で「うすい」の文字。"
+    }
+   ]
+  },
   "12100": {
    "pref": 12,
    "name": "千葉市",
@@ -366,6 +480,27 @@
     }
    ]
   },
+  "12203": {
+   "pref": 12,
+   "name": "市川市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/tiba/itikawa/itikawa.jpg",
+     "page": "https://we-love-manho.com/tiba/itikawa/itikawa.html",
+     "desc": "「市の木クロマツと中央に市章のカラーデザイン。「いちかわし」「おすい」表記」の12時6時違い。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/itikawa/itikawasi42.jpg",
+     "page": "https://we-love-manho.com/tiba/itikawa/itikawa.html",
+     "desc": "「マンホールカードです。４月３日、第４弾として全国４２自治体で５０種類（計１７０種類）の マンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています」のノンカラー。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/itikawa/itikawasi14.jpg",
+     "page": "https://we-love-manho.com/tiba/itikawa/itikawa.html",
+     "desc": "「手毬模様、中央に市章、そのすぐ下に「汚水」の文字。両脇に鍵穴」と同タイプの蓋ですが、市章の少し下に「汚水」の文字があり、上下にある鍵穴が塞がれています。"
+    }
+   ]
+  },
   "12204": {
    "pref": 12,
    "name": "船橋市",
@@ -379,6 +514,70 @@
      "url": "https://we-love-manho.com/tiba/hunabasi/hunabasi26.jpg",
      "page": "https://we-love-manho.com/tiba/hunabasi/hunabasi.html",
      "desc": "穴あき毘沙門亀甲模様に市章入り。"
+    }
+   ]
+  },
+  "12207": {
+   "pref": 12,
+   "name": "松戸市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/tiba/matudo/matudosi9.jpg",
+     "page": "https://we-love-manho.com/tiba/matudo/matudo.html",
+     "desc": "「カード座標の蓋です。「矢切の渡し」のカラーです。カラーはこれ1基のみ設置」と12時部の鍵穴が無くて蝶番部が有る違いです。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/matudo/matudo3.jpg",
+     "page": "https://we-love-manho.com/tiba/matudo/matudo.html",
+     "desc": "放射状の手毬のような模様に、市章と「汚水」文字入り。上下に鍵穴。 汚水管マンホール蓋。"
+    }
+   ]
+  },
+  "12217": {
+   "pref": 12,
+   "name": "柏市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/tiba/kasiwa/kasiwasi19.jpg",
+     "page": "https://we-love-manho.com/tiba/kasiwa/kasiwa.html",
+     "desc": "「この蓋はマンホールカードが配布開始された8月1日から市の企画で「蓋への愛の メッセージ」と言うことで皆さんが蓋に（受け枠も含む）思い思いを書かれたものです。 9月上旬に設置された（担当者談）そうです。私が8月28日に参加した時は鮮やか でしたが据え付けから約2カ月で左のように色褪せていました。 詳しくは こちらででどうぞ」デザインの12時違いのノンカラー。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/kasiwa/kasiwa5.jpg",
+     "page": "https://we-love-manho.com/tiba/kasiwa/kasiwa.html",
+     "desc": "「柏市の初代デザインマンホール蓋（サザンカ）を収めた親子蓋。親蓋は毘沙門亀甲模様」と同デザイン、鍵穴が縦穴タイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/kasiwa/kasiwasi25-2.jpg",
+     "page": "https://we-love-manho.com/tiba/kasiwa/kasiwa.html",
+     "desc": "毘沙門亀甲模様、中央に市章、上下に鍵穴。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/kasiwa/syounannmati17.jpg",
+     "page": "https://we-love-manho.com/tiba/kasiwa/kasiwa.html",
+     "desc": "「旧沼南町（しょうなんまち） ・町章入り規格型の汚水管マンホール蓋。 中央に町章、直ぐ下に汚水の文字」とほぼ同じですがこちらには破線模様の受け枠と6時に鍵穴が有ります。",
+     "legacy": "gci:12305A1968"
+    }
+   ]
+  },
+  "12219": {
+   "pref": 12,
+   "name": "市原市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/tiba/itihara/itihara8.jpg",
+     "page": "https://we-love-manho.com/tiba/itihara/itihara.html",
+     "desc": "市原市の雨水管マンホール\"> ・小さな六角形とテトラポッド風の物を組み合わせたような地模様の穴あき蓋に市章と「車」「雨水」の文字。 車道用雨水管マンホールの蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/itihara/itiharasi2.jpg",
+     "page": "https://we-love-manho.com/tiba/itihara/itihara.html",
+     "desc": "市原市のマンホール\"> ・中央に市の木イチョウ、周囲に市の鳥ウグイスが3羽と市の花コスモスをデザインしたノンカラー版。 「いちはら」「おすい」の表示。"
+    },
+    {
+     "url": "https://we-love-manho.com/tiba/itihara/itiharasi12.jpg",
+     "page": "https://we-love-manho.com/tiba/itihara/itihara.html",
+     "desc": "市原市の小型マンホール蓋\"> ・「市原市のマンホール\"> ・中央に市の鳥ウグイス、上部に市の木イチョウ、下部に市の花コスモスを描いたカラー版。 「いちはら」「おすい」の表示」の小型。 汚水管小型"
     }
    ]
   },
@@ -677,6 +876,48 @@
     }
    ]
   },
+  "13206": {
+   "pref": 13,
+   "name": "府中市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/hutyuu/hutyuusi74.jpg",
+     "page": "https://we-love-manho.com/toukyou/hutyuu/hutyuu.html",
+     "desc": "「市の鳥 「ひばり」が2羽描かれている。「ふちゅうし」「ごうりゅう」の文字。 右下の「ごうりゅう」の文字が削られた蓋をだいちゃん@さんから頂いています。 下水管（合流）」と同じデザインで「ふちゅうし」「ようすい」の文字です。 ・用水"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/hutyuu/hutyuusi36.jpg",
+     "page": "https://we-love-manho.com/toukyou/hutyuu/hutyuu.html",
+     "desc": "「市の木ケヤキをデザイン 下部に「ふちゅうし」「おすい」の文字、受枠にＶ模様。 ・」と6時違い。 ・"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/hutyuu/5.jpg",
+     "page": "https://we-love-manho.com/toukyou/hutyuu/hutyuu.html",
+     "desc": "ＪＩＳ規格模様 ・中央に府中市の市章 下部に「合流」の文字 ・下水管(合流)"
+    }
+   ]
+  },
+  "13209": {
+   "pref": 13,
+   "name": "町田市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toukyou/matida/matida.jpg",
+     "page": "https://we-love-manho.com/toukyou/matida/matida.html",
+     "desc": "「中央に市章、周りに市の花サルビアの花を放射状に描いています。下部に「おすい」上部に「25」の表示。 汚水」の受枠に四角模様があるタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/matida/2.jpg",
+     "page": "https://we-love-manho.com/toukyou/matida/matida.html",
+     "desc": "「市の木ケヤキのデザイン、中央に市章、上部に「25」下部に「あめ」の文字」と同じデザインだが雨水用の穴が開いている。"
+    },
+    {
+     "url": "https://we-love-manho.com/toukyou/matida/matidasi26.jpg",
+     "page": "https://we-love-manho.com/toukyou/matida/matida.html",
+     "desc": "「雨水」の文字の下に六角形が無く、横向きの鍵穴があります。"
+    }
+   ]
+  },
   "14100": {
    "pref": 14,
    "name": "横浜市",
@@ -757,6 +998,53 @@
      "page": "https://we-love-manho.com/kanagawa/sagamihara/sagamihara.html",
      "desc": "「旧藤野町（ふじのまち） ・2009年12月12日fujisanTAROさん撮影時には花びらの色が剥離していましたが、リニューアルしました。 町の花フジが一房アップで描かれたカラーデザインです。 「ふじのまち」「おすい」の文字」の小型。",
      "legacy": "gci:14424A1968"
+    }
+   ]
+  },
+  "14201": {
+   "pref": 14,
+   "name": "横須賀市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka16.jpg",
+     "page": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka.html",
+     "desc": "「下町浄化センター展示カラー蓋。市の木オオシマザクラ（葉も）と 中央に市章が描かれています。「歩道」「おすい」の文字。平成13年度から採用」と同デザインですが、「車道」「おすい」になっています。"
+    },
+    {
+     "url": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka6.jpg",
+     "page": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka.html",
+     "desc": "亀甲模様中央に市章入り。"
+    },
+    {
+     "url": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka5-2.jpg",
+     "page": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka.html",
+     "desc": "「下町浄化センター展示カラー蓋。市の花ハマユウと中央に市章。 下部に「歩道」と「あめ」の文字があります」と同デザインで「車道」「合流」になっている。"
+    },
+    {
+     "url": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka8.jpg",
+     "page": "https://we-love-manho.com/kanagawa/yokosuka/yokosuka.html",
+     "desc": "「下町浄化センター展示カラー蓋。黒船とペリー。「あめ」の表示」と同デザインですが、グレーでコーティングされていました。"
+    }
+   ]
+  },
+  "14205": {
+   "pref": 14,
+   "name": "藤沢市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/kanagawa/hujisawa/hujisawa9.jpg",
+     "page": "https://we-love-manho.com/kanagawa/hujisawa/hujisawa.html",
+     "desc": "フジのノンカラーデザイン。 中央に藤沢市の市章の上に 「車」 の文字。 車道用小型の蓋と思われます"
+    },
+    {
+     "url": "https://we-love-manho.com/kanagawa/hujisawa/hujisawa86.jpg",
+     "page": "https://we-love-manho.com/kanagawa/hujisawa/hujisawa.html",
+     "desc": "「市の木クロマツの地色が赤いカラーデザイン。こちらは市章の下に 「おすい」 の 文字が入っています」のノンカラー。中央の丸の中に藤沢市の市章とその上に 「おすい」 文字が入っています。"
+    },
+    {
+     "url": "https://we-love-manho.com/kanagawa/hujisawa/hujisawasi63.jpg",
+     "page": "https://we-love-manho.com/kanagawa/hujisawa/hujisawa.html",
+     "desc": "JIS規格蓋。中心に藤沢市章。市章の上に 「F-1」下に「特定」 、三重破線の受け枠。 特定処理汚水管マンホール蓋。"
     }
    ]
   },
@@ -885,6 +1173,305 @@
      "page": "https://we-love-manho.com/niigata/niigata/niigata.html",
      "desc": "「旧西蒲原郡中之口村 中之口支所(先人館)で展示されている蓋です。 澤将監の館（江戸時代の大庄屋の屋敷）とクロマツのカラーデザイン。 中之口村章と「おすい」の文字入りでナンバー枠があります」のノンカラー。 越後の大庄屋澤家初代の澤将監は、武田信玄の家臣だった。",
      "legacy": "gci:15351A1968"
+    }
+   ]
+  },
+  "15202": {
+   "pref": 15,
+   "name": "長岡市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaokasi14.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「長岡市 ・マンホールカードです。２０１８年４月２８日、第７弾として全国４９自治体で４９種類（累計３０１自治体３４２種類）の マンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています」と６時違いの「合流」表記。"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaoka_2.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「長岡中央浄化センターの展示蓋。 ４分割して、花火、スキーヤー、悠久山公園のお城と桜、長生橋のデザインのカラー版」にＶ字模様の受枠付き。"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaoka4.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "ＪＩＳ規格のマンホール。 中央にある両手で円を描いたようなマークは、長岡市の古い市章の外側の輪の部分だけ残して中に汚水の文字を入れたものです。"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaoka5.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "ＪＩＳ規格のマンホール。 下水と水マークを組み合わせた中に「市」の文字があります。"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/totio.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "旧栃尾市 ・特産の「手かがりまり」のデザイン。 まりは、養蚕や機織りが盛んだった越後の山沿い地方で、クズ繭の糸や機織りの残糸を利用して子供や孫たちのおもちゃとして作られた。",
+     "legacy": "gci:15215A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/totiosi3.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "亀甲模様、中央に市章、その下に「下水道」の文字。受枠にＶ字模様。",
+     "legacy": "gci:15215A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nakanosimamati.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "旧中之島町（なかのしままち） ・中央に町章入りの六角凧、外周に特産のレンコンをデザイン。 武者絵や美人画などの描かれた畳10枚分ほどの大きさの大凧合戦が、刈谷田川対岸の見附市今町との間で繰り広げられます。 「中之島町」「おすい」の文字。",
+     "legacy": "gci:15364A1986"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/kosijimati3.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧越路町 ・「ホタルの里越路町」の文字と共に、水辺でおしりを光らせて飛ぶホタルが カラーで描かれています。草にとまっているホタルの光の中には「下水」の文字が入っています」と同デザインのノンカラー版で１２時６時と文字の大きさなどが違う。中サイズと思われます。 下水管中サイズ",
+     "legacy": "gci:15401A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/kosijimati9.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "JIS蓋、中央に町章と「下水」の文字。 汚水桝蓋",
+     "legacy": "gci:15401A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/mishima_1b.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧三島町（みしままち） ・三島町の位置に○を付けた新潟県の地図と、 町の木スギと特産の稲穂を描き、「ＭＩＳＨＩＭＡ」「ＮＩＩＧＡＴＡ」の文字入り。 少し青みがかっていたので、元はカラー蓋なのかもしれません」と仕様違いでＶ字模様の受枠付き。",
+     "legacy": "gci:15402A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/misimamati3.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "町の花ハナミズキとカタクリ、ギフチョウのデザイン。「みしま」「おすい」文字入り。",
+     "legacy": "gci:15402A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/misimamati4.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "ＪＩＳ規格の蓋に、町章と「下水道」文字入り。",
+     "legacy": "gci:15402A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/yoita.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧与板町 ・長岡中央浄化センターの展示蓋。 毎年 ９月１４・１５日の二晩に開催される十五夜まつりの登り屋台の車輪のカラーデザイン」の６時違いのノンカラー。",
+     "legacy": "gci:15403A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/wasimamura4.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "ＪＩＳ規格に村章入りの公共枡蓋。",
+     "legacy": "gci:15404A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaokawasima.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "中央に和島のゆるキャラ「わし麻呂」を配し、大花火と長生橋をモチーフに「RYOKAN NO SATO WASHIMA」と「NAGAOKA」の文字。",
+     "legacy": "gci:15404A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/1.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧寺泊町 ・旧寺泊町は日本海の新鮮な海の幸が豊富です。 マンホールの蓋にも鯛や平目、タコやイカ、蟹など美味しそうな物が一杯ですね。「てらどまり」「おすい」の文字。上部に「１４」とあります」と１２時６時違い。",
+     "legacy": "gci:15406A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/nagaokayamakosi.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "中央に山古志のゆるキャラ「小太郎」を配し、外周上部に「YAMAKOSHI」の文字。",
+     "legacy": "gci:15421A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/kawaguti-2.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧川口町 ・蓋一面に町の木のサクラの花を散りばめています。 中央に町章入り。 特定環境保全公共下水道 汚水」のノンカラー。 特定環境保全公共下水道",
+     "legacy": "gci:15441A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/kawagutimati3.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "旧川口町 ・蓋一面に町の木のサクラの花を散りばめています。 中央に町章入り。 特定環境保全公共下水道 汚水",
+     "legacy": "gci:15441A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/niigata/nagaoka/ogunimati5.jpg",
+     "page": "https://we-love-manho.com/niigata/nagaoka/nagaoka.html",
+     "desc": "「旧小国町 ・町の木雪小国（雪椿の一種）の花が大きく二輪描かれ、周囲に滑らないように斜線を配したデザインです。「小国町」の文字」と同デザインですが、小国町の文字の違いと、こちらは雪椿の花びらの輪郭が太くめしべの根元が花びらと分離されています。",
+     "legacy": "gci:15502A1968"
+    }
+   ]
+  },
+  "16201": {
+   "pref": 16,
+   "name": "富山市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/oosawanomati.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "「旧大沢野町（おおさわのまち） 中央に旧大沢野町章と「おすい」の文字。 その周囲に、町の木マツ、町の花サルビア、人が手を繋いで輪になっている様子がカラーで描かれています。受枠にＶ字模様」の小型です。１２時部分に「おすい」の文字、受枠には模様無。",
+     "legacy": "gci:16301A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/ooyamamati.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "旧大山町（おおやままち） 平成４年に一般公募し、 上滝中学校の生徒の作品を採用し作成され、昭和６３年に制定された町花のナデシコをモチーフにし、 中心には、大山町章を配置したものとなっています。（県ＨＰより）",
+     "legacy": "gci:16302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/toyama63.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "旧八尾町章、町の花木ツバキのデザインに「やつお」「おすい」の文字入りですが、 「ＴＯＹＡＭＡ ＣＩＴＹ」の文字も追加されています。",
+     "legacy": "gci:16361A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/hutyuu.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "旧婦中町（ふちゅうまち） 町の花スイセンのデザイン。「HUCHU」の文字。 汚水管マンホール",
+     "legacy": "gci:16362A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/yamadamura3.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "「旧山田村 村の花ユキツバキのデザイン。「やまだむら」「おすい」の文字」の子蓋と12時6時違い。「やまだ」「おすい」の文字。 汚水",
+     "legacy": "gci:16363A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/toyama57.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "「こちらは中央の文字が「富山 農村」と書かれています。 １２時６時の蝶番違い（下記の蓋）を平野さんから頂いています。 農業集落排水管」と同じ市の草花アザミのデザインの小型蓋。 下水"
+    },
+    {
+     "url": "https://we-love-manho.com/toyama/toyama/hosoirimura.jpg",
+     "page": "https://we-love-manho.com/toyama/toyama/toyama.html",
+     "desc": "旧細入村 村章の周りに村の花木サザンカ、その周りに村の花キクの デザイン。下部に「下水」の文字。 特定環境保全公共下水道",
+     "legacy": "gci:16364A1968"
+    }
+   ]
+  },
+  "17201": {
+   "pref": 17,
+   "name": "金沢市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/isikawa/kanazawa/kanazawa103.jpg",
+     "page": "https://we-love-manho.com/isikawa/kanazawa/kanazawa.html",
+     "desc": "井桁模様、梅鉢に「下水」。"
+    }
+   ]
+  },
+  "18201": {
+   "pref": 18,
+   "name": "福井市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/hukui70.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "「福井市のシンボルである不死鳥（フェニックス）のデザイン。 空襲や地震、水害などから不死鳥のごとく復興したことなどから、 不死鳥が福井市民及び福井市のシンボルになっているそうです」デザインのノンカラー、8時に25、2時に日之出機器のロゴマークが有るタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/hukui20.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "市章入り規格の蓋に「下水道」と書いてあって、穴が開いています。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/hukui15.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "「市章と市の花・アジサイのカラーデザイン。外周に「しゅうはい」の文字」と同じのデザインの小型蓋。 農集排水管小型"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/miyama.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "「旧美山町 ・中央から町章、町の花ミヤマツツジ、町の木スギ。受枠にＶ字模様あり」と同デザインで受枠に模様の無いタイプ。",
+     "legacy": "gci:18302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/miyama4.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "「旧美山町 ・中央から町章、町の花ミヤマツツジ、町の木スギ。受枠にＶ字模様あり」の小さいタイプ。 汚水管小型",
+     "legacy": "gci:18302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/miyama5.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "町章入り亀甲模様「下水道」の文字あり。",
+     "legacy": "gci:18302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/kosino2.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "「旧越廼（こしの）村 ・旧村の花・スイセンのデザイン。 農集排水管」の小さいタイプ。 農集排水管小型",
+     "legacy": "gci:18424A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/simizu2.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "町章入り亀甲模様「汚水」の文字。",
+     "legacy": "gci:18426A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukui/hukui/simizu.jpg",
+     "page": "https://we-love-manho.com/hukui/hukui/hukui.html",
+     "desc": "旧清水町（しみずちょう） ・空に雲が浮かび、両脇にはこうべをたれた稲穂、地図記号で表現された水田と 紐がしみずの文字になっている農作業でかぶる笠が描かれています。",
+     "legacy": "gci:18426A1968"
+    }
+   ]
+  },
+  "20201": {
+   "pref": 20,
+   "name": "長野市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/nagano18.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "「市の花・リンゴの花とリンゴをカラーデザイン。 下部に「ＳＥＷＥＲＡＧＥ」（下水道）の文字」と１２時６時違いで外枠に■の模様有り。"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/nagano63.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "「中央に長野市の市章 下部に「下水道」の文字 下水管小型」より大きいタイプです。fujisanTAROさんからもいただいています。"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/sinnsyuusinnmati.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "旧信州新町 ・旧町の動物[ヒツジ]と旧町の植物[ワサビ]のデザイン。 1950年代から名物として知られるジンギスカン。特にサフォーク種は高原で飼育されていておいしい。",
+     "legacy": "gci:20581A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/nagano91.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "「旧豊野町（とよのまち） ・町章の周りに特産のリンゴとブドウが描かれている カラー蓋です。「下水道」の文字。 下水道」ののノンカラー「下水道」と表記。 下水道",
+     "legacy": "gci:20582A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/togakusi.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "「旧戸隠村 ・東部浄化センター展示蓋です。 戸隠山を背景に、村の木白樺に小鳥が二羽止まっているカラーデザイン。「特環」（特定環境保全公共下水道）の文字あり」のノンカラー。 特定環境保全公共下水道",
+     "legacy": "gci:20586A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/nagano85.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "旧鬼無里村 ・モミジと村の花ミズバショウに、ＫＩＮＡＳＡの脇に ミズバショウの形と裾花川の流れをモチーフし村の名の「鬼」の字を 表したシンボルマークが描かれています。",
+     "legacy": "gci:20587A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagano/naganosi/nakajyoumura.jpg",
+     "page": "https://we-love-manho.com/nagano/naganosi/naganosi.html",
+     "desc": "旧中条村 ・中央に村の木ケヤキ、周りに村の花ウメをデザイン。「中条村」「おすい」の文字。",
+     "legacy": "gci:20589A1968"
+    }
+   ]
+  },
+  "21201": {
+   "pref": 21,
+   "name": "岐阜市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/gihu/gihusi/gihu23.jpg",
+     "page": "https://we-love-manho.com/gihu/gihusi/gihusi.html",
+     "desc": "こちらは数字の刻印がありません。"
+    },
+    {
+     "url": "https://we-love-manho.com/gihu/gihusi/gihusi34.jpg",
+     "page": "https://we-love-manho.com/gihu/gihusi/gihusi.html",
+     "desc": "規格蓋に岐阜市章、「雨水」の文字が描かれています。 雨水"
     }
    ]
   },
@@ -1048,6 +1635,221 @@
     }
    ]
   },
+  "23201": {
+   "pref": 23,
+   "name": "豊橋市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aiti/toyohasi/toyohasi4.jpg",
+     "page": "https://we-love-manho.com/aiti/toyohasi/toyohasi.html",
+     "desc": "「朝日の中を出港していく船と人々や町が描かれている。地色が薄グリーンで、穴あき蓋です。 合流」と同デザインの穴が開いていないタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/toyohasi/toyohasi32.jpg",
+     "page": "https://we-love-manho.com/aiti/toyohasi/toyohasi.html",
+     "desc": "「下水構えの中に市章入り、ＪＩＳ規格模様。下部に鍵穴、受枠に斜線模様」と蓋の淵に段差が付いているのと、 文字と鍵穴部分もちょっと違う。"
+    }
+   ]
+  },
+  "23202": {
+   "pref": 23,
+   "name": "岡崎市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/okazaki60.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "「岡崎市 ・徳川家康の生地である岡崎城と、市内を流れる乙川の五万石船。 「五万石でも岡崎さまは、お城下に船が着く｣と歌われたほどである。穴あき蓋です」のノンカラー、蓋面に４個の凹みが付いている。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/okazakisi8.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "「岡崎城と矢作橋のデザイン蓋です。黄色いカラー塗装で「うすい」の表記、平成６年４月１日から採用のデザインだそうです。 橋の名前部分は「やはぎばし」と成っていたそうですが、平成１８年９月１日から「やはぎはし」に改修したそうです。 今回は「やはぎばし」の蓋にはお目にかかれませんでした」のノンカラー。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/okazaki2.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "「岡崎城と岡崎公園のサクラと三河花火の多色カラーデザイン。「おすい」の文字」の受枠にＶ字模様。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/okazaki49.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "中央から市章、市の木ミカワクロマツ、市の花フジ、上部に「おすい」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/okazakisi22.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "毘沙門亀甲地模様、市章と「電気」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/nukata6.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "「旧額田町 ・町の花ササユリと男川のアユが描かれている。「おすい」の表記」と同デザインで、文字が「ぬかた」、「しゅうはい」の表記になっていました。 集落排水管",
+     "legacy": "gci:23502A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/okazaki/nukata2-2.jpg",
+     "page": "https://we-love-manho.com/aiti/okazaki/okazaki.html",
+     "desc": "中央に町の鳥ウグイス、町の花ササユリ、町の木クロガネモチ、旧町章のデザインに「ぬかた しゅうはい」の文字。 集落排水管"
+    }
+   ]
+  },
+  "23203": {
+   "pref": 23,
+   "name": "一宮市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/itinomiya20.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "「一宮市 ・市の花「キキョウ」と、中央に一宮市の市章。市内1200キロに、3万個のマンホールがあるそうです。（2013年6月広報一宮より）」と同じデザインですが、此方は「25」です。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/itinomiya21.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "四角いブロックにドットを付けた模様です。一宮市市章入りです。鍵穴は上下。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/bisai6.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "「旧尾西市（びさいし） ・上部に市章、中央に市の花・サツキ、周囲に市の木であるカシの葉と実が描かれているカラー版」と同デザイン。受枠に模様がありません。",
+     "legacy": "gci:23218A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/bisaisi11.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "「旧尾西市章入り太陽のようなデザイン。 汚水」の緑色の塗装です。",
+     "legacy": "gci:23218A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/kisokawa.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "旧木曽川町 ・町の花・スイセンのデザイン。",
+     "legacy": "gci:23381A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/itinomiya/kisokawa4.jpg",
+     "page": "https://we-love-manho.com/aiti/itinomiya/itinomiya.html",
+     "desc": "旧木曽川町町章入り穴あきJIS規格蓋です。",
+     "legacy": "gci:23381A1968"
+    }
+   ]
+  },
+  "23206": {
+   "pref": 23,
+   "name": "春日井市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aiti/kasugai/kasugai115.jpg",
+     "page": "https://we-love-manho.com/aiti/kasugai/kasugai.html",
+     "desc": "「市の木（けやき）を描いた蓋です。中央の市章（サークル付）の中に「雨」の表記がありません。 穴が4個」デザインに「雨」、受枠にＶ字模様のあるタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/kasugai/kasugai70.jpg",
+     "page": "https://we-love-manho.com/aiti/kasugai/kasugai.html",
+     "desc": "「中央の市章の中に「汚」とあり、周囲に市の花・サクラが描かれています」と同じく春日井市の汚水管蓋のデザイン蓋です。 蓋の上部に日本鋳工業の蓋のマーク「ニコー」の表記があります。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/kasugai/kasugai102.jpg",
+     "page": "https://we-love-manho.com/aiti/kasugai/kasugai.html",
+     "desc": "規格蓋の○にへこみの無いタイプ、市章に「汚」、その下に「下水道」の表記がある汚水管蓋です。 鍵穴が左右に。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/kasugai/kasugai67.jpg",
+     "page": "https://we-love-manho.com/aiti/kasugai/kasugai.html",
+     "desc": "規格蓋です。6：12の対比の綺麗な蓋です、中央に「井」の字でしょうか、他には何も表記のない蓋です。 岐阜市の越境蓋かと思いましたが同地内に沢山設置されていましたので違うような。 穴も沢山空いているので雨水管と思います。"
+    }
+   ]
+  },
+  "23211": {
+   "pref": 23,
+   "name": "豊田市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/aiti/toyota/toyota35.jpg",
+     "page": "https://we-love-manho.com/aiti/toyota/toyota.html",
+     "desc": "「市の花ヒマワリのデザイン。 中央に「汚水」・市章・「下水道」の表記、下部には鍵穴、受枠には溝がありません」と同じデザインで、鍵穴のないタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/aiti/toyota/toyota51.jpg",
+     "page": "https://we-love-manho.com/aiti/toyota/toyota.html",
+     "desc": "規格蓋です。中央に市章その下に囲い文字で「雨水」の表記、左右に鍵穴が付いている。"
+    }
+   ]
+  },
+  "24201": {
+   "pref": 24,
+   "name": "津市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/mie/tu/tu23.jpg",
+     "page": "https://we-love-manho.com/mie/tu/tu.html",
+     "desc": "市章と「汚水」文字入り毘沙門亀甲の規格模様の小型蓋です。"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/tu/tu4.jpg",
+     "page": "https://we-love-manho.com/mie/tu/tu.html",
+     "desc": "「津市 ・中央にヨットとカモメ、周囲に市の花・ツツジが描かれている」と同じデザインの"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/tu/tu39.jpg",
+     "page": "https://we-love-manho.com/mie/tu/tu.html",
+     "desc": "穴あきの名古屋型規格蓋に旧市章入り。"
+    }
+   ]
+  },
+  "24202": {
+   "pref": 24,
+   "name": "四日市市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/mie/yokkaiti/yokkaiti7-2.jpg",
+     "page": "https://we-love-manho.com/mie/yokkaiti/yokkaiti.html",
+     "desc": "中央に市章、「汚水」と表記の丸が大きいタイプのＪＩＳ規格蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/yokkaiti/yokkaiti50.jpg",
+     "page": "https://we-love-manho.com/mie/yokkaiti/yokkaiti.html",
+     "desc": "市と友好姉妹都市先の代表的な動物等を描いた蓋の受枠に溝が無いタイプです。"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/yokkaiti/yokkaiti49.jpg",
+     "page": "https://we-love-manho.com/mie/yokkaiti/yokkaiti.html",
+     "desc": "市の花（さるびあ）を描いた蓋です。 汚水管を示すホーム（家）のマークがついた受枠に溝が無いタイプです。"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/yokkaiti/yokkaiti48.jpg",
+     "page": "https://we-love-manho.com/mie/yokkaiti/yokkaiti.html",
+     "desc": "「安藤広重の「東海道五十三次」四日市宿のデザイン。両脇に鍵穴」のノンカラーで傘のマークがついた受枠に溝が無いタイプです。 溝付きと、溝付きでない蓋は１０時、２時の部分の仕様が違っています。"
+    },
+    {
+     "url": "https://we-love-manho.com/mie/yokkaiti/kusunoki.jpg",
+     "page": "https://we-love-manho.com/mie/yokkaiti/yokkaiti.html",
+     "desc": "旧楠町 ・六角形模様の規格マンホール 中央の町章はひらがなの「くす」を丸くデザインしたようです",
+     "legacy": "gci:24342A1968"
+    }
+   ]
+  },
+  "25201": {
+   "pref": 25,
+   "name": "大津市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/siga/ootu/sigatyou.jpg",
+     "page": "https://we-love-manho.com/siga/ootu/ootu.html",
+     "desc": "「旧志賀町（しがちょう） ・淡海（おうみ）環境プラザ展示カラー蓋です。 湖と山に囲まれた志賀町の豊かな自然を題材にし、 町の花「じゃくなげ」と、琵琶湖に遊ぶヨット、 颯爽とそびえ立つ比良連峰を表現しています。 （淡海環境プラザの説明より）「しがちょう」「おすい」の文字」のノンカラー。",
+     "legacy": "gci:25301A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/siga/ootu/ootu36.jpg",
+     "page": "https://we-love-manho.com/siga/ootu/ootu.html",
+     "desc": "「大津市 ・市制施行から１００年目の大津市の景観をモチーフにした、琵琶湖、琵琶湖大橋、ミシガン船、ヨット、観覧車、 市の鳥・ユリカモメ、市の花・エイザンスミレ、市の木・ヤマザクラ、 花火大会、レガッタ、びわ湖花噴水、犬などと市章に下水の「下」を組み合わせたマークが描かれている。 平成10年10月1日に市制施行100周年を迎え、その記念に蓋のデザインを公募し、 最優秀賞に選ばれた作品が元になったデザインです」と同じデザインだが、犬の上の長方形にナンバーがあり、マーク部分に「Ｔ１４」がありません。"
+    },
+    {
+     "url": "https://we-love-manho.com/siga/ootu/ootusi65.jpg",
+     "page": "https://we-love-manho.com/siga/ootu/ootu.html",
+     "desc": "波紋のような波型模様、中央に市章の中の部分を「下」という文字に変えたもの。 下水"
+    }
+   ]
+  },
   "26100": {
    "pref": 26,
    "name": "京都市",
@@ -1119,6 +1921,118 @@
     }
    ]
   },
+  "27203": {
+   "pref": 27,
+   "name": "豊中市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/toyonaka/toyonakasi13.jpg",
+     "page": "https://we-love-manho.com/oosakahu/toyonaka/toyonaka.html",
+     "desc": "「中央に市章入り「合流」の文字入り、↑なし。外周に楕円模様あり。 穴が4個のタイプもなっくんさんから頂いています」と同タイプの蓋で、「合」の文字の横に上向き矢印、その隣に日之出水道機器のマーク入りです。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/toyonaka/toyonaka2.jpg",
+     "page": "https://we-love-manho.com/oosakahu/toyonaka/toyonaka.html",
+     "desc": "「マンホールカードです。１２月１日、第３弾として全国４６自治体で４６種類（計１０９自治体１２０種類）の マンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています」デザインのノンカラー版。 昭和61年の市政50周年を記念してキャラクター化され、 平成2年にPRと景観づくりの一環として、マンホールの柄に取り入れられた。現在約100枚を設置している（2015.3.7産経新聞より）。"
+    }
+   ]
+  },
+  "27205": {
+   "pref": 27,
+   "name": "吹田市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/suita/4-2.jpg",
+     "page": "https://we-love-manho.com/oosakahu/suita/suita.html",
+     "desc": "中央に〈太陽の塔〉1970年大阪万博のシンボル（岡本太郎）。 周囲に市民の木クスノキ、市の花サツキをデザイン。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/suita/suitasi51.jpg",
+     "page": "https://we-love-manho.com/oosakahu/suita/suita.html",
+     "desc": "「丸の地模様の穴あき蓋、中央に市章入り、外蝶番付です」と蝶番違い。楕円を３周した受枠の蓋を九度山の料理人兼植木屋さんから頂いています。"
+    }
+   ]
+  },
+  "27207": {
+   "pref": 27,
+   "name": "高槻市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/takatuki/takatuki10.jpg",
+     "page": "https://we-love-manho.com/oosakahu/takatuki/takatuki.html",
+     "desc": "「マンホールカードです。１２月１日、第３弾として全国４６自治体で４６種類（計１０９自治体１２０種類）の マンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています」の6時違い。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/takatuki/takatukisi29.jpg",
+     "page": "https://we-love-manho.com/oosakahu/takatuki/takatuki.html",
+     "desc": "毘沙門亀甲模様の穴あき蓋、中央に市章入り。 雨水マンホール蓋。"
+    }
+   ]
+  },
+  "27210": {
+   "pref": 27,
+   "name": "枚方市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/hirakata/hirakata.jpg",
+     "page": "https://we-love-manho.com/oosakahu/hirakata/hirakata.html",
+     "desc": "「枚方市の花・菊と淀川を下る30石船です。「ひらかたし」「おすい」の表示。 汚水管マンホール蓋（カラー版）」と同じデザインのノンカラー。鍵穴が違うタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/hirakata/hirakata2.jpg",
+     "page": "https://we-love-manho.com/oosakahu/hirakata/hirakata.html",
+     "desc": "亀甲模様に市章入りで、穴が開いています。"
+    }
+   ]
+  },
+  "27211": {
+   "pref": 27,
+   "name": "茨木市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/ibaraki/ibaraki4.jpg",
+     "page": "https://we-love-manho.com/oosakahu/ibaraki/ibaraki.html",
+     "desc": "同じデザインのモノクロ版。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/ibaraki/ibaraki6.jpg",
+     "page": "https://we-love-manho.com/oosakahu/ibaraki/ibaraki.html",
+     "desc": "市章だけ入った規格マンホール蓋です。"
+    }
+   ]
+  },
+  "27212": {
+   "pref": 27,
+   "name": "八尾市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/yao/yao2.jpg",
+     "page": "https://we-love-manho.com/oosakahu/yao/yao.html",
+     "desc": "「マンホールカードです。2017年12月9日、第6弾として全国64自治体で66種類（計252自治体293種類）のマンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています。 ※実設置蓋は無いそうです。 市役所西庁舎内に展示してあるとのことでした」と同デザインのノンカラーで、外周の受枠、形状違い。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/yao/yaosi19.jpg",
+     "page": "https://we-love-manho.com/oosakahu/yao/yao.html",
+     "desc": "亀甲模様の蓋です。中央に市章、その下に「下水車道A」の表記、受け枠には二重の楕円模様付。"
+    }
+   ]
+  },
+  "27227": {
+   "pref": 27,
+   "name": "東大阪市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/oosakahu/higasioosaka/higasioosaka47.jpg",
+     "page": "https://we-love-manho.com/oosakahu/higasioosaka/higasioosaka.html",
+     "desc": "「白色小型蓋。「ひがしおおさか」「おすい」の文字。 公共汚水桝」と同デザインの文字なし版です。"
+    },
+    {
+     "url": "https://we-love-manho.com/oosakahu/higasioosaka/higasioosaka25.jpg",
+     "page": "https://we-love-manho.com/oosakahu/higasioosaka/higasioosaka.html",
+     "desc": "「縦縞のタイガース模様（笑）の格子状の穴あきマンホールです。 こちらは中央に市章と「ひがし」「おおさか」の文字があります」の「ひがしおおさか」の文字なしタイプ。"
+    }
+   ]
+  },
   "28100": {
    "pref": 28,
    "name": "神戸市",
@@ -1186,6 +2100,107 @@
     }
    ]
   },
+  "28202": {
+   "pref": 28,
+   "name": "尼崎市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hyougo/amagasaki/amagasakisi.jpg",
+     "page": "https://we-love-manho.com/hyougo/amagasaki/amagasaki.html",
+     "desc": "「尼崎市のマンホールは、中央には、綺麗な水に住む蛍やトンボや魚。その周りに市の花・キョウチクトウが デザインされています。「あまがさき」「げすい」の表示」デザインの「うすい」表記です。"
+    },
+    {
+     "url": "https://we-love-manho.com/hyougo/amagasaki/amagasakisi22.jpg",
+     "page": "https://we-love-manho.com/hyougo/amagasaki/amagasaki.html",
+     "desc": "「穴あき蜘蛛の巣地模様中央に、尼崎市の市章と「下水」の文字が入っています。上下に鍵穴あり」とは12時3時9時などが違い、鍵穴は下にだけあります。"
+    }
+   ]
+  },
+  "28203": {
+   "pref": 28,
+   "name": "明石市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hyougo/akasi/akasi18.jpg",
+     "page": "https://we-love-manho.com/hyougo/akasi/akasi.html",
+     "desc": "「カードの座標位置の実敷設蓋です。 よくぞ東経135度丁度のところのマンホールを探されたものです。 敷設場所は天文科学館から120mほど西に離れていますが、これは測り方の基準が違う測地経緯度と天文経緯度があるためです。 実敷設蓋は測地経緯度、天文科学館は天文経緯度に基づいて東経135度丁度に設置されています。 （左の会社がモリサワさん、樹木の向こうが天文科学館） 兵庫県西脇市のカードにも書いてありましたが、明石市のマンホール蓋も北を向くよ」の受枠にＶ字模様のあるタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/hyougo/akasi/akasi15.jpg",
+     "page": "https://we-love-manho.com/hyougo/akasi/akasi.html",
+     "desc": "亀甲模様に市章。受枠にＶ字模様。"
+    }
+   ]
+  },
+  "28204": {
+   "pref": 28,
+   "name": "西宮市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hyougo/nisinomiya/1.jpg",
+     "page": "https://we-love-manho.com/hyougo/nisinomiya/nisinomiya.html",
+     "desc": "西宮市のマンホールは、甲子園球場はもちろん、酒蔵と酒樽、そして市の花である桜の花びらがちりばめてあります。 上部に「合-２５」下部に「にしのみや」の文字があります。"
+    },
+    {
+     "url": "https://we-love-manho.com/hyougo/nisinomiya/nisinomiyasi21.jpg",
+     "page": "https://we-love-manho.com/hyougo/nisinomiya/nisinomiya.html",
+     "desc": "「破線の同心円地模様の穴あき蓋、中心に市章、中に｢下水｣、その下に｢合流｣の表記」の蓋の穴が開いていないタイプに「汚水」と表記。"
+    }
+   ]
+  },
+  "28210": {
+   "pref": 28,
+   "name": "加古川市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hyougo/kakogawasi/kakogawasi5.jpg",
+     "page": "https://we-love-manho.com/hyougo/kakogawasi/kakogawasi.html",
+     "desc": "「市章の周りに市の花ツツジを描いた白色デザイン。「加古川市」「下水道」の文字。 下水管マンホール蓋」のノンカラー版。 下水管マンホール蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/hyougo/kakogawasi/kakogawasi6.jpg",
+     "page": "https://we-love-manho.com/hyougo/kakogawasi/kakogawasi.html",
+     "desc": "穴あき亀甲模様に市章と「下水道」の文字。 下水管マンホール蓋。"
+    }
+   ]
+  },
+  "29201": {
+   "pref": 29,
+   "name": "奈良市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/nara/nara/narasi21.jpg",
+     "page": "https://we-love-manho.com/nara/nara/nara.html",
+     "desc": "「親子マンホールも発見！！親蓋は亀甲模様です」デザインの「雨水」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/nara/nara/023-2.jpg",
+     "page": "https://we-love-manho.com/nara/nara/nara.html",
+     "desc": "「CARちゃん 平野さん Kanさんのと類似していますが、よく見ると 鍵穴の位置や小丸模様が違うのもあります。また縁取りも違います」の雨水管マンホール蓋。"
+    }
+   ]
+  },
+  "30201": {
+   "pref": 30,
+   "name": "和歌山市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/wakayama/wakayama/wakayama26.jpg",
+     "page": "https://we-love-manho.com/wakayama/wakayama/wakayama.html",
+     "desc": "「毬と殿さま」にちなみ、まりが図案化され、左の鞠中心部に和歌山市章。※黒い斑点は雨です。 合流（汚水と雨水が一体）管蓋」の色違い。２５の数字と合流の文字。お城の定時の鐘も「まりと殿様」でした。"
+    },
+    {
+     "url": "https://we-love-manho.com/wakayama/wakayama/wakayama17.jpg",
+     "page": "https://we-love-manho.com/wakayama/wakayama/wakayama.html",
+     "desc": "市章の周りに図案化された毬を描いたようなデザインです。「農集」の表示。 農業集落排水管"
+    },
+    {
+     "url": "https://we-love-manho.com/wakayama/wakayama/wakayama37.jpg",
+     "page": "https://we-love-manho.com/wakayama/wakayama/wakayama.html",
+     "desc": "ＪＩＳ規格模様に市章と「汚水」の文字、下に鍵穴１つ。"
+    }
+   ]
+  },
   "33100": {
    "pref": 33,
    "name": "岡山市",
@@ -1236,6 +2251,34 @@
     }
    ]
   },
+  "33202": {
+   "pref": 33,
+   "name": "倉敷市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/okayama/kurasiki/kurasiki41-2.jpg",
+     "page": "https://we-love-manho.com/okayama/kurasiki/kurasiki.html",
+     "desc": "「市花のフジと中央にクラを図案化した市章。 下には「１４」「Ａ１」「おすい」と記されている」のノンカラーで、「１４」「Ｄ１」「うすい」の表記です。"
+    },
+    {
+     "url": "https://we-love-manho.com/okayama/kurasiki/kurasiki3.jpg",
+     "page": "https://we-love-manho.com/okayama/kurasiki/kurasiki.html",
+     "desc": "「市章入り規格蓋」の小さい蓋。 下水"
+    },
+    {
+     "url": "https://we-love-manho.com/okayama/kurasiki/hunaotyou2.jpg",
+     "page": "https://we-love-manho.com/okayama/kurasiki/kurasiki.html",
+     "desc": "「旧船穂町（ふなおちょう） ・町の木ヤマザクラの中に、特産のマスカットと町章のデザイン。 「ふなお」「おすい」「２５」の文字」デザインの小型。 汚水枡",
+     "legacy": "gci:33441A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/okayama/kurasiki/090920-0175.jpg",
+     "page": "https://we-love-manho.com/okayama/kurasiki/kurasiki.html",
+     "desc": "旧真備町 ・特産のタケノコをモチーフにした真備町のマスコット「マービーちゃん」と、町の花サツキ、周囲に 町の木「竹」をデザイン。「まび」の文字。",
+     "legacy": "gci:33503A1968"
+    }
+   ]
+  },
   "34100": {
    "pref": 34,
    "name": "広島市",
@@ -1255,6 +2298,80 @@
      "page": "https://we-love-manho.com/hirosima/hirosima/hirosima.html",
      "desc": "旧湯来町（ゆきちょう） ・町の花「山百合」が大きく描かれ、 その脇に「ゆき」の文字、 外周には町の木「杉」が描かれています。",
      "legacy": "gci:34324A1968"
+    }
+   ]
+  },
+  "34207": {
+   "pref": 34,
+   "name": "福山市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hirosima/hukuyama/hukuyamasi17.jpg",
+     "page": "https://we-love-manho.com/hirosima/hukuyama/hukuyama.html",
+     "desc": "「福山市 ・福山市の花「バラ」のバラのシンボルマークと、市の木センダンを交互に描いた カラーマンホール。 中央に市章と「S」を組み合わせたマーク」デザインのバラのシンボルマーク以外は無着色。"
+    },
+    {
+     "url": "https://we-love-manho.com/hirosima/hukuyama/hukuyamasi16.jpg",
+     "page": "https://we-love-manho.com/hirosima/hukuyama/hukuyama.html",
+     "desc": "「穴あき亀甲模様、市章とSを組み合わせたマークの下に 「Ｇ」 の文字入り。受枠は楕円模様。 真白ではありませんが、白色のカラーマンホールです。 ※ アルファベットはマンホール蓋の耐荷重（トン）を表しています。「Ｇ」は２５トン （福山市上下水道局工務部管路維持課）」のノンカラー。 「Ｇ」 の文字。"
+    }
+   ]
+  },
+  "37201": {
+   "pref": 37,
+   "name": "高松市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/takamatusi12.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "「高松市 ・源氏と平家の四国屋島の戦いで、那須与一が扇の的を射る様子が描かれています。クリーム色バージョンで受枠は楕円模様を2周模様、 「たかまつし」「げすい」表記」と同デザイン、「たかまつし」「あめ」表記。"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/takamatsushi2.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "中央に市章、その下に「汚水」の文字が入っています。地紋は「Ｈ」の字を同心円に並べたものです。"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/muretyou7.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "亀甲模様、中央に町章、すぐ下に「汚水」の文字。受枠にＶ字模様。",
+     "legacy": "gci:37342A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/muretyou2.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "「旧牟礼町 ・町のイメージキャラクター「与一くん」と、周囲には町の花ツバキ、外周に矢が描かれたカラーデザイン 。 キャラクターは五剣山と源平合戦の侍と扇の的のイメージなのだとか。「むれ町」「おすい」の文字。 汚水」のノンカラー版。 汚水",
+     "legacy": "gci:37342A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/ajityou2.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "旧庵治町（あじちょう） ・亀甲模様、中央の町章のすぐ下に「おすい」の文字。 汚水",
+     "legacy": "gci:37343A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/sionoe.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "旧塩江町（しおのえちょう） ・旧塩江町の花ネムと香東川とホタルをデザイン。 汚水",
+     "legacy": "gci:37361A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/kagawa-2.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "旧香川町 ・中央に大きく町のシンボルマークを描き、周囲に町花・ツツジを描いている。 シンボルマークは、池と香川県香川郡香川町の3つの「か」を表している。",
+     "legacy": "gci:37362A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/kounann.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "「旧香南町 ・高松空港を背景に町の花キクと町の木モクセイのカラーデザイン。 上部に「こうなん」「おすい」の文字。 汚水」のノンカラー版。 汚水",
+     "legacy": "gci:37363A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kagawa/takamatu/takamatu6.jpg",
+     "page": "https://we-love-manho.com/kagawa/takamatu/takamatu.html",
+     "desc": "旧国分寺町のデザイン（町章と町の花・サツキと町の木でもある特産のマツの盆栽）から町章が消され、 「こくぶんじ」が「たかまつし」に変わっています。",
+     "legacy": "gci:37383A1968"
     }
    ]
   },
@@ -1823,6 +2940,29 @@
     }
    ]
   },
+  "39201": {
+   "pref": 39,
+   "name": "高知市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/kouti/kouti/kouti3.jpg",
+     "page": "https://we-love-manho.com/kouti/kouti/kouti.html",
+     "desc": "マークは高知市章にSewerage（下水道の意味）の頭文字を入れたもの。 「波紋の広がりをデザインしたものと思います」がそれ以上は解りません、 との、高知市下水道建設課の談。Ｔ１４タイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/kouti/kouti/harunotyou.jpg",
+     "page": "https://we-love-manho.com/kouti/kouti/kouti.html",
+     "desc": "旧春野町（はるのちょう） ・町章の周りに町の花アジサイを描いている。 「はるの のうしゅう」の文字。 農集",
+     "legacy": "gci:39383A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/kouti/kouti/harunotyou4.jpg",
+     "page": "https://we-love-manho.com/kouti/kouti/kouti.html",
+     "desc": "中央の町章の上に町の花「アジサイ」と、下の町の木「サクラ」の枝に町の鳥「ウグイス」２羽が描かれています。 下部に「はるの」「おすい」の文字。 農集",
+     "legacy": "gci:39383A1968"
+    }
+   ]
+  },
   "40100": {
    "pref": 40,
    "name": "北九州市",
@@ -1860,6 +3000,74 @@
     }
    ]
   },
+  "40203": {
+   "pref": 40,
+   "name": "久留米市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hukuoka/kurumesi/kurumesi4.jpg",
+     "page": "https://we-love-manho.com/hukuoka/kurumesi/kurumesi.html",
+     "desc": "耳納連山 （ミノウレンザン） 、筑後川の両脇に市の花久留米ツツジが描かれている。デザインの説明の「みのうれんざん」「ちくごがわ」「くるめつつじ」の文字入りで、下部に 「くるめし」「おすい」の表示。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukuoka/kurumesi/kurumesi8.jpg",
+     "page": "https://we-love-manho.com/hukuoka/kurumesi/kurumesi.html",
+     "desc": "ＪＩＳ規格に市章と鍵穴１個入り。受枠に丸を鎖状に繋いだ模様あり。"
+    }
+   ]
+  },
+  "42201": {
+   "pref": 42,
+   "name": "長崎市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/1.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "「蓋の地色が赤で、あじさいが「ピンク、ブルー、紫」の３色バージョンです。 汚水管マンホール蓋」と同デザインで、文字なしタイプ。 汚水管マンホール蓋。"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki45.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "「市章の一部の☆マーク入り汚水管マンホール蓋。 「重車」の文字は耐荷重25トンの事です」と同じタイプで文字が無く鍵穴が１つある。"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/ioujimatyou3.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "島と海の中には楽しげに泳ぐ魚、蛸、烏賊、蟹などが沢山描かれています。 「いおうじま」「おすい」の文字。 汚水管マンホール蓋。",
+     "legacy": "gci:42302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/takasimatyou.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "旧高島町（たかしまちょう） ・大きく元気な魚3匹と旧高島町の町章。 「たかしま」「げすいどう」の文字。 下水管マンホール蓋。",
+     "legacy": "gci:42303A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/nomozakityou.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "旧野母崎町（のもざきちょう） ・町の花スイセンのデザインで、周囲は滑り止めの凸模様になっています。 「のもざき」「げすいどう」の文字。 下水管マンホール蓋。",
+     "legacy": "gci:42304A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/sannwatyou.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "旧三和町（さんわちょう） ・町の木で特産のビワの周りに「SANWA TOWN」、下部に「さんわ」「おすい」の文字。 汚水管マンホール蓋。",
+     "legacy": "gci:42305A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/kinnkaityou3.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "「旧琴海町（きんかいちょう） ・町章の周りに2重に町の花コスモスをデザインした カラー版です。「琴海」「おすい」の文字。 汚水管マンホール蓋」デザインのノンカラー版。 汚水管マンホール蓋。",
+     "legacy": "gci:42309A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/nagasaki/nagasaki/sotometyou2.jpg",
+     "page": "https://we-love-manho.com/nagasaki/nagasaki/nagasaki.html",
+     "desc": "「旧外海町（そとめちょう） ・外海町の沖合にある角力灘（すもうなだ）と 町の花スイセンと町章。「外海」「ＳＯＴＯＭＥ」「おすい」 汚水管マンホール蓋」の小型。 汚水管小型マンホール蓋。",
+     "legacy": "gci:42315A1968"
+    }
+   ]
+  },
   "43100": {
    "pref": 43,
    "name": "熊本市",
@@ -1873,6 +3081,62 @@
      "url": "https://we-love-manho.com/kumamoto/kumamoto/kumamoto2.jpg",
      "page": "https://we-love-manho.com/kumamoto/kumamoto/kumamoto.html",
      "desc": "「く」の字を図案化した市章入り。"
+    }
+   ]
+  },
+  "44201": {
+   "pref": 44,
+   "name": "大分市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/ooita/ooita/ooita3.jpg",
+     "page": "https://we-love-manho.com/ooita/ooita/ooita.html",
+     "desc": "市の花サザンカが6個描かれている。"
+    },
+    {
+     "url": "https://we-love-manho.com/ooita/ooita/ooita8.jpg",
+     "page": "https://we-love-manho.com/ooita/ooita/ooita.html",
+     "desc": "「中央に市章と「雨水」文字入りの同心円風模様」デザインに「うすい」文字入り。"
+    }
+   ]
+  },
+  "45201": {
+   "pref": 45,
+   "name": "宮崎市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki3.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "「宮崎市 ・中央の宮崎市章から、外側に向かって市の花のハナショウブを描いています。「雨水」の文字入り」に汚水の文字が入ってます。"
+    },
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/miyazakisi25.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "「亀甲模様、中央に市章入り。受枠に楕円模様を３周」の穴あき蓋で、受枠の楕円模様は２周です。６時付近も違って「Ｎ」の文字が入っています。"
+    },
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/kiyotaketyou.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "旧清武町 ・町花ウメ、特産品の日向夏みかん、ツバキのデザインに町章入り。 以下は役場から ・下部右側は、町の特産品である「日向夏」です。 一番右の「日向夏」に描かれている紋章は、清武町の町章です。 ・下部左側は、町の花である「梅の花」です。 ・中央の花は「椿」です。「椿」の花が水面に浮かび、水面に波紋が出来ている様子を描いたものです。 清武町総合運動公園の整備の際、 公園の一部に「椿」を植える計画があったことから描かれております。 ・上",
+     "legacy": "gci:45301A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/tanotyou2.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "「旧田野町 ・町章の周りに、町の花サザンカ、町の鳥メジロを描いています」の小型蓋。 汚水",
+     "legacy": "gci:45302A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/sadowaratyou.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "「旧佐土原町（さどわらちょう） ・町章と、町の花「山桜」が描かれたカラー版」デザインのノンカラー版。",
+     "legacy": "gci:45303A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/miyazaki/miyazaki/takaokatyou.jpg",
+     "page": "https://we-love-manho.com/miyazaki/miyazaki/miyazaki.html",
+     "desc": "旧高岡町（たかおかちょう） ・町の花ウメのデザインに、「高岡町」「しゅうはい」の文字。 農業集落排水管",
+     "legacy": "gci:45381A1968"
     }
    ]
   },
@@ -1893,6 +3157,22 @@
     }
    ]
   },
+  "47201": {
+   "pref": 47,
+   "name": "那覇市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/okinawa/naha/nahasi14.jpg",
+     "page": "https://we-love-manho.com/okinawa/naha/naha.html",
+     "desc": "「一番内側の魚が右向き、「T-14」の文字なし、受枠にも魚が描かれています」と同デザインですが、受枠にも魚が描かれています。"
+    },
+    {
+     "url": "https://we-love-manho.com/okinawa/naha/naha31.jpg",
+     "page": "https://we-love-manho.com/okinawa/naha/naha.html",
+     "desc": "中央円内に市章。蓋地は亀甲模様です。 那覇市の蓋は、現在ほとんどが「魚」のデザイン蓋になっていますので、古い蓋はいつ撤去されるか判りませんので、 記録に残しておかないとと思い探しに行ってきました。"
+    }
+   ]
+  },
   "01100": {
    "pref": 1,
    "name": "札幌市",
@@ -1906,6 +3186,27 @@
      "url": "https://we-love-manho.com/hokkaidou/sapporo/sapporosi6.jpg",
      "page": "https://we-love-manho.com/hokkaidou/sapporo/sapporo.html",
      "desc": "「札幌市型地模様の蓋で中央の市章を挟んで「げすい」の表示があり穴が開いています」と同じタイプですが、所々穴がボルトで塞がれています。 下水"
+    }
+   ]
+  },
+  "01204": {
+   "pref": 1,
+   "name": "旭川市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawa6.jpg",
+     "page": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawa.html",
+     "desc": "「カード座標軸の蓋です」デザインの小型蓋。 汚水小型"
+    },
+    {
+     "url": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawa.jpg",
+     "page": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawa.html",
+     "desc": "上部に「あさひかわし」「あまみず」、 左「ナナカマド」の文字と、市の木ナナカマドの葉と実のデザイン。星印のようなマークは、市章。"
+    },
+    {
+     "url": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawasi7.jpg",
+     "page": "https://we-love-manho.com/hokkaidou/asahikawa/asahikawa.html",
+     "desc": "楕円を同心円状に並べた地模様。 中央に市章、上部に「汚水」「車道」、下部に「下水道」の文字入り。両脇に鍵穴あり。 車道用"
     }
    ]
   },
@@ -2652,6 +3953,23 @@
     }
    ]
   },
+  "03201": {
+   "pref": 3,
+   "name": "盛岡市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/iwate/morioka/moriokasi19.jpg",
+     "page": "https://we-love-manho.com/iwate/morioka/morioka.html",
+     "desc": "「ＪＩＳ規格模様 中央に下水構えに盛岡市の市章。受枠に菱形模様」の受枠に模様が無いタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/iwate/morioka/tamayamamura5.jpg",
+     "page": "https://we-love-manho.com/iwate/morioka/morioka.html",
+     "desc": "「中央の村章の周りに村の花スズランをデザイン。 ※こちらの蓋の側には、集落汚水マンホール表示板がありました。 集落排水汚水」と12時6時違い。 ※こちらの蓋の側にも、集落汚水マンホール表示板がありました。 集落排水汚水",
+     "legacy": "gci:03307A1968"
+    }
+   ]
+  },
   "04100": {
    "pref": 4,
    "name": "仙台市",
@@ -2665,6 +3983,206 @@
      "url": "https://we-love-manho.com/miyagi/senndai/senndaisi7.jpg",
      "page": "https://we-love-manho.com/miyagi/senndai/senndai.html",
      "desc": "仙台市の花・萩をデザイン。上部に「ＳⅡ」下部に「雨水専用」の表示。 中央に仙台市の市章。 雨水専用公共マス蓋"
+    }
+   ]
+  },
+  "05201": {
+   "pref": 5,
+   "name": "秋田市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/akita/akita/akita13.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "「マークは秋田市章と周りに「下水」のデザイン（市担当者談）。 竿燈祭り（東北三大祭）の竿燈を配している。下部に「雨水」の文字、受枠に斜線模様」のノンカラーでと１２時６時が上下逆です。受枠に模様が無くて「雨水」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/akita/akita/akita25-2.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "規格模様穴あき、中央に市章入り。"
+    },
+    {
+     "url": "https://we-love-manho.com/akita/akita/akita27.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "毘沙門亀甲地模様に、市章と「ポンプ室」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/akita/akita/kawabe.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "旧河辺町 ・清流に生息する鮎が描かれています。",
+     "legacy": "gci:05381A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/akita/akita/yuuwa.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "旧雄和町（ゆうわまち） ・旧雄和町の町章と町の花つつじが描かれています。",
+     "legacy": "gci:05382A1972"
+    },
+    {
+     "url": "https://we-love-manho.com/akita/akita/yuuwa4.jpg",
+     "page": "https://we-love-manho.com/akita/akita/akita.html",
+     "desc": "毘沙門亀甲模様、町章と「集排」の文字入りで、4ヶ所の出っ張り部分がボルト留めになっています。 集落排水管",
+     "legacy": "gci:05382A1972"
+    }
+   ]
+  },
+  "07201": {
+   "pref": 7,
+   "name": "福島市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/5031.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "旧飯野町、町章入り水道空気弁蓋",
+     "legacy": "gci:07309A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/hukusima30.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "「福島わらじまつりのデザインのカラー版で地色が赤タイプ」と同デザインで穴が開いて「ふくしま」と表記。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/hukusima49.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "岡部地区の阿武隈川は白鳥の飛来地で、川を泳ぐ2羽の白鳥と飛んでいる3羽の白鳥が描かれています。「ふくしまし」「おすい」の文字。 山口地区の農集排 汚水"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/hukusima21.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "「中央には市章のフだけ残した星型マークがあり、その中に「市の花」の文字。 周りには「きく」「もも」「さざんか」「さつき」「やまぶき」がデザインされています。 公共汚水枡蓋」デザインで、ノンカラー受枠に模様の無いタイプ。 公共汚水枡蓋"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/hukusima13.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "ＪＩＳ規格模様の蓋に市章、上部に「ＢＬＭ」の文字。 「BLM」は、鉄蓋工業(株)製の無騒音鉄蓋で、3時と9時に横鍵穴。市章の左脇に縦鍵穴。1時半と4時半の位置に矢印あり。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/hukusima/hukusima6.jpg",
+     "page": "https://we-love-manho.com/hukusima/hukusima/hukusima.html",
+     "desc": "「ＪＩＳ規格の蓋に穴が開いています。中央の市章のフだけ残した星型マークの中に、下水の文字。両脇に鍵穴あり」の蓋の穴をふさいだマンホールです。"
+    }
+   ]
+  },
+  "07203": {
+   "pref": 7,
+   "name": "郡山市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hukusima/kooriyama/kooriyamasi7.jpg",
+     "page": "https://we-love-manho.com/hukusima/kooriyama/kooriyama.html",
+     "desc": "「地色が黒いバージョンの小型汚水枡」と同デザイン、カッコウの下の鍵穴が無いタイプ。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/kooriyama/2168.jpg",
+     "page": "https://we-love-manho.com/hukusima/kooriyama/kooriyama.html",
+     "desc": "「マンホールカードです。８月１日、第二弾として全国４０自治体で４４種類（６４自治体７４種類）の マンホールカードの無料配布が 開始されました。 表にはマンホール写真と位置情報が書かれています」のノンカラー版。 郡山市、湖南町の文字入り 特定環境下水道"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/kooriyama/kooriyamasi2.jpg",
+     "page": "https://we-love-manho.com/hukusima/kooriyama/kooriyama.html",
+     "desc": "「規格蓋に市章とその下に「車」の文字。受枠は二重の山形模様。鍵穴二個」と同じタイプで、「車」の文字が市章に対して上に入っています。"
+    }
+   ]
+  },
+  "07204": {
+   "pref": 7,
+   "name": "いわき市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/1451.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "「マンホールカード掲載の蓋と同じ色遣いの合流用です」デザインのノンカラー「おすい」。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/iwakisi29.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "「中央のいわきの「い」をデザインした市章から、市の花ツツジが咲き広がるように描かれているデザインで、上に「車道用」 下に「汚水」下部に「市の花つつじ」の文字入り」と同デザインで「車道用」の文字が市章の下にあります。上に鍵穴。 汚水中型サイズ"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/iwakisi20.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "中釜戸の観音堂の傍らにある、国の天然記念物「中釜戸のシダレモミジ」の地元集落だけに、蓋全体にもみじの葉を同心円状に配したデザインです。 下部に「いわき市」「集排」の文字。 渡辺地区農業集落排水の"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/iwakisi16.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "白鳥の飛来地夏井川で泳ぐ白鳥と飛ぶ白鳥が描かれています。 外周が水滴の模様で、「いわき市 集排」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/iwakisi12.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "イノシシ５頭とフクロウ２匹が描かれています。木の陰から覗いているのは子どもでしょうか？ かわいいですね。私はこう言うデザインは好きですね・・。外周が水滴の模様で、「いわき市」「集排」の文字。"
+    },
+    {
+     "url": "https://we-love-manho.com/hukusima/iwaki/iwakisi27.jpg",
+     "page": "https://we-love-manho.com/hukusima/iwaki/iwaki.html",
+     "desc": "切れ目の入った六角形地模様、中央に市章と脇に鍵穴一つ。 汚水枡"
+    }
+   ]
+  },
+  "08201": {
+   "pref": 8,
+   "name": "水戸市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/ibaraki/mito/mitosi15.jpg",
+     "page": "https://we-love-manho.com/ibaraki/mito/mito.html",
+     "desc": "「市の木「うめ」をデザイン。 上部に水戸市の市章（水戸市の「水」を図案化したもの）。受枠にＭの模様。 ・」と同デザインで受枠に模様無し。「おすい」表記の小型蓋。 ・"
+    },
+    {
+     "url": "https://we-love-manho.com/ibaraki/mito/mitosi26.jpg",
+     "page": "https://we-love-manho.com/ibaraki/mito/mito.html",
+     "desc": "市章入り規格模様の雨水管マンホール蓋。真ん中に市章、下に鍵穴。 受け枠にV字模様が有ります。"
+    },
+    {
+     "url": "https://we-love-manho.com/ibaraki/mito/mitosi28.jpg",
+     "page": "https://we-love-manho.com/ibaraki/mito/mito.html",
+     "desc": "規格模様の雨水管マンホール蓋。「ミト市」マークと左右に鍵穴です。"
+    },
+    {
+     "url": "https://we-love-manho.com/ibaraki/mito/5.jpg",
+     "page": "https://we-love-manho.com/ibaraki/mito/mito.html",
+     "desc": "「内原北部地区農集排の親子蓋。親蓋は目の細かい亀甲模様」と同デザイン。受枠に斜線模様、12時6時部分も違う。 ・集落排水管",
+     "legacy": "gci:08305A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/ibaraki/mito/utiharamati5.jpg",
+     "page": "https://we-love-manho.com/ibaraki/mito/mito.html",
+     "desc": "毘沙門亀甲地模様、中央に旧内原町章、その上に「農村モデル事業」、下に「農業集落排水」の文字。 「変形テトラポッド地模様、中央に旧内原町章、その上に「農業集落排水事業」、下に「うちはら」の文字。 ・」蓋とほぼ同一の場所にありました。 ・",
+     "legacy": "gci:08305A1968"
+    }
+   ]
+  },
+  "09201": {
+   "pref": 9,
+   "name": "宇都宮市",
+   "imgs": [
+    {
+     "url": "https://we-love-manho.com/totigi/utunomiya/utunomiya1-1.jpg",
+     "page": "https://we-love-manho.com/totigi/utunomiya/utunomiya.html",
+     "desc": "宇都宮市 ・全体に市の木イチョウをデザインした宇都宮市のマンホールです。 中央に宇都宮の市章と「下水」の文字、受枠にＶ字模様。 ※市章は、かっての宇都宮城（亀が丘城）にちなみ、亀甲形と宇都宮の宮の字を図案化。"
+    },
+    {
+     "url": "https://we-love-manho.com/totigi/utunomiya/utunomiyasi4-2.jpg",
+     "page": "https://we-love-manho.com/totigi/utunomiya/utunomiya.html",
+     "desc": "亀甲模様、中央に市章と下水を組み合わせたマークと下部に鍵穴。"
+    },
+    {
+     "url": "https://we-love-manho.com/totigi/utunomiya/kamikawachi_k.jpg",
+     "page": "https://we-love-manho.com/totigi/utunomiya/utunomiya.html",
+     "desc": "「旧上河内町（かみかわちまち） ・町の木のユズと柚のキャラクター「ユッピー」をデザインした汚水管マンホール蓋」の小型盤です。",
+     "legacy": "gci:09303A1994"
+    },
+    {
+     "url": "https://we-love-manho.com/totigi/utunomiya/kawachi_kogata.jpg",
+     "page": "https://we-love-manho.com/totigi/utunomiya/utunomiya.html",
+     "desc": "「旧河内町（かわちまち） ・町章の周りに町の花サギソウの花が沢山描かれています」の汚水用小型盤です。",
+     "legacy": "gci:09304A1968"
+    },
+    {
+     "url": "https://we-love-manho.com/totigi/utunomiya/kawachi_n.jpg",
+     "page": "https://we-love-manho.com/totigi/utunomiya/utunomiya.html",
+     "desc": "中央に町章木ツゲ、周りに町の花サギソウをデザイン。ツゲの上に町章下に「河内」の文字があります。 農業集落排水管",
+     "legacy": "gci:09304A1968"
     }
    ]
   }
