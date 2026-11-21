@@ -24,6 +24,8 @@ interface StudySettings {
   prefs: number[];
   /** 人口順位帯（帯の開始順位） */
   bands: number[];
+  /** 旧市町村の蓋（into を持つアイテム）も含めるか */
+  includeLegacy: boolean;
   /** 'natural' = 都道府県順（人口順位モードでは人口順） */
   order: CardOrder;
   scope: CardScope;
@@ -73,12 +75,14 @@ export function ManholeCards() {
       const all =
         settings.mode === 'pop' ? await loadManholeBandItems(settings.bands) : await loadManholeItems(settings.prefs);
       // 旧形式（自治体単位）の「覚えた」が残っていれば、読み込んだ範囲の分を画像単位に変換して保存
+      // （旧市町村を除外する設定でも、移行は読み込んだ全件に対して行う）
       const current = migrateLearnedManholes(
         learned,
         all.map(({ item }) => item),
       );
       if (current !== learned) onLearnedChange(current);
-      const cards = buildCards(all, settings, current);
+      const target = settings.includeLegacy ? all : all.filter(({ item }) => !item.into);
+      const cards = buildCards(target, settings, current);
       if (cards.length === 0) {
         setState({
           mode: 'error',
@@ -124,6 +128,7 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
   const [mode, setMode] = useState<RangeMode>('area');
   const [prefs, setPrefs] = useState<Set<number>>(new Set(ALL_PREF_CODES));
   const [bands, setBands] = useState<Set<number>>(new Set([1]));
+  const [includeLegacy, setIncludeLegacy] = useState(true);
   const [order, setOrder] = useState<CardOrder>('shuffle');
   const [scope, setScope] = useState<CardScope>('all');
 
@@ -153,9 +158,13 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
             <PopulationBandPicker
               bands={bands}
               onChange={setBands}
-              note="旧市町村の蓋は合併先の自治体の順位に含めます"
+              note={includeLegacy ? '旧市町村の蓋は合併先の自治体の順位に含めます' : undefined}
             />
           )}
+          <label className="pref-check filter-toggle">
+            <input type="checkbox" checked={includeLegacy} onChange={() => setIncludeLegacy(!includeLegacy)} />
+            旧市町村（消滅した自治体）のものも含める
+          </label>
         </section>
 
         <section>
@@ -190,6 +199,7 @@ function CardSetup({ onStart }: { onStart: (settings: StudySettings) => void }) 
               mode,
               prefs: [...prefs].sort((a, b) => a - b),
               bands: [...bands].sort((a, b) => a - b),
+              includeLegacy,
               order,
               scope,
             })
